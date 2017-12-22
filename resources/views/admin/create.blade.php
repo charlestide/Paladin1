@@ -4,7 +4,7 @@
 @section('content')
 <section id="page-content">
 
-    <pvc-bread-crumb icon="user" title="修改管理员" summary="在这里您可以修改已存在管理员">
+    <pvc-bread-crumb icon="user" title="创建管理员" summary="您可以在这里创建一个新管理员">
         <pvc-bread-crumb-item title="系统管理" url="#"></pvc-bread-crumb-item>
         <pvc-bread-crumb-item title="管理员" url="/admin"></pvc-bread-crumb-item>
     </pvc-bread-crumb>
@@ -22,18 +22,13 @@
         </div><!-- /.row -->
         @endif
 
-        <pvc-panel title="#{{$admin->id}} 管理员：{{$admin->name}}" :closeable="true">
+        <pvc-panel title="创建新管理">
             <pvc-form method="post" action="{{url('/admin')}}" token="{{csrf_token()}}">
-                @if(!Request::is('*/create'))
-                    <pvc-hidden-field slot="hidden" name="admin[id]" value="{{$admin->id}}"></pvc-hidden-field>
-                @endif
-                    <pvc-text-field name="admin[name]" value="{{$admin->name}}" :required="true" label="名称"></pvc-text-field>
-                    <pvc-text-field name="admin[email]" value="{{$admin->email}}" :required="true" label="邮箱"></pvc-text-field>
-                    <pvc-text-field name="admin[password]" value="*******" :required="true" label="密码" type="password"></pvc-text-field>
-                    <pvc-label-field label="创建于" value="{!! Request::is('*/create') ? '未创建' : $admin->created_at !!}"></pvc-label-field>
-                    <pvc-label-field label="更新于" value="{!! Request::is('*/create') ? '未创建' : $admin->updated_at !!}"></pvc-label-field>
+                    <pvc-text-field name="admin[name]" required="true" label="名称"></pvc-text-field>
+                    <pvc-text-field name="admin[email]" required="true" label="邮箱"></pvc-text-field>
+                    <pvc-text-field name="admin[password]" type="password" :required="true" label="密码"></pvc-text-field>
                     <button type="submit" class="btn btn-theme" slot="footer">保存</button>
-                    <pvc-link-button href="{{url('/admin')}}" slot="footer" slot="footer" title="返回列表"></pvc-link-button>
+                    <pvc-link-button href="{{url('/admin')}}" slot="footer" title="返回列表"></pvc-link-button>
             </pvc-form>
         </pvc-panel>
 

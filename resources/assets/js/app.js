@@ -22,6 +22,7 @@ Vue.component('pvc-datatable', require('./components/data/DataTable.vue'));
 Vue.component('pvc-data-column', require('./components/data/DataColumn.vue'));
 Vue.component('pvc-data-column-action', require('./components/data/DataColumnAction.vue'));
 Vue.component('pvc-button', require('./components/button/Button.vue'));
+Vue.component('pvc-link-button', require('./components/button/LinkButton.vue'));
 Vue.component('pvc-panel', require('./components/layout/Panel.vue'));
 
 

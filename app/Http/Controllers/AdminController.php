@@ -38,7 +38,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin/create');
     }
 
     /**
@@ -49,18 +49,36 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if ($request->has('admin')) {
+
+            $adminData = $request->input('admin');
+
+            if (isset($adminData['id']) and $adminData['id'] == 1) {
+                die('超级管理员不能修改');
+            } else {
+                $admin = Admin::firstOrCreate($adminData);
+                if (isset($adminData['password']) and !empty($adminData['password']) ) {
+                    $admin->password = $adminData['password'];
+                }
+                $admin->save();
+            }
+
+            return redirect('/admin/'.$admin->id)->with('messageInfo',['title' => '保存管理员', 'text' => '保存成功']);
+        } else {
+//            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
+            die('错误的提交');
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Admin $admin)
     {
-        //
+        return view('admin.show',['admin' => $admin]);
     }
 
     /**

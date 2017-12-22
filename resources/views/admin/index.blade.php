@@ -11,12 +11,12 @@
 
 
     <pvc-panel>
-        <pvc-button slot="head-right" target="_blank" action="{{url('/admin/create')}}" title="新增" icon="plus-square" class="btn-theme" size="xs"></pvc-button>
+        <pvc-link-button slot="head-right" target="_blank" href="{{url('/admin/create')}}" title="新增" icon="plus-square" class="btn-theme" size="xs"></pvc-link-button>
         <pvc-datatable source="/admin?format=json">
             <pvc-data-column data="id" title="ID" width="10%"></pvc-data-column>
             <pvc-data-column data="name" title="名称" width="30%"></pvc-data-column>
             <pvc-data-column data="email" title="Email" width="20%"></pvc-data-column>
-            <pvc-data-column data="updated" title="更新于" default="从未更新" width="20%"></pvc-data-column>
+            <pvc-data-column data="updated_at" title="更新于" default="从未更新" width="20%"></pvc-data-column>
             <pvc-data-column-action action="/admin/{$model.id}" title="操作" width="20%">
                 <pvc-button title="修改" action="/admin/{data.id}/edit" icon="edit" ></pvc-button>
                 <pvc-button title="详情" action="/admin/{data.id}" icon="eye"></pvc-button>
