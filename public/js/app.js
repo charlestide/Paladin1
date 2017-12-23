@@ -1373,7 +1373,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -1418,15 +1418,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             self = this;
 
         column.render = function (data, type, full, meta) {
-            var content = '',
-                button = null;
+            var content = '';
 
             self.buttons.forEach(function (buttonData) {
+                var newButtonData = buttonData;
+
                 if (typeof buttonData.action === 'string') {
-                    buttonData.action = self.parseAction(buttonData.action, data);
+                    newButtonData.href = self.parseAction(buttonData.action, full);
                 }
 
-                content += ' ' + self.createButton(buttonData)[0].outerHTML;
+                content += ' ' + self.createButton(newButtonData)[0].outerHTML;
             });
 
             return content;
@@ -1438,25 +1439,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         addButtonData: function addButtonData(buttonData) {
             this.buttons.push(buttonData);
         },
-        parseAction: function parseAction(action, data) {
-            var expResult = action.match(/\{.+\}/g);
+        parseAction: function parseAction(href, data) {
+            var expResult = href.match(/\{.+\}/g);
+
             if (expResult && expResult.length) {
                 expResult.forEach(function (item) {
                     var value = eval(item.replace('$model', 'data').replace('{', '').replace('}', ''));
-                    action = action.replace(item, value);
+                    href = href.replace(item, value);
                 });
             }
-            return action;
+
+            return href;
         },
         createButton: function createButton(buttonData) {
             var button = $('<a class="btn bg-color-blueDark txt-color-white"></a>');
 
-            button.attr('href', buttonData.action);
+            button.attr('href', buttonData.href);
             button.text(' ' + buttonData.title);
-            // button.addClass('btn');
             button.addClass('btn-' + buttonData.size);
-            // button.addClass('btn-theme');
-            // button.addClass('rounded');
 
             if (buttonData.icon) {
                 var icon = $('<i class="fa"></i>');

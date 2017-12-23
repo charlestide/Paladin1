@@ -53,15 +53,13 @@ class AdminController extends Controller
 
             $adminData = $request->input('admin');
 
-            if (isset($adminData['id']) and $adminData['id'] == 1) {
-                die('超级管理员不能修改');
-            } else {
-                $admin = Admin::firstOrCreate($adminData);
-                if (isset($adminData['password']) and !empty($adminData['password']) ) {
-                    $admin->password = $adminData['password'];
-                }
-                $admin->save();
+            $admin = new Admin($adminData);
+
+            if (isset($adminData['password']) and !empty($adminData['password']) ) {
+                $admin->password = $adminData['password'];
             }
+
+            $admin->save();
 
             return redirect('/admin/'.$admin->id)->with('messageInfo',['title' => '保存管理员', 'text' => '保存成功']);
         } else {
@@ -96,12 +94,27 @@ class AdminController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Admin $admin)
     {
-        //
+        if ($request->has('admin') and $admin->id > 1) {
+
+            $adminData = $request->input('admin');
+            $admin->fill($adminData);
+
+            if ($adminData['password']) {
+                $admin->password = $adminData['password'];
+            }
+
+            $admin->save();
+
+            return redirect('/admin/'.$admin->id)->with('messageInfo',['title' => '保存管理员', 'text' => '保存成功']);
+        } else {
+//            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
+            die('错误的提交');
+        }
     }
 
     /**

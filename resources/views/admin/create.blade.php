@@ -22,10 +22,10 @@
         </div><!-- /.row -->
         @endif
 
-        <pvc-panel title="创建新管理">
-            <pvc-form method="post" action="{{url('/admin')}}" token="{{csrf_token()}}">
-                    <pvc-text-field name="admin[name]" required="true" label="名称"></pvc-text-field>
-                    <pvc-text-field name="admin[email]" required="true" label="邮箱"></pvc-text-field>
+        <pvc-panel title="创建新管理员">
+            <pvc-form method="post" action="{{url('/admin')}}" token="{{csrf_token()}}" :validation="true">
+                    <pvc-text-field name="admin[name]" required="true" :required="true" label="名称"></pvc-text-field>
+                    <pvc-text-field name="admin[email]" required="true" :required="true" :email="true" label="邮箱"></pvc-text-field>
                     <pvc-text-field name="admin[password]" type="password" :required="true" label="密码"></pvc-text-field>
                     <button type="submit" class="btn btn-theme" slot="footer">保存</button>
                     <pvc-link-button href="{{url('/admin')}}" slot="footer" title="返回列表"></pvc-link-button>

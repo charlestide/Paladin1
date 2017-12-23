@@ -9,6 +9,20 @@
                     :name="name"
                     :type="type"
                     :value="value"
+
+                    :required="required"
+                    :remote="remote"
+                    :email="email"
+                    :url="url"
+                    :date="date"
+                    :dateISO="dateISO"
+                    :number="number"
+                    :digits="digits"
+                    :equalTo="equalTo"
+                    :accept="accept"
+                    :creditcard="creditcard"
+                    :extension="extension"
+                    :require_from_group="require_from_group"
             >
             <span v-if="icon" class="input-group-addon"><i class="fa" :class="'fa-' + icon"></i></span>
         </div>
@@ -52,15 +66,25 @@
                     return value in {left:'',top:''};
                 },
                 default: 'left'
-            }
+            },
+
+            remote: String,
+            email: Boolean,
+            url: Boolean,
+            date: Boolean,
+            dateISO: Boolean,
+            number: Boolean,
+            digits: Boolean,
+            equalTo: String,
+            accept: String,
+            creditcard: String,
+            extension: String,
+            require_from_group: String
         },
         computed: {
             show: function () {
                 return this.type !== 'hidden';
             }
-        },
-        mounted: function () {
-            console.log('type',this.type == 'hidden');
         }
     }
 </script>

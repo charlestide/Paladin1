@@ -23,13 +23,12 @@
         @endif
 
         <pvc-panel title="#{{$admin->id}} 管理员：{{$admin->name}}" :closeable="true">
-            <pvc-form method="post" action="{{url('/admin')}}" token="{{csrf_token()}}">
-                @if(!Request::is('*/create'))
+            <pvc-form method="post" action="{{url('/admin/'.$admin->id)}}" token="{{csrf_token()}}" :validation="true">
                     <pvc-hidden-field slot="hidden" name="admin[id]" value="{{$admin->id}}"></pvc-hidden-field>
-                @endif
+                    {{method_field('PUT')}}
                     <pvc-text-field name="admin[name]" value="{{$admin->name}}" :required="true" label="名称"></pvc-text-field>
-                    <pvc-text-field name="admin[email]" value="{{$admin->email}}" :required="true" label="邮箱"></pvc-text-field>
-                    <pvc-text-field name="admin[password]" value="*******" :required="true" label="密码" type="password"></pvc-text-field>
+                    <pvc-text-field name="admin[email]" value="{{$admin->email}}" :required="true" label="邮箱" :email="true"></pvc-text-field>
+                    <pvc-text-field name="admin[password]" value="" label="密码" type="password"></pvc-text-field>
                     <pvc-label-field label="创建于" value="{!! Request::is('*/create') ? '未创建' : $admin->created_at !!}"></pvc-label-field>
                     <pvc-label-field label="更新于" value="{!! Request::is('*/create') ? '未创建' : $admin->updated_at !!}"></pvc-label-field>
                     <button type="submit" class="btn btn-theme" slot="footer">保存</button>

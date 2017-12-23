@@ -30,16 +30,16 @@
             },self=this;
 
             column.render = function (data, type, full, meta) {
-                let content = '',
-                    button = null;
-
+                let content = '';
 
                 self.buttons.forEach(function (buttonData) {
+                    let newButtonData = buttonData;
+
                     if (typeof buttonData.action === 'string') {
-                        buttonData.action = self.parseAction(buttonData.action,data);
+                        newButtonData.href = self.parseAction(buttonData.action,full);
                     }
 
-                    content += ' ' + self.createButton(buttonData)[0].outerHTML;
+                    content += ' ' + self.createButton(newButtonData)[0].outerHTML;
 
                 });
 
@@ -52,25 +52,24 @@
             addButtonData: function (buttonData) {
                 this.buttons.push(buttonData);
             },
-            parseAction: function (action,data) {
-                let expResult = action.match(/\{.+\}/g);
+            parseAction: function (href,data) {
+                let expResult = href.match(/\{.+\}/g);
+
                 if (expResult && expResult.length) {
                     expResult.forEach(function (item) {
                         let value = eval(item.replace('$model','data').replace('{','').replace('}',''));
-                        action = action.replace(item,value);
+                        href = href.replace(item,value);
                     });
                 }
-                return action;
+
+                return href;
             },
             createButton: function (buttonData) {
                 let button = $('<a class="btn bg-color-blueDark txt-color-white"></a>');
 
-                button.attr('href',buttonData.action);
+                button.attr('href',buttonData.href);
                 button.text(' ' + buttonData.title);
-                // button.addClass('btn');
                 button.addClass('btn-'+buttonData.size);
-                // button.addClass('btn-theme');
-                // button.addClass('rounded');
 
                 if (buttonData.icon) {
                     let icon = $('<i class="fa"></i>');

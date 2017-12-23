@@ -30,7 +30,6 @@
         <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
         <link href="https://cdn.bootcss.com/dropzone/5.1.1/min/dropzone.min.css" rel="stylesheet">
-        {{--<link href="https://cdn.bootcss.com/datatables/1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet">--}}
         <link href="https://cdn.bootcss.com/fuelux/3.16.1/css/fuelux.min.css" rel="stylesheet">
         <link href="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.min.css" rel="stylesheet">
         <link href="https://cdn.bootcss.com/chosen/1.8.2/chosen.min.css" rel="stylesheet">
@@ -67,8 +66,6 @@
         <script src="https://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
         <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
         <script src="https://cdn.bootcss.com/dropzone/5.1.1/min/dropzone.min.js"></script>
-        {{--<script src="https://cdn.bootcss.com/datatables/1.10.16/js/jquery.dataTables.min.js"></script>--}}
-        {{--<script src="https://cdn.bootcss.com/datatables/1.10.16/js/dataTables.bootstrap.min.js"></script>--}}
         <script src="https://cdn.bootcss.com/flot/0.8.3/jquery.flot.min.js"></script>
         <script src="https://cdn.bootcss.com/flot/0.8.3/jquery.flot.categories.min.js"></script>
         <script src="https://cdn.bootcss.com/flot/0.8.3/jquery.flot.resize.min.js"></script>
@@ -84,8 +81,6 @@
         <script src="https://cdn.bootcss.com/select2/4.0.4/js/i18n/zh-CN.js"></script>
         <script src="https://cdn.bootcss.com/chosen/1.8.2/chosen.jquery.min.js"></script>
         <script src="https://cdn.bootcss.com/jquery-mockjax/1.6.2/jquery.mockjax.min.js"></script>
-        <script src="https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.min.js"></script>
-        <script src="https://cdn.bootcss.com/jquery-validate/1.17.0/localization/messages_zh.min.js"></script>
         <script src="https://cdn.bootcss.com/moment.js/2.18.1/locale/zh-cn.js"></script>
         <script src="https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"></script>
         {{--<script src="/js/components/echarts/themes/macarons.js"></script>--}}

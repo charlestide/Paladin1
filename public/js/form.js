@@ -665,7 +665,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -695,7 +695,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "pvc-form",
     props: {
-        token: String
+        token: String,
+        validation: {
+            type: Boolean,
+            default: false
+        }
+    },
+    mounted: function mounted() {
+
+        var self = this;
+
+        $.getScript('https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.min.js', function () {
+            $.getScript('https://cdn.bootcss.com/jquery-validate/1.17.0/localization/messages_zh.min.js');
+        });
+
+        $(function () {
+            if (self.validation) {
+                $(self.$el).validate({
+                    highlight: function highlight(element) {
+                        $(element).parents('.form-group').addClass('has-error has-feedback');
+                    },
+                    unhighlight: function unhighlight(element) {
+                        $(element).parents('.form-group').removeClass('has-error');
+                    },
+                    success: function success(label) {
+                        $(label).parents('.form-group').addClass('has-success').removeClass('has-error');
+                    },
+                    submitHandler: function submitHandler(form) {
+                        form.submit();
+                    }
+                });
+            }
+        });
     }
 });
 
@@ -1196,7 +1227,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -1207,6 +1238,20 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1261,15 +1306,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return value in { left: '', top: '' };
             },
             default: 'left'
-        }
+        },
+
+        remote: String,
+        email: Boolean,
+        url: Boolean,
+        date: Boolean,
+        dateISO: Boolean,
+        number: Boolean,
+        digits: Boolean,
+        equalTo: String,
+        accept: String,
+        creditcard: String,
+        extension: String,
+        require_from_group: String
     },
     computed: {
         show: function show() {
             return this.type !== 'hidden';
         }
-    },
-    mounted: function mounted() {
-        console.log('type', this.type == 'hidden');
     }
 });
 
@@ -1327,7 +1382,20 @@ var render = function() {
             attrs: {
               placeholder: _vm.placeholder,
               name: _vm.name,
-              type: _vm.type
+              type: _vm.type,
+              required: _vm.required,
+              remote: _vm.remote,
+              email: _vm.email,
+              url: _vm.url,
+              date: _vm.date,
+              dateISO: _vm.dateISO,
+              number: _vm.number,
+              digits: _vm.digits,
+              equalTo: _vm.equalTo,
+              accept: _vm.accept,
+              creditcard: _vm.creditcard,
+              extension: _vm.extension,
+              require_from_group: _vm.require_from_group
             },
             domProps: { value: _vm.value }
           }),

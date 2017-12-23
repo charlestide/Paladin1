@@ -10,7 +10,11 @@ class Admin extends Model
 
     protected $primaryKey = 'id';
 
-    protected $guarded = ['password'];
+    protected $fillable = [
+        'name', 'email', 'password',
+    ];
+
+    protected $hidden = ['password','remember_token'];
 
     /**
      * @param $password
