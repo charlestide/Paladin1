@@ -1,0 +1,1 @@
+<?php Route::resource('{{modelName}}','{{ControllerName}}');
