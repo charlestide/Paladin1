@@ -4,6 +4,7 @@
  */
 
 
+export default RemoteLoader;
 
 function RemoteLoader() {
 }
@@ -83,11 +84,47 @@ RemoteLoader.requireOne = function(schema) {
  * 加载JS
  * @param filePath
  */
-RemoteLoader.loadJs = function (filePath) {
-    var scriptTag = document.createElement('script');
-    scriptTag.src = filePath;
-    scriptTag.type = "text/javascript";
-    document.getElementsByTagName('head')[0].appendChild(scriptTag);
+RemoteLoader.loadJs = function (filePath,callback) {
+
+
+    if (typeof(filePath) === 'string') {
+        filePath = [filePath];
+    }
+
+    let loadedCount = 0,self = this;
+
+    filePath.forEach(function (itemPath) {
+        self.loadScript(itemPath,function () {
+            loadedCount++;
+
+            if (loadedCount >= filePath.length) {
+                if (typeof callback !== 'undefined') {
+                    callback();
+                }
+            }
+        })
+    });
+};
+
+RemoteLoader.loadScript = function(url, callback) {
+    let script = document.createElement("script");
+    script.type = "text/javascript";
+    if(typeof(callback) !== "undefined"){
+        if (script.readyState) {
+            script.onreadystatechange = function () {
+                if (script.readyState === "loaded" || script.readyState === "complete") {
+                    script.onreadystatechange = null;
+                    callback();
+                }
+            };
+        } else {
+            script.onload = function () {
+                callback();
+            };
+        }
+    }
+    script.src = url;
+    document.body.appendChild(script);
 };
 
 /**
@@ -117,10 +154,4 @@ RemoteLoader.load = function (listener) {
         }
     }
 };
-
-export default {
-    install: function (Vue) {
-        Vue.prototype.$RemoteLoader = RemoteLoader;
-    }
-}
 

@@ -12,27 +12,25 @@
     <!-- Start body content -->
     <div class="body-content animated fadeIn">
 
-        <pvc-panel v-else="generated" title="生成CRUD代码" :closeable="true">
-            <pvc-form method="post" action="{{url('/generator/crud')}}" token="{{csrf_token()}}" :validation="false">
-                <pvc-chosen name="model" label="请选择Model" :required="true" layout="hor" placeholder="请选择一个Model" v-on:changed="modelSelected">
+        <pvc-panel title="生成CRUD代码" :closeable="true" :validation="true">
+            <pvc-form method="post" action="{{url('/generator/crud/run')}}" token="{{csrf_token()}}" :validation="false">
+                <pvc-chosen name="modelClass" label="请选择Model" :required="true" placeholder="请选择一个Model" v-on:changed="modelSelected" >
                     @foreach($models as $model)
                     <option value="{{$model}}">{{$model}}</option>
                     @endforeach
                 </pvc-chosen>
-                <pvc-text-field name="modelDisplayName" label="Model的显示名称" :required="true" placeholder="请为Model指定一个显示用的名称"></pvc-text-field>
-
+                <pvc-textfield name="modelDisplayName" label="Model的显示名称" :required="true" placeholder="请为Model指定一个显示用的名称" :value="modelDisplayName"></pvc-textfield>
+                <pvc-checkbox name="overwriteFile" label="是否覆盖文件">
+                    <pvc-option value="true"></pvc-option>
+                </pvc-checkbox>
                 <pvc-form-divider v-show="modelClass" :label="modelClass +' 的字段'"></pvc-form-divider>
-                <div v-for="column in modelColumns">
-                    <pvc-text-field  :name="'modelColumns['+column+']'" :label="column" placeholder="请定义一个显示名称"></pvc-text-field>
+                <div v-for="(column,columnName) in modelColumns">
+                    <pvc-textfield  :name="'modelColumns['+columnName+'][displayName]'" :value="column.displayName" :label="columnName+' ('+column.type+')'" placeholder="请定义一个显示名称"></pvc-textfield>
+                    <pvc-hidden-field  :name="'modelColumns['+columnName+'][type]'" :value="column.type"></pvc-hidden-field>
                 </div>
                 <button type="submit" class="btn btn-theme" slot="footer">生成</button>
             </pvc-form>
         </pvc-panel>
-        @else
-        <pvc-panel v-if="generated" title="生成结果">
-            {{$generatedResult}}
-        </pvc-panel>
-        @endif
     </div><!-- /.body-content -->
     <!--/ End body content -->
 
@@ -51,15 +49,16 @@
             el: '#page-content',
             data: {
                 modelClass: '',
+                modelDisplayName: '',
                 modelColumns: [],
-                generated: {{isset($generatedResult) ? 'true' : 'false'}}
             },
             watch: {
                 modelClass: function (value, oldValue) {
                     let self = this;
                     $.getJSON('{{url('generator/crud/model')}}',{modelClass: value},function (json) {
-                        if (json.length) {
-                            self.modelColumns = json;
+                        if (json) {
+                            self.modelColumns = json.columns;
+                            self.modelDisplayName = json.modelDisplayName;
                         }
                     });
                 }

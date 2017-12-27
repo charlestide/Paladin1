@@ -1,5 +1,7 @@
 <template>
-    $END$
+    <div class="input-group">
+        <slot/>
+    </div>
 </template>
 
 <script>

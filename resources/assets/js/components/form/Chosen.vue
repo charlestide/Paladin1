@@ -1,68 +1,45 @@
 <template>
-    <pvc-field-hor v-if="layout === 'hor'" :label="label" :required="required" :name="name" type="select">
-        <select>
+    <pvc-field-layout :layout="layout" :label="label" :required="required">
+        <select :data-placeholder="placeholder" :required="required" :name="name" class="chosen-select" :multiple="multiple">
+            <option v-if="placeholder"></option>
             <slot/>
         </select>
-    </pvc-field-hor>
-    <pvc-field-ver v-else-if="layout === 'ver'" :label="label" :required="required" :name="name" type="select">
-        <select>
-            <slot/>
-        </select>
-    </pvc-field-ver>
-    <pvc-field-none v-else-if="layout === 'none'" :label="label" :required="required" :name="name" type="select">
-        <select>
-            <slot/>
-        </select>
-    </pvc-field-none>
+    </pvc-field-layout>
 </template>
 
 <script>
-    import PvcFieldHor from "./FieldLayoutHor";
-    import PvcFieldVer from "./FieldLayoutVer";
-    import PvcFieldNone from "./FieldLayoutNone";
+    import {layoutMixin,valueMixin} from "./formMixin";
 
     export default {
-        name: "pvc-select",
-        components: {
-            PvcFieldVer,
-            PvcFieldHor,
-            PvcFieldNone
-        },
+        name: "pvc-chosen",
+        mixins: [layoutMixin,valueMixin],
         props: {
-            required: {
+            multiple: {
                 type: Boolean,
                 default: false
             },
-            label: String,
-            name: String,
-            value: String,
-            layout: {
-                type: String,
-                default: 'hor',
-                validate: function (value) {
-                    return value in {hor:'',ver:'',none:''}
-                }
-            }
         },
         mounted: function () {
             let self = this;
 
             $.ajaxSetup({ cache: true });
-            $.getScript('https://cdn.bootcss.com/select2/4.0.5/js/select2.min.js',function () {
-                $.getScript('https://cdn.bootcss.com/select2/4.0.5/js/i18n/zh-CN.js',function () {
-                    $.ajaxSetup({cache: false});
-                })
+            $.getScript('https://cdn.bootcss.com/chosen/1.8.2/chosen.jquery.min.js',function () {
+                $.ajaxSetup({cache: false});
             });
 
             $(function () {
-                $('select',self.$el).select2();
+                $('select',self.$el).chosen({
+                    '.chosen-select-no-results': {
+                        no_results_text: '找不到数据!'
+                    },
+                }).change(function (event,value) {
+                    self.$emit('changed',value.selected);
+                })
             })
         }
     }
 </script>
 
 <style scoped>
-    @import "https://cdn.bootcss.com/select2/4.0.5/css/select2.min.css";
-    @import "https://cdn.bootcss.com/select2-bootstrap-css/1.4.6/select2-bootstrap.min.css";
-    
+    @import "https://cdn.bootcss.com/chosen/1.8.2/chosen.min.css";
 </style>

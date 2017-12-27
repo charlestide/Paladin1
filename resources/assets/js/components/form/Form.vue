@@ -27,8 +27,11 @@
 
             let self = this;
 
+            $.ajaxSetup({cache:true});
             $.getScript('https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.min.js',function() {
-                $.getScript('https://cdn.bootcss.com/jquery-validate/1.17.0/localization/messages_zh.min.js');
+                $.getScript('https://cdn.bootcss.com/jquery-validate/1.17.0/localization/messages_zh.min.js',function () {
+                    $.ajaxSetup({cache:false})
+                });
             });
 
             $(function () {

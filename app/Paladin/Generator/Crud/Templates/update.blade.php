@@ -1,43 +1,36 @@
+@verbatim
 @extends('layouts.lay_admin')
 
-<!-- START @PAGE CONTENT -->
+    <!-- START @PAGE CONTENT -->
 @section('content')
+@endverbatim
 <section id="page-content">
 
-    <pvc-bread-crumb icon="user" title="修改管理员" summary="在这里您可以修改已存在管理员">
-        <pvc-bread-crumb-item title="系统管理" url="#"></pvc-bread-crumb-item>
-        <pvc-bread-crumb-item title="管理员" url="/admin"></pvc-bread-crumb-item>
+    <pvc-bread-crumb icon="user" title="修改{{$displayName}}" summary="在这里你可以修改{{$displayName}}">
+        <pvc-bread-crumb-item title="{{$displayName}}" url="/{{$modelName}}"></pvc-bread-crumb-item>
     </pvc-bread-crumb>
 
     <!-- Start body content -->
     <div class="body-content animated fadeIn">
+        <pvc-panel title="#<?php echo sprintf('{{$%s->%s}}',$modelName,$primaryKey) ?>" :closeable="true">
+            <pvc-form method="post" action=" <?php echo sprintf('{{url(\'/%s/\'.$%s->%s)}}',$modelName,$modelName,$primaryKey) ?>" token="@{{csrf_token()}}" :validation="true">
 
-        @if (Session::has('form_result'))
-        <div class="row">
-            <div class="col-md-12">
-                <div class="callout callout-info mb-20">
-                    <p> {{Session::get('form_result')}}</p>
-                </div>
-            </div>
-        </div><!-- /.row -->
-        @endif
+                    <pvc-hidden-field slot="hidden" name="{{$displayName}}[id]" value="<?php echo sprintf('{{$%s->%s}}',$modelName,$primaryKey) ?>"></pvc-hidden-field>
+                    @{{method_field('PUT')}}
 
-        <pvc-panel title="#{{$admin->id}} 管理员：{{$admin->name}}" :closeable="true">
-            <pvc-form method="post" action="{{url('/admin/'.$admin->id)}}" token="{{csrf_token()}}" :validation="true">
-                    <pvc-hidden-field slot="hidden" name="admin[id]" value="{{$admin->id}}"></pvc-hidden-field>
-                    {{method_field('PUT')}}
-                    <pvc-text-field name="admin[name]" value="{{$admin->name}}" :required="true" label="名称"></pvc-text-field>
-                    <pvc-text-field name="admin[email]" value="{{$admin->email}}" :required="true" label="邮箱" :email="true"></pvc-text-field>
-                    <pvc-text-field name="admin[password]" value="" label="密码" type="password"></pvc-text-field>
-                    <pvc-label-field label="创建于" value="{!! Request::is('*/create') ? '未创建' : $admin->created_at !!}"></pvc-label-field>
-                    <pvc-label-field label="更新于" value="{!! Request::is('*/create') ? '未创建' : $admin->updated_at !!}"></pvc-label-field>
+                    @foreach($fields as $fieldName => $field)
+                    @if (!$field['primary'] and !in_array($fieldName,['created_at','updated_at']))
+                    <pvc-textfield name="{{$modelName}}[{{$fieldName}}]" value="<?php echo sprintf('{{$%s->%s}}',$modelName,$fieldName)?>" label="{{$field['displayName']}}"></pvc-textfield>
+                    @endif
+                    @endforeach
                     <button type="submit" class="btn btn-theme" slot="footer">保存</button>
-                    <pvc-link-button href="{{url('/admin')}}" slot="footer" slot="footer" title="返回列表"></pvc-link-button>
+                    <pvc-link-button href="<?php echo sprintf('{{url(\'/%s\')}}',$modelName) ?>" slot="footer" slot="footer" title="返回列表"></pvc-link-button>
             </pvc-form>
         </pvc-panel>
 
     </div><!-- /.body-content -->
     <!--/ End body content -->
+@verbatim
 
     <!-- Start footer content -->
     @include('layouts._footer-admin')
@@ -47,3 +40,4 @@
 <script type="text/javascript" src="/js/form.js"></script>
 @stop
 <!--/ END PAGE CONTENT -->
+@endverbatim

@@ -6,10 +6,16 @@
  * Time: 下午9:45
  */
 
-namespace app\Paladin\Generator;
+namespace App\Paladin\Generator;
 
 
 trait hasSchema
 {
+
+//    protected $schema = [];
+
+    public function getSchema() {
+        return $this->schema;
+    }
 
 }

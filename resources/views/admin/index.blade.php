@@ -20,6 +20,7 @@
             <pvc-data-column-action action="/admin/{$model.id}" title="操作" width="20%">
                 <pvc-button title="修改" action="/admin/{data.id}/edit" icon="edit" ></pvc-button>
                 <pvc-button title="详情" action="/admin/{data.id}" icon="eye"></pvc-button>
+                <pvc-button title="权限" action="/admin/{data.id}/assign" icon="user-secret"></pvc-button>
             </pvc-data-column-action>
         </pvc-datatable>
     </pvc-panel>

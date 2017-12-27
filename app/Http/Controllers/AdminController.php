@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Model\Admin;
+use App\Model\Permission;
 
 class AdminController extends Controller
 {
@@ -126,5 +127,21 @@ class AdminController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function assign(Request $request, Admin $admin) {
+        if ($request->has('permissions')) {
+            $permissions = $request->input('permissions');
+            $admin->permissions()->saveMany(Permission::find($permissions));
+
+            return redirect('/admin/'.$admin->id);
+        } else {
+
+            return view('admin.assign',[
+                'admin' => $admin,
+                'permissions' => Permission::grouped(),
+                'related' => $admin->permissions->pluck('id')->toArray()
+            ]);
+        }
     }
 }

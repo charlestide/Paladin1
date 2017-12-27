@@ -21,6 +21,9 @@
         <div class="panel-body">
             <slot/>
         </div><!-- /.panel-body -->
+        <div v-if="this.$slots.footer" class="panel-footer" style="text-align: center">
+            <slot name="footer" />
+        </div>
     </div><!-- /.panel -->
 </template>
 

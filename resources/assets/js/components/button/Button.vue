@@ -1,5 +1,5 @@
 <template>
-    <button class="btn rounded" :class="['btn-'+size,'input-group-'+size]" data-container="body">
+    <button class="btn btn-theme rounded" :class="['btn-'+size,'input-group-'+size]" data-container="body" v-on:click="click">
         <i v-if="icon" class="fa" :class="['fa-'+icon]"></i> {{title}}
     </button>
 </template>
@@ -11,7 +11,7 @@
             action: [Function,String],
             size: {
                 type: String,
-                default: "xs",
+                default: "sm",
                 validator: function (value) {
                     return value in {lg:'',sm:'',xs:''};
                 }
@@ -38,6 +38,11 @@
                 };
 
                 this.$parent.addButtonData(button);
+            }
+        },
+        methods: {
+            click: function () {
+                window.href = this.url;
             }
         }
     }

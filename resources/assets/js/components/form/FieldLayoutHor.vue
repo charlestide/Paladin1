@@ -11,7 +11,7 @@
 
 <script>
     export default {
-        name: "pvc-form-left",
+        name: "pvc-field-hor",
         props: {
             required: {
                 type: Boolean,

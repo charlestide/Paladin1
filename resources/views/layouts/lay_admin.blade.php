@@ -32,16 +32,12 @@
         <link href="https://cdn.bootcss.com/dropzone/5.1.1/min/dropzone.min.css" rel="stylesheet">
         <link href="https://cdn.bootcss.com/fuelux/3.16.1/css/fuelux.min.css" rel="stylesheet">
         <link href="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.min.css" rel="stylesheet">
-        <link href="https://cdn.bootcss.com/chosen/1.8.2/chosen.min.css" rel="stylesheet">
+        {{--<link href="https://cdn.bootcss.com/chosen/1.8.2/chosen.min.css" rel="stylesheet">--}}
         <link href="/js/components/gritter/css/jquery.gritter.css" type="text/css" rel="stylesheet">
-        <link href="https://cdn.bootcss.com/select2/4.0.4/css/select2.min.css" rel="stylesheet">
+        {{--<link href="https://cdn.bootcss.com/select2/4.0.4/css/select2.min.css" rel="stylesheet">--}}
 
-        <link href="/css/admin/reset.css" type="text/css" rel="stylesheet">
-        <link href="/css/admin/layout.css" rel="stylesheet">
-        <link href="/css/admin/components.css" rel="stylesheet">
-        <link href="/css/admin/plugins.css" rel="stylesheet">
-        <link href="/css/admin/layout.css" rel="stylesheet">
-        <link href="{{asset('/css/admin/themes/laravel.theme.css')}}" id="laravel" rel="stylesheet">
+        <link href="{{asset('/css/vendor/blankon/apps.css')}}" rel="stylesheet">
+        <link href="{{asset('/css/vendor/blankon/apps.css')}}" id="theme" rel="stylesheet">
 
         <!--
             'global/plugins/bower_components/bootstrap-session-timeout/dist/bootstrap-session-timeout.min.js'
@@ -61,7 +57,7 @@
         <script src="https://cdn.bootcss.com/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
         <script src="https://cdn.bootcss.com/jquery-sparklines/2.1.2/jquery.sparkline.min.js"></script>
         <script src="https://cdn.bootcss.com/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-        <script src="https://cdn.bootcss.com/ion-sound/3.0.7/js/ion.sound.min.js"></script>
+        <script src="https://cdn.bootcss.com/soundmanager2/2.97a.20170601/script/soundmanager2-nodebug-jsmin.js"></script>
         <script src="https://cdn.bootcss.com/bootbox.js/4.4.0/bootbox.min.js"></script>
         <script src="https://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
         <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
@@ -71,24 +67,18 @@
         <script src="https://cdn.bootcss.com/flot/0.8.3/jquery.flot.resize.min.js"></script>
         <script src="https://cdn.bootcss.com/flot/0.8.3/jquery.flot.pie.min.js"></script>
         <script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
-        <script src="https://cdn.bootcss.com/pleasejs/0.4.2/Please.min.js"></script>
+        {{--<script src="https://cdn.bootcss.com/pleasejs/0.4.2/Please.min.js"></script>--}}
         <script src="https://cdn.bootcss.com/skycons/1396634940/skycons.min.js"></script>
         <script src="https://cdn.bootcss.com/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
         <script src="https://cdn.bootcss.com/fuelux/3.16.1/js/fuelux.min.js"></script>
         <script src="https://cdn.bootcss.com/moment.js/2.18.1/moment.min.js"></script>
         <script src="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.min.js"></script>
-        <script src="https://cdn.bootcss.com/select2/4.0.4/js/select2.min.js"></script>
-        <script src="https://cdn.bootcss.com/select2/4.0.4/js/i18n/zh-CN.js"></script>
-        <script src="https://cdn.bootcss.com/chosen/1.8.2/chosen.jquery.min.js"></script>
         <script src="https://cdn.bootcss.com/jquery-mockjax/1.6.2/jquery.mockjax.min.js"></script>
         <script src="https://cdn.bootcss.com/moment.js/2.18.1/locale/zh-cn.js"></script>
         <script src="https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"></script>
         {{--<script src="/js/components/echarts/themes/macarons.js"></script>--}}
         {{--<script src="/js/components/gritter/js/jquery.gritter.min.js"></script>--}}
         <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js"></script>
-
-
-
 
     <!--/ END PAGE LEVEL SCRIPTS -->
 
@@ -173,35 +163,34 @@
             	@include('layouts._sidebar_right')
             <!--/ END SIDEBAR RIGHT -->
 
-	    <!-- START @ALL MODALS --> 	
-	    @if((Request::is('component','component/modals')))	
-	    	@include('component._all-modals')
-	    @endif
-	    <!--/ END ALL MODALS -->
-
-
-
         </section><!-- /#wrapper -->
         <!--/ END WRAPPER -->
 
         <script>
             $(function(){
-               console.log('document loaded');
+                $.ajaxSetup({cache:true});
             });
         </script>
 
         <script type="text/javascript" src="{{asset('/js/app.js')}}"></script>
-        {{--<script type="text/javascript" scr="/blankon/common/form.js"></script>--}}
-        {{--<script type="text/javascript" src="/blankon/admin/js/demo.js"></script>--}}
-        {{--<script type="text/javascript" src="/js/modules/chart.echarts.js"></script>--}}
+        @stack('scripts')
+        <script type="text/javascript">
+            if (typeof(content) === 'undefined') {
+                const content = new Vue({
+                    el: '#page-content',
+                });
+            }
+        </script>
 
-        <script type="text/javascript" src="{{asset('/js/admin.js')}}"></script>
 
         <!-- START @BACK TOP -->
         <div id="back-top" class="animated pulse circle">
             <i class="fa fa-angle-up"></i>
         </div><!-- /#back-top -->
         <!--/ END BACK TOP -->
+
+        <script type="text/javascript" src="/js/vendor/blankon/apps.js"></script>
+
 
         @if (Session::has('messageInfo'))
             <p role="message" class="display-hide" title="{{Session::get('messageInfo')['title']}}" text="{{Session::get('messageInfo.text')}}"></p>

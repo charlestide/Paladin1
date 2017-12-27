@@ -9,7 +9,7 @@
 
 <script>
     export default {
-        name: "pvc-form-top",
+        name: "pvc-field-ver",
         props: {
             required: {
                 type: Boolean,

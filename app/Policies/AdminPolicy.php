@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use ;
 use App\Model\Admin;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -10,14 +9,21 @@ class AdminPolicy
 {
     use HandlesAuthorization;
 
+    public function before(Admin $admin,$ablility)
+    {
+        if ($admin->isSuperAdmin()) {
+            return true;
+        }
+    }
+
     /**
      * Determine whether the user can view the admin.
      *
-     * @param  \  $user
+     * @param  \App\Model\Admin  $user
      * @param  \App\Model\Admin  $admin
      * @return mixed
      */
-    public function view( $user, Admin $admin)
+    public function view(Admin $user, Admin $admin)
     {
         //
     }
@@ -25,10 +31,10 @@ class AdminPolicy
     /**
      * Determine whether the user can create admins.
      *
-     * @param  \  $user
+     * @param  \App\Model\Admin  $user
      * @return mixed
      */
-    public function create( $user)
+    public function create(Admin $user)
     {
         //
     }
@@ -36,11 +42,11 @@ class AdminPolicy
     /**
      * Determine whether the user can update the admin.
      *
-     * @param  \  $user
+     * @param  \App\Model\Admin  $user
      * @param  \App\Model\Admin  $admin
      * @return mixed
      */
-    public function update( $user, Admin $admin)
+    public function update(Admin $user, Admin $admin)
     {
         //
     }
@@ -48,11 +54,11 @@ class AdminPolicy
     /**
      * Determine whether the user can delete the admin.
      *
-     * @param  \  $user
+     * @param  \App\Model\Admin  $user
      * @param  \App\Model\Admin  $admin
      * @return mixed
      */
-    public function delete( $user, Admin $admin)
+    public function delete(\App\Model\Admin $user, Admin $admin)
     {
         //
     }

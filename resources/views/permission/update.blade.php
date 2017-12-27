@@ -1,59 +1,39 @@
 @extends('layouts.lay_admin')
 
-
-<!-- START @PAGE CONTENT -->
+    <!-- START @PAGE CONTENT -->
 @section('content')
 
 <section id="page-content">
 
-    <saber-content-header title="权限管理" summary="在此管理系统权限" icon="lock">
-        <breadcrumb url="#">系统管理</breadcrumb>
-        <breadcrumb url="{{url('permission')}}">权限</breadcrumb>
-    </saber-content-header>
+    <pvc-bread-crumb icon="user" title="修改权限" summary="在这里你可以修改权限">
+        <pvc-bread-crumb-item title="权限" url="/permission"></pvc-bread-crumb-item>
+    </pvc-bread-crumb>
 
     <!-- Start body content -->
     <div class="body-content animated fadeIn">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- Start sample validation 1-->
-                <saber-update-panel name="权限" token="{{ csrf_token() }}" action="{{url('/permission')}}" backUrl="{{url('permission')}}">
-                    <saber-textfield label="名称" name="permission[display_name]" required value="{{$permission->display_name }}" ></saber-textfield>
-                    <saber-textfield label="标识" name="permission[name]" required value="{{$permission->name}}" ></saber-textfield>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">对象 <span class="asterisk">*</span></label>
-                        <div class="col-sm-7">
-                            {{--<select class="form-control" placeholder="请选择一个对象，请在以下权限中选择">--}}
-                                {{--@foreach($models as $modelName => $tableName)--}}
-                                    {{--<option>{{$modelName}}</option>--}}
-                                {{--@endforeach--}}
-                            {{--</select>--}}
-                            <saber-radio-group name="actions" nolabel="true">
-                                <option value="create">创建</option>
-                                <option value="edit" checked>修改</option>
-                                <option value="show">查看</option>
-                                <option value="delete">删除</option>
-                            </saber-radio-group>
-                        </div>
-                    </div>
-                    <saber-textarea label="描述" name="permission[description]" value="{{ $permission->description }}" ></saber-textarea>
-                    <saber-label label="创建于" value="{{$permission->created_at }}" ></saber-label>
-                    <saber-label label="更新于" value="{{$permission->updated_at }}" ></saber-label>
-                    <input type="hidden" name="permission[id]" value="{{$permission->id}}">
-                </saber-update-panel>
+        <pvc-panel title="#{{$permission->id}}" :closeable="true">
+            <pvc-form method="post" action=" {{url('/permission/'.$permission->id)}}" token="{{csrf_token()}}" :validation="true">
 
-                <!--/ End sample validation 1 -->
+                    <pvc-hidden-field slot="hidden" name="权限[id]" value="{{$permission->id}}"></pvc-hidden-field>
+                    {{method_field('PUT')}}
 
-            </div>
-        </div><!-- /.row -->
+                                                                                                    <pvc-textfield name="permission[name]" value="{{$permission->name}}" label="标识"></pvc-textfield>
+                                                                                <pvc-textfield name="permission[description]" value="{{$permission->description}}" label="描述"></pvc-textfield>
+                                                                                                                                            <button type="submit" class="btn btn-theme" slot="footer">保存</button>
+                    <pvc-link-button href="{{url('/permission')}}" slot="footer" slot="footer" title="返回列表"></pvc-link-button>
+            </pvc-form>
+        </pvc-panel>
 
     </div><!-- /.body-content -->
     <!--/ End body content -->
+
 
     <!-- Start footer content -->
     @include('layouts._footer-admin')
     <!--/ End footer content -->
 
-
 </section><!-- /#page-content -->
+<script type="text/javascript" src="/js/form.js"></script>
 @stop
 <!--/ END PAGE CONTENT -->
+

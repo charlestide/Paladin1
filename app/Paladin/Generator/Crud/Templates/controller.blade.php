@@ -1,12 +1,10 @@
-<?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Model\Admin;
+use {{get_class($model)}};
 
-class AdminController extends Controller
+class {{$ModelName}}Controller extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,17 +16,12 @@ class AdminController extends Controller
 
         if ($request->input('format') == 'json') {
 
-            $admins = Admin::query();
+            ${{$modelName}}s = {{$ModelName}}::query();
 
-            return Datatables::of($admins)
-                ->addColumn('action', function ( $admin) {
-                    return '<a href="'.url('/admin/'.$admin->id).'" class="btn btn-xs bg-color-blueDark txt-color-white">'
-                        . '<i class="fa fa-detail"></i> 查看</a>';
-                })
-                ->make(true);
+            return Datatables::of(${{$modelName}}s)->make(true);
         }
 
-        return view('admin/index');
+        return view('{{$modelName}}/index');
     }
 
     /**
@@ -38,7 +31,8 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('admin/create');
+
+        return view('{{$modelName}}/create');
     }
 
     /**
@@ -49,81 +43,71 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->has('admin')) {
+        if ($request->has('{{$modelName}}')) {
 
-            $adminData = $request->input('admin');
+            ${{$modelName}}Data = $request->input('{{$modelName}}');
 
-            $admin = new Admin($adminData);
+            ${{$modelName}} = new {{$ModelName}}(${{$modelName}}Data);
 
-            if (isset($adminData['password']) and !empty($adminData['password']) ) {
-                $admin->password = $adminData['password'];
-            }
+            ${{$modelName}}->save();
 
-            $admin->save();
-
-            return redirect('/admin/'.$admin->id)->with('messageInfo',['title' => '保存管理员', 'text' => '保存成功']);
+            return redirect('/{{$modelName}}/'.${{$modelName}}->id)->with('messageInfo',['title' => '保存信息', 'text' => '保存成功']);
         } else {
-//            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
-            die('错误的提交');
+            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  Admin  $admin
+     * @param  {{$ModelName}}  ${{$modelName}}
      * @return \Illuminate\Http\Response
      */
-    public function show(Admin $admin)
+    public function show({{$ModelName}} ${{$modelName}})
     {
-        return view('admin.show',['admin' => $admin]);
+        return view('{{$modelName}}.show',['{{$modelName}}' => ${{$modelName}}]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Admin  $admin
+     * @param  {{$ModelName}}  ${{$modelName}}
      * @return \Illuminate\Http\Response
      */
-    public function edit(Admin $admin)
+    public function edit({{$ModelName}} ${{$modelName}})
     {
-        return view('admin/update',['admin' => $admin]);
+        return view('{{$modelName}}/update',['{{$modelName}}' => ${{$modelName}}]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  Admin  $admin
+     * @param  {{$ModelName}}  ${{$modelName}}
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Admin $admin)
+    public function update(Request $request, {{$ModelName}} ${{$modelName}})
     {
-        if ($request->has('admin') and $admin->id > 1) {
+        if ($request->has('{{$modelName}}')) {
 
-            $adminData = $request->input('admin');
-            $admin->fill($adminData);
+            ${{$modelName}}Data = $request->input('{{$modelName}}');
+            ${{$modelName}}->fill(${{$modelName}}Data);
 
-            if ($adminData['password']) {
-                $admin->password = $adminData['password'];
-            }
+            ${{$modelName}}->save();
 
-            $admin->save();
-
-            return redirect('/admin/'.$admin->id)->with('messageInfo',['title' => '保存管理员', 'text' => '保存成功']);
+            return redirect('/{{$modelName}}/'.${{$modelName}}->id)->with('messageInfo',['title' => '保存信息', 'text' => '保存成功']);
         } else {
-//            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
-            die('错误的提交');
+            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  {{$ModelName}}  ${{$modelName}}
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy({{$ModelName}} ${{$modelName}})
     {
         //
     }

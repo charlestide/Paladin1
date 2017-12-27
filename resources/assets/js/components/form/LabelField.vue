@@ -1,25 +1,17 @@
 <template>
-    <div class="form-group">
-        <label class="control-label" :class="{'col-sm-3': labelPosition === 'left'}">{{label}} </label>
-        <div :class="{'col-sm-7': labelPosition === 'left'}">
-            {{value}}
-        </div>
-    </div><!-- /.form-group -->
+    <pvc-field-layout :layout="layout" :label="label">
+            <div class="form-control">{{value}}</div>
+    </pvc-field-layout>
 </template>
 
 <script>
+    import {layoutMixin} from "./formMixin";
+
     export default {
+        mixins: [layoutMixin],
         name: "pvc-label-field",
         props: {
-            label: String,
-            value: String,
-            labelPosition: {
-                type: String,
-                validator: function (value) {
-                    return value in {left:'',top:''};
-                },
-                default: 'left'
-            }
+            value: String
         }
     }
 </script>

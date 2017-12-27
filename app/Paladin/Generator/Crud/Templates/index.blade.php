@@ -11,11 +11,12 @@
     </pvc-bread-crumb>
 
     <pvc-panel>
-        <pvc-link-button slot="head-right" target="_blank" href="@pf(url('/modelName/create'))" title="新增" icon="plus-square" class="btn-theme" size="xs"></pvc-link-button>
+        @verbatim
+        <pvc-link-button slot="head-right" target="_blank" href="<?php echo  "{{url('/$modelName/create')}}" ?>" title="新增" icon="plus-square" class="btn-theme" size="xs"></pvc-link-button>
+        @endverbatim
         <pvc-datatable source="/{{$modelName}}?format=json">
-            <pvc-data-column data="{{$primaryKey}}" title="ID" width="10%"></pvc-data-column>
             @foreach($fields as $fieldName => $field)
-            <pvc-data-column data="{{$fieldName}}" title="{{$field['label']}}" default="无数据"></pvc-data-column>
+            <pvc-data-column data="{{$fieldName}}" title="{{$field['displayName']}}" default="无数据"></pvc-data-column>
             @endforeach
             <pvc-data-column-action title="操作" width="20%">
                 <pvc-button title="修改" action="/{{$modelName}}/{data.id}/edit" icon="edit" ></pvc-button>

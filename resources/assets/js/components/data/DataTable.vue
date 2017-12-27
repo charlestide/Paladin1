@@ -11,6 +11,9 @@
 </template>
 
 <script>
+
+    import RemoteLoader from '../../remoteLoader';
+
     export default {
         name: "pvc-datatable",
         props: {
@@ -45,7 +48,8 @@
                     },
                     ajax: this.source,
                     columns: this.columns,
-                    className: ''
+                    className: '',
+                    pageType: 'simple_incremental_bootstrap'
                 },self = this;
 
                 config.className += ' ' + this.alignmentValue;
@@ -82,16 +86,16 @@
                 this.columns.push(columnData);
             }
         },
-        mounted: function () {
-            $.getScript('https://cdn.bootcss.com/datatables/1.10.16/js/jquery.dataTables.min.js',function () {
-                $.getScript('https://cdn.bootcss.com/datatables/1.10.16/js/dataTables.bootstrap.min.js');
-            });
 
+        beforeMount: function () {
+            RemoteLoader.loadJs('/js/vendor/datatables/datatables.min.js');
+        },
+
+        mounted: function () {
             let self = this;
 
             $(function () {
                 self.datatable = $(self.$el).DataTable(self.dataTableConfig);
-                // console.log(self.dataTableConfig);
             })
         }
     }
@@ -99,5 +103,6 @@
 
 <style scoped>
     @import "https://cdn.bootcss.com/datatables/1.10.16/css/dataTables.bootstrap.min.css";
+    @import "/js/vendor/datatables/datatables.min.css";
 
 </style>
