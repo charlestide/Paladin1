@@ -16,11 +16,11 @@
 </template>
 
 <script>
-    import {layoutMixin,valueMixin,validateMixin,styleMixin} from "./formMixin";
+    import {layoutMixin,valueMixin,validateMixin} from "./formMixin";
 
     export default {
         name: "pvc-textarea",
-        mixins: [layoutMixin,valueMixin,validateMixin,styleMixin],
+        mixins: [layoutMixin,valueMixin,validateMixin],
         props: {
             rows: Number,
             cols: Number

@@ -15,14 +15,17 @@
             checked: {
                 type: Boolean,
                 default: false
+            },
+            type: {
+                type: String,
+                validate(value) {
+                    return value in {checkbox:'',radio:''}
+                }
             }
         },
         computed: {
             parentName: function () {
                 return this.$parent.name;
-            },
-            type: function () {
-                return this.$parent.type;
             },
             containerClass: function () {
                 switch (this.type) {
@@ -37,8 +40,6 @@
             id: function () {
                 return this.parentName + Math.random();
             }
-        },
-        mounted: function () {
         }
     }
 </script>

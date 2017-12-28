@@ -2,7 +2,14 @@
 
 export let IconMixin = {
     props: {
-        icon: String
+        icon: String,
+        iconPos: {
+            type: String,
+            default: 'left',
+            validate: function(value) {
+                return value in {left:'',right:''}
+            }
+        }
     },
     computed: {
         iconClass: function () {

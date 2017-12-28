@@ -1,26 +1,57 @@
 <template>
     <pvc-field-layout v-bind="layoutProps">
+        <span v-if="$slots.left" class="input-group-addon">
+            <slot name="left"/>
+        </span>
+        <span v-if="checkbox" class="input-group-addon">
+            <div class="ckbox ckbox-theme">
+                <input :id="checkboxId" :checked="inputEnabled" type="checkbox" v-on:click.native="handlerChecked" />
+                <label :for="checkboxId"></label>
+            </div>
+        </span>
+        <div v-if="selectbox" class="input-group-btn">
+            <button type="button" class="btn btn-theme" tabindex="-1">{{value}}</button>
+            <button type="button" class="btn btn-theme dropdown-toggle" data-toggle="dropdown" tabindex="-1" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li v-for="(option,index) in items" @click="handlerSelectOption"  >
+                    <a @click="handlerSelectOption" href="javascript:void(0)" :index="index">{{option.label}}</a>
+                </li>
+                <slot/>
+            </ul>
+        </div>
+        <span v-if="icon==='left'" class="input-group-addon"><i :class="iconClass"></i></span>
             <input
-                    class="form-control"
-                    :placeholder="placeholder"
-                    :name="name"
-                    :type="type"
-                    :required="required"
-                    :value="value"
-
-                    v-bind="validationProps"
+                class="form-control"
+                :placeholder="placeholder"
+                :name="name"
+                :type="type"
+                :required="required"
+                :value="textValue"
+                :disabled="!inputEnabled"
+                v-bind="validationProps"
             >
-            <span v-if="icon" class="input-group-addon"><i class="fa" :class="'fa-' + icon"></i></span>
+        <span v-if="icon==='left'" class="input-group-addon"><i :class="iconClass"></i></span>
+        <span v-if="$slots.right" class="input-group-addon">
+            <slot name="right"/>
+        </span>
     </pvc-field-layout>
 </template>
 
 <script>
-    import {layoutMixin,valueMixin,validateMixin,styleMixin} from "./formMixin";
-
+    import {layoutMixin,valueMixin,validateMixin,formMixin} from "./formMixin";
+    import {IconMixin} from "../common/IconMixin";
+    import {ItemListMixin} from "../common/ItemListMixin";
 
     export default {
         name: "pvc-textfield",
-        mixins: [layoutMixin,valueMixin,validateMixin,styleMixin],
+        mixins: [layoutMixin,valueMixin,validateMixin,IconMixin,formMixin,ItemListMixin],
+        data() {
+            return {
+                textValue: this.value
+            }
+        },
         props: {
             size: {
                 type: String,
@@ -36,7 +67,24 @@
                 },
                 default:'text'
             },
+            checkbox: Boolean,
+            selectbox: [Boolean,Array]
         },
+        computed: {
+            checkboxId() {
+                return Math.random();
+            }
+        },
+        methods: {
+            handlerChecked() {
+                this.inputEnabled = !this.inputEnabled;
+                this.$emit('check',this.inputEnabled);
+            },
+            handlerSelectOption(event) {
+                let index = $(event.target).attr('index');
+                this.textValue = this.items[index].value;
+            }
+        }
     }
 </script>
 

@@ -103,6 +103,7 @@
 
                 //数据
                 config.source = this.data ? this.data : this.childNodes;
+                console.log(this.childNodes);
 
                 //是否启用table模式，即调用table扩展
                 if (!_.isEmpty(this.table)) {
@@ -128,11 +129,10 @@
                         });
 
                         if (_.has(node.data,'$action')) {
-                            console.log(node.data.$action);
                             node.data.$action.forEach(function (action) {
                                 let columnIndex = action.column;
                                 if (columnIndex >= 0 && columnIndex < self.columns.length) {
-                                    console.log(action.el);
+                                    $tdList.eq(columnIndex).append($('<span> </span>'));
                                     $tdList.eq(columnIndex).append($(action.el));
                                 }
                             });
@@ -204,50 +204,4 @@
 
 <style scoped>
     @import "/js/vendor/fancytree/ui.fancytree.css";
-</style>
-
-<style>
-    /*span.fancytree-icon {*/
-        /*vertical-align: middle;*/
-    /*}*/
-
-    /*ul.fancytree-container {*/
-        /*border: none;*/
-        /*!*font-size: 12px;*!*/
-    /*}*/
-
-    /*.fancytree {*/
-        /*border: 1px solid #DDD;*/
-    /*}*/
-
-    /*span.fancytree-active .fancytree-title {*/
-        /*background-color: #f4645f;*/
-        /*border: none;*/
-        /*width: 96%;*/
-        /*color: #fff;*/
-        /*vertical-align: middle;*/
-    /*}*/
-
-    /*span.fancytree-node.fancytree-active {*/
-        /*background: none;*/
-        /*color: #fff;*/
-        /*vertical-align: middle;*/
-    /*}*/
-
-    /*.fancytree-container.fancytree-treefocus span.fancytree-node.fancytree-active {*/
-        /*background: none;*/
-        /*border: none;*/
-        /*vertical-align: middle;*/
-    /*}*/
-
-    /*span.fancytree-node.fancytree-active.fancytree-focesed {*/
-        /*background: none;*/
-        /*color: #fff;*/
-        /*vertical-align: middle;*/
-    /*}*/
-
-    /*span.fancytree-title {*/
-        /*vertical-align: middle;*/
-        /*color: #999;*/
-    /*}*/
 </style>

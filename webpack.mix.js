@@ -14,6 +14,8 @@ let mix = require('laravel-mix');
 mix.js('resources/assets/js/app.js', 'public/js')
     .sass('resources/assets/sass/app.scss', 'public/css')
 
+    .js('resources/assets/js/form.js','public/js')
+
     .scripts([
         'resources/assets/js/vendor/blankon/apps.js',
         'resources/assets/js/vendor/blankon/demo.js',

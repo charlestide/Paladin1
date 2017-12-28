@@ -27,7 +27,7 @@ Vue.component('pvc-panel', require('./components/layout/Panel.vue'));
 Vue.component('pvc-jstree', require('./components/data/Jstree.vue'));
 Vue.component('pvc-fancytree', require('./components/data/Fancytree.vue'));
 Vue.component('pvc-tree-node', require('./components/data/TreeNode.vue'));
-// Vue.component('pvc-tree-node-column', require('./components/data/TreeNodeColumn.vue'));
+Vue.component('pvc-item', require('./components/common/Item.vue'));
 
 
 

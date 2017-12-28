@@ -80,13 +80,19 @@ export let layoutMixin = {
             }
         }
     },
-    styleMixin = {
+    formMixin = {
+        data() {
+            return {
+                inputEnabled: this.enabled,
+                inputValue: this.value
+            }
+        },
         props: {
-            icon: String,
-            round: {
+            enabled: {
                 type: Boolean,
                 default: true
             },
+            value: String
         }
     }
 ;

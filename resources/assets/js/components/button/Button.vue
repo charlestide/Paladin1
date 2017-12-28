@@ -1,14 +1,18 @@
 <template>
-    <button class="btn btn-theme rounded" :class="['btn-'+size,'input-group-'+size]" data-container="body" v-on:click="click">
-        <i v-if="icon" class="fa" :class="['fa-'+icon]"></i> {{title}}
+    <button class="btn btn-theme rounded" :type="type" :class="['btn-'+size,'input-group-'+size]" data-container="body" @click="handlerClick">
+        <i v-if="icon" :class="iconClass"></i> {{title}}
     </button>
 </template>
 
 <script>
+    import {IconMixin} from "../common/IconMixin";
+
     export default {
         name: "pvc-button",
+        mixins: [IconMixin],
         props: {
             action: [Function,String],
+            mixins: [IconMixin],
             size: {
                 type: String,
                 default: "sm",
@@ -23,9 +27,15 @@
                     return value in {_self:'',_blank:''};
                 }
             },
-            url: String,
             title: String,
-            icon: String,
+            type: {
+                type: String,
+                default: 'button'
+            },
+            method: {
+                type: String,
+                default: 'get'
+            }
         },
         mounted: function () {
             if (this.$parent.addButtonData) {
@@ -41,8 +51,30 @@
             }
         },
         methods: {
-            click: function () {
-                window.href = this.url;
+            handlerClick: function (event) {
+                if (_.isFunction(this.action)) {
+                    this.action();
+                } else {
+                    if (this.method.toLowerCase() !== 'get') {
+                        $.ajax({
+                            type: this.method,
+                            url: this.action,
+                            dataType: 'json',
+                            success(data) {
+                                if (data.status) {
+                                    window.location.href = data;
+                                } else {
+                                    alert(data.message);
+                                }
+                            },
+                            error(httpRequest,textStatus) {
+                                alert('Error: ' + textStatus);
+                            }
+                        })
+                    } else {
+                        window.location.href = this.action;
+                    }
+                }
             }
         }
     }

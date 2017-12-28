@@ -1,12 +1,15 @@
 <template>
     <a class="btn rounded" :class="['btn-'+size,'input-group-'+size]" data-container="body" :href="href">
-        <i v-if="icon" class="fa" :class="['fa-'+icon]"></i> {{title}}
+        <i v-if="icon" :class="iconClass"></i> {{title}}
     </a>
 </template>
 
 <script>
+    import {IconMixin} from "../common/IconMixin";
+
     export default {
         name: "pvc-link-button",
+        mixins: [IconMixin],
         props: {
             size: {
                 type: String,

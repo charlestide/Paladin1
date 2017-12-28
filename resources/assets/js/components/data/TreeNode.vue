@@ -36,6 +36,8 @@
                 if (this.expanded) {
                     result += ' '+this.expanded;
                 }
+
+                return result;
             },
             columns() {
                 return this.$parent.columns;
@@ -62,6 +64,7 @@
                     });
                 }
 
+                //增加action内容，比如修改按钮
                 if (this.$slots.action) {
                     let actionSlot = this.$slots.action;
                     node.$action = [];
@@ -71,9 +74,9 @@
                             column: actionSlot[i].elm.attributes.column ? $(actionSlot[i].elm).attr('column') : 0
                         });
                     }
-
-                    console.log(this.title,node);
                 }
+
+                console.log(node.title,node.expanded);
 
                 this.$parent.addChild(node);
             }

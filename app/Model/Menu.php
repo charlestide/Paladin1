@@ -32,4 +32,8 @@ class Menu extends Model
         return $this->hasMany('App\Model\Menu','parent_id');
     }
 
+    public function parent() {
+        return $this->belongsTo('App\Model\Menu','parent_id');
+    }
+
 }

@@ -109,6 +109,17 @@ class {{$ModelName}}Controller extends Controller
      */
     public function destroy({{$ModelName}} ${{$modelName}})
     {
-        //
+        try {
+            $menu->delete();
+            return redirect()->with([
+                'title' => '删除信息',
+                'text' => '删除成功',
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'title' => '删除信息',
+                'text' => '删除失败: '. $e->getMessage(),
+            ]);
+        }
     }
 }

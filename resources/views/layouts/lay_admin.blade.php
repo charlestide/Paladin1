@@ -33,21 +33,11 @@
         <link href="https://cdn.bootcss.com/fuelux/3.16.1/css/fuelux.min.css" rel="stylesheet">
         <link href="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.min.css" rel="stylesheet">
         {{--<link href="https://cdn.bootcss.com/chosen/1.8.2/chosen.min.css" rel="stylesheet">--}}
-        <link href="/js/components/gritter/css/jquery.gritter.css" type="text/css" rel="stylesheet">
-        {{--<link href="https://cdn.bootcss.com/select2/4.0.4/css/select2.min.css" rel="stylesheet">--}}
+        <link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" type="text/css" rel="stylesheet">
+        <link href="https://cdn.bootcss.com/select2/4.0.4/css/select2.min.css" rel="stylesheet">
 
         <link href="{{asset('/css/vendor/blankon/apps.css')}}" rel="stylesheet">
-        <link href="{{asset('/css/vendor/blankon/apps.css')}}" id="theme" rel="stylesheet">
-
-        <!--
-            'global/plugins/bower_components/bootstrap-session-timeout/dist/bootstrap-session-timeout.min.js'
-            // 'global/plugins/bower_components/datatables/js/datatables.responsive.js',
-        // 'global/plugins/bower_components/flot/jquery.flot.spline.min.js',
-        // 'global/plugins/bower_components/flot/jquery.flot.tooltip.min.js',
-
-        // 'global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js',
-                   'admin/js/pages/blankon.table.js',
-        -->
+        <link href="{{asset('/css/vendor/blankon/themes/laravel.theme.css')}}" id="theme" rel="stylesheet">
 
         <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
@@ -77,7 +67,7 @@
         <script src="https://cdn.bootcss.com/moment.js/2.18.1/locale/zh-cn.js"></script>
         <script src="https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"></script>
         {{--<script src="/js/components/echarts/themes/macarons.js"></script>--}}
-        {{--<script src="/js/components/gritter/js/jquery.gritter.min.js"></script>--}}
+        <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
         <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js"></script>
 
     <!--/ END PAGE LEVEL SCRIPTS -->
@@ -166,11 +156,9 @@
         </section><!-- /#wrapper -->
         <!--/ END WRAPPER -->
 
-        <script>
-            $(function(){
-                $.ajaxSetup({cache:true});
-            });
-        </script>
+        @if(session('tip'))
+        <div id="tip" status="{{session('tipStatus') ?: 'success'}}" style="display: none;">{{session('tip')}}</div>
+        @endif
 
         <script type="text/javascript" src="{{asset('/js/app.js')}}"></script>
         @stack('scripts')

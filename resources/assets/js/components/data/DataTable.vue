@@ -87,16 +87,14 @@
             }
         },
 
-        beforeMount: function () {
-            RemoteLoader.loadJs('/js/vendor/datatables/datatables.min.js');
-        },
-
         mounted: function () {
             let self = this;
 
-            $(function () {
-                self.datatable = $(self.$el).DataTable(self.dataTableConfig);
-            })
+            RemoteLoader.loadJs('/js/vendor/datatables/datatables.min.js',function () {
+                $(function () {
+                    self.datatable = $(self.$el).DataTable(self.dataTableConfig);
+                })
+            });
         }
     }
 </script>

@@ -14,8 +14,11 @@
 </template>
 
 <script>
+    import {ItemListMixin} from "../common/ItemListMixin";
+
     export default {
         name: "pvc-form",
+        mixins: [ItemListMixin],
         props: {
             token: String,
             validation: {

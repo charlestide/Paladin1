@@ -3,7 +3,9 @@
         <label>{{label}}
             <span v-if="required" class="asterisk">*</span>
         </label>
-        <slot/>
+        <div class="input-group">
+            <slot/>
+        </div>
     </div>
 </template>
 

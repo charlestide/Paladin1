@@ -11,5 +11,19 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected function success($message) {
+        session()->flash('tip',$message);
+        session()->flash('tipStatus','success');
+    }
+
+    protected function error($message) {
+        session()->flash('tip',$message);
+        session()->flash('tipStatus','error');
+    }
+
+    protected function info($message) {
+        session()->flash('tip',$message);
+        session()->flash('tipStatus','info');
+    }
 
 }

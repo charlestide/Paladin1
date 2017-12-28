@@ -15,13 +15,15 @@
     import PvcFieldHor from "./FieldLayoutHor";
     import PvcFieldVer from "./FieldLayoutVer";
     import PvcFieldNone from "./FieldLayoutNone";
+    import {ItemListMixin} from "../common/ItemListMixin";
 
     export default {
         name: "pvc-field-layout",
+        mixins: [ItemListMixin],
         components: {
             PvcFieldVer,
             PvcFieldHor,
-            PvcFieldNone
+            PvcFieldNone,
         },
         props: {
             required: {
@@ -38,7 +40,8 @@
                     return value in {hor:'',ver:'',none:''}
                 }
             }
-        }
+        },
+
     }
 </script>
 
