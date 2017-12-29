@@ -15,6 +15,7 @@
 
 <script>
     import {ItemListMixin} from "../common/ItemListMixin";
+    import RemoteLoader from "../../remoteLoader";
 
     export default {
         name: "pvc-form",
@@ -30,31 +31,30 @@
 
             let self = this;
 
-            $.ajaxSetup({cache:true});
-            $.getScript('https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.min.js',function() {
-                $.getScript('https://cdn.bootcss.com/jquery-validate/1.17.0/localization/messages_zh.min.js',function () {
-                    $.ajaxSetup({cache:false})
+            RemoteLoader.loadJs([
+                'https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.min.js',
+                'https://cdn.bootcss.com/jquery-validate/1.17.0/localization/messages_zh.min.js'
+            ],function () {
+                $(function () {
+                    if (self.validation) {
+                        $(self.$el).validate({
+                            highlight:function(element) {
+                                $(element).parents('.form-group').addClass('has-error has-feedback');
+                            },
+                            unhighlight: function(element) {
+                                $(element).parents('.form-group').removeClass('has-error');
+                            },
+                            success: function (label) {
+                                $(label).parents('.form-group').addClass('has-success').removeClass('has-error');
+                            },
+                            submitHandler: function (form) {
+                                form.submit();
+                            }
+                        });
+                    }
                 });
             });
 
-            $(function () {
-                if (self.validation) {
-                    $(self.$el).validate({
-                        highlight:function(element) {
-                            $(element).parents('.form-group').addClass('has-error has-feedback');
-                        },
-                        unhighlight: function(element) {
-                            $(element).parents('.form-group').removeClass('has-error');
-                        },
-                        success: function (label) {
-                            $(label).parents('.form-group').addClass('has-success').removeClass('has-error');
-                        },
-                        submitHandler: function (form) {
-                            form.submit();
-                        }
-                    });
-                }
-            });
         }
     }
 </script>

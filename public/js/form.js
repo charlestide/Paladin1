@@ -552,8 +552,6 @@ var IconMixin = {
                 } else {
                     iconClass = 'fa fa-' + this.icon;
                 }
-            } else {
-                iconClass = 'fa fa-circle-o';
             }
 
             return iconClass;
@@ -707,7 +705,165 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 7 */,
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * Author: Charles.Tide<charlestide@vip.163.com>
+ * Date: 2017/11/20.
+ */
+
+/* harmony default export */ __webpack_exports__["a"] = (RemoteLoader);
+
+function RemoteLoader() {}
+
+/**
+ * schema配置
+ * @type {object}
+ */
+RemoteLoader.schemaConfig = null;
+
+/**
+ * 被加入require的listener
+ * @type {Array}
+ */
+RemoteLoader.schemas = [];
+
+/**
+ * 加载配置
+ * @param schemaConfigPath
+ */
+RemoteLoader.schema = function (schemaConfigPath) {
+    if (window.XMLHttpRequest) {
+        ajax = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+        ajax = new window.ActiveXObject();
+    } else {
+        console.log("your browser not support AJAX");
+    }
+
+    if (ajax !== null) {
+        ajax.open("GET", schemaConfigPath, true);
+        ajax.send(null);
+        ajax.onreadystatechange = function () {
+            if (ajax.readyState === 4 && ajax.status === 200) {
+                RemoteLoader.schemaConfig = JSON.parse(ajax.responseText);
+
+                RemoteLoader.schemas.forEach(function (schema) {
+                    RemoteLoader.requireOne(schema);
+                });
+            }
+        };
+    }
+};
+
+/**
+ * 将schema加入到待加载列表
+ * @param schema
+ */
+RemoteLoader.require = function (schema) {
+    RemoteLoader.schemas.push(schema);
+};
+
+/**
+ * 加载模块
+ * @param schema
+ */
+RemoteLoader.requireOne = function (schema) {
+    if (RemoteLoader.schemaConfig.hasOwnProperty(schema)) {
+        var sc = this.schemaConfig[schema];
+
+        if (sc.hasOwnProperty('css')) {
+            sc.css.forEach(function (file) {
+                self.loadCss(file);
+            });
+        }
+
+        if (sc.hasOwnProperty('js')) {
+            RemoteLoader.schemaConfig[schema].js.forEach(function (file) {
+                self.loadJs(file);
+            });
+        }
+    }
+};
+
+/**
+ * 加载JS
+ * @param filePath
+ */
+RemoteLoader.loadJs = function (filePath, callback) {
+
+    if (typeof filePath === 'string') {
+        filePath = [filePath];
+    }
+
+    var loadedCount = 0,
+        self = this;
+
+    filePath.forEach(function (itemPath) {
+        self.loadScript(itemPath, function () {
+            loadedCount++;
+
+            if (loadedCount >= filePath.length) {
+                if (typeof callback !== 'undefined') {
+                    callback();
+                }
+            }
+        });
+    });
+};
+
+RemoteLoader.loadScript = function (url, callback) {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    if (typeof callback !== "undefined") {
+        if (script.readyState) {
+            script.onreadystatechange = function () {
+                if (script.readyState === "loaded" || script.readyState === "complete") {
+                    script.onreadystatechange = null;
+                    callback();
+                }
+            };
+        } else {
+            script.onload = function () {
+                callback();
+            };
+        }
+    }
+    script.src = url;
+    document.body.appendChild(script);
+};
+
+/**
+ * 加载CSS
+ * @param filePath
+ */
+RemoteLoader.loadCss = function (filePath) {
+    var linkTag = document.createElement('link');
+    linkTag.href = filePath;
+    linkTag.rel = 'stylesheet';
+    linkTag.type = 'text/css';
+    document.getElementsByTagName('head')[0].appendChild(linkTag);
+};
+
+/**
+ * 为onload事件增加监听
+ * @param listener
+ */
+RemoteLoader.load = function (listener) {
+    var oldonload = window.onload;
+    if (typeof window.onload !== 'function') {
+        window.onload = listener;
+    } else {
+        window.onload = function () {
+            oldonload();
+            listener();
+        };
+    }
+};
+
+/***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1050,6 +1206,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_ItemListMixin__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__remoteLoader__ = __webpack_require__(7);
 //
 //
 //
@@ -1065,6 +1222,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 
@@ -1082,30 +1240,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         var self = this;
 
-        $.ajaxSetup({ cache: true });
-        $.getScript('https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.min.js', function () {
-            $.getScript('https://cdn.bootcss.com/jquery-validate/1.17.0/localization/messages_zh.min.js', function () {
-                $.ajaxSetup({ cache: false });
+        __WEBPACK_IMPORTED_MODULE_1__remoteLoader__["a" /* default */].loadJs(['https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.min.js', 'https://cdn.bootcss.com/jquery-validate/1.17.0/localization/messages_zh.min.js'], function () {
+            $(function () {
+                if (self.validation) {
+                    $(self.$el).validate({
+                        highlight: function highlight(element) {
+                            $(element).parents('.form-group').addClass('has-error has-feedback');
+                        },
+                        unhighlight: function unhighlight(element) {
+                            $(element).parents('.form-group').removeClass('has-error');
+                        },
+                        success: function success(label) {
+                            $(label).parents('.form-group').addClass('has-success').removeClass('has-error');
+                        },
+                        submitHandler: function submitHandler(form) {
+                            form.submit();
+                        }
+                    });
+                }
             });
-        });
-
-        $(function () {
-            if (self.validation) {
-                $(self.$el).validate({
-                    highlight: function highlight(element) {
-                        $(element).parents('.form-group').addClass('has-error has-feedback');
-                    },
-                    unhighlight: function unhighlight(element) {
-                        $(element).parents('.form-group').removeClass('has-error');
-                    },
-                    success: function success(label) {
-                        $(label).parents('.form-group').addClass('has-success').removeClass('has-error');
-                    },
-                    submitHandler: function submitHandler(form) {
-                        form.submit();
-                    }
-                });
-            }
         });
     }
 });
@@ -1480,7 +1633,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -1564,8 +1717,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             default: 'text'
         },
-        checkbox: Boolean,
-        selectbox: [Boolean, Array]
+        checkbox: {
+            type: Boolean,
+            default: false
+        },
+        selectbox: {
+            type: [Boolean, Array],
+            default: false
+        }
     },
     computed: {
         checkboxId: function checkboxId() {
@@ -2105,8 +2264,13 @@ var render = function() {
     "pvc-field-layout",
     _vm._b({}, "pvc-field-layout", _vm.layoutProps, false),
     [
-      _vm.$slots.left
-        ? _c("span", { staticClass: "input-group-addon" }, [_vm._t("left")], 2)
+      this.$slots.left
+        ? _c(
+            "span",
+            { staticClass: "input-group-addon 1" },
+            [_vm._t("left")],
+            2
+          )
         : _vm._e(),
       _vm._v(" "),
       _vm.checkbox
@@ -2176,8 +2340,8 @@ var render = function() {
           ])
         : _vm._e(),
       _vm._v(" "),
-      _vm.iconpos === "left"
-        ? _c("span", { staticClass: "input-group-addon" }, [
+      _vm.icon && _vm.iconpos === "left"
+        ? _c("span", { staticClass: "input-group-addon 1" }, [
             _c("i", { class: _vm.iconClass })
           ])
         : _vm._e(),
@@ -2186,7 +2350,7 @@ var render = function() {
         "input",
         _vm._b(
           {
-            staticClass: "form-control input-lg",
+            staticClass: "form-control",
             attrs: {
               placeholder: _vm.placeholder,
               name: _vm.name,
@@ -2202,13 +2366,13 @@ var render = function() {
         )
       ),
       _vm._v(" "),
-      _vm.iconpos === "right"
+      _vm.icon && _vm.iconpos === "right"
         ? _c("span", { staticClass: "input-group-addon" }, [
             _c("i", { class: _vm.iconClass })
           ])
         : _vm._e(),
       _vm._v(" "),
-      _vm.$slots.right
+      this.$slots.right
         ? _c("span", { staticClass: "input-group-addon" }, [_vm._t("right")], 2)
         : _vm._e()
     ]

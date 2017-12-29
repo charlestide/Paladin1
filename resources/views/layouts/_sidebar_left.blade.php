@@ -21,7 +21,10 @@ START @SIDEBAR LEFT
                 <h4 class="media-heading">
                     <img src="https://placeimg.com/50/50" width="50" height="50">
                     {{__('welcome')}}, <span>{{auth()->user()->name}}</h4>
-                <small>{{auth()->user()->email}}</small>
+                <small>
+                    <i class="fa fa-envelope"></i>
+                    {{auth()->user()->email}}
+                </small>
             </div>
         </div>
     </div><!-- /.sidebar-content -->

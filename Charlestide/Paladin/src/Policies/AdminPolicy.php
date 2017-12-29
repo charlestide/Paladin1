@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Policies;
+namespace Charlestide\Paladin\Policies;
 
-use App\Model\Admin;
+use Charlestide\Paladin\Models\Admin;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Cache;
 
 class AdminPolicy
 {
@@ -20,8 +19,8 @@ class AdminPolicy
     /**
      * Determine whether the user can view the admin.
      *
-     * @param  \App\Model\Admin  $user
-     * @param  \App\Model\Admin  $admin
+     * @param  \Charlestide\Paladin\Models\Admin  $user
+     * @param  \Charlestide\Paladin\Models\Admin  $admin
      * @return mixed
      */
     public function view(Admin $user, Admin $admin)
@@ -32,7 +31,7 @@ class AdminPolicy
     /**
      * Determine whether the user can create admins.
      *
-     * @param  \App\Model\Admin  $user
+     * @param  \Charlestide\Paladin\Models\Admin  $user
      * @return mixed
      */
     public function create(Admin $user)
@@ -43,8 +42,8 @@ class AdminPolicy
     /**
      * Determine whether the user can update the admin.
      *
-     * @param  \App\Model\Admin  $user
-     * @param  \App\Model\Admin  $admin
+     * @param  \Charlestide\Paladin\Models\Admin  $user
+     * @param  \Charlestide\Paladin\Models\Admin  $admin
      * @return mixed
      */
     public function update(Admin $user, Admin $admin)
@@ -55,11 +54,11 @@ class AdminPolicy
     /**
      * Determine whether the user can delete the admin.
      *
-     * @param  \App\Model\Admin  $user
-     * @param  \App\Model\Admin  $admin
+     * @param  \Charlestide\Paladin\Models\Admin  $user
+     * @param  \Charlestide\Paladin\Models\Admin  $admin
      * @return mixed
      */
-    public function delete(\App\Model\Admin $user, Admin $admin)
+    public function delete(\Charlestide\Paladin\Models\Admin $user, Admin $admin)
     {
         //
     }

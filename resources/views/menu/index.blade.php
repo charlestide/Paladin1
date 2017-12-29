@@ -12,7 +12,7 @@
     <pvc-panel>
         <pvc-link-button slot="head-right" target="_blank" href="{{url('/menu/create')}}" title="新增" icon="plus-square" class="btn-theme" size="sm"></pvc-link-button>
         <pvc-fancytree id="tree" :table="[{key:'title',title:'标题'},{key:'url',title:'URL'},{key:'action',title:'操作'}]" :checkbox="true">
-            @foreach(\App\Model\Menu::where('parent_id',0)->get() as $menu)
+            @foreach(\Charlestide\Paladin\Models\Menu::where('parent_id',0)->get() as $menu)
                 <pvc-tree-node icon="{{$menu->icon}}" :expanded="true" title="{{$menu->name}}" url="{{$menu->url}}">
                     <pvc-button action="{{url("/menu/create/$menu->id")}}" title="添加子菜单" icon="plus" slot="action" column="2"></pvc-button>
                     <pvc-button action="{{url("/menu/$menu->id/edit")}}" title="修改" slot="action" icon="edit" column="2"></pvc-button>

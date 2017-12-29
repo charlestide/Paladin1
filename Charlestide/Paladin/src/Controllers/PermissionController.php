@@ -2,18 +2,23 @@
 namespace Charlestide\Paladin\Controllers;
 
 use Charlestide\Paladin\Models\Permission;
+use Charlestide\Paladin\Services\AuthService;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
 class PermissionController extends Controller
 {
+
+    protected $authModel = Permission::class;
+
     /**
      * Display a listing of the resource.
      *
      * @return  \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request,AuthService $authService)
     {
+        $authService::detectPermissions();
 
         if ($request->input('format') == 'json') {
 

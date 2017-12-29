@@ -10,6 +10,9 @@ use Yajra\DataTables\DataTables;
 
 class AdminController extends Controller
 {
+
+    protected $authModel = Admin::class;
+
     /**
      * Display a listing of the resource.
      *
@@ -51,7 +54,6 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('view',Admin::class);
         if ($request->has('admin')) {
 
             $adminData = $request->input('admin');
@@ -79,7 +81,6 @@ class AdminController extends Controller
      */
     public function show(Admin $admin)
     {
-        $this->authorize('view',$admin);
         return view('admin.show',['admin' => $admin]);
     }
 
@@ -149,11 +150,11 @@ class AdminController extends Controller
     }
 
     public function role(Request $request,Admin$admin) {
-        if ($request->has('roles')) {
+        if ($request->has('roles') and $request->isMethod('post')) {
             $roles = $request->input('roles');
             $admin->roles()->saveMany(Role::find($roles));
 
-            return redirect('/admin/'.$admin->id);
+            return redirect('/admin/'.$admin->id.'/role');
         } else {
 
             return view('admin.role',[

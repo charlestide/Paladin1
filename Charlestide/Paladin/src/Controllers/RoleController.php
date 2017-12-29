@@ -8,6 +8,9 @@ use Charlestide\Paladin\Models\Role;
 
 class RoleController extends Controller
 {
+
+    protected $authModel = Role::class;
+
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +18,8 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
+
+//        $this->authorize('list',Role::class);
 
         if ($request->input('format') == 'json') {
 
@@ -33,6 +38,7 @@ class RoleController extends Controller
      */
     public function create()
     {
+        $this->authorize('create',Role::class);
 
         return view('role/create');
     }
@@ -45,6 +51,8 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create',Role::class);
+
         if ($request->has('role')) {
 
             $roleData = $request->input('role');
@@ -67,6 +75,8 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
+        $this->authorize('view',$role);
+
         return view('role.show',['role' => $role]);
     }
 
@@ -78,6 +88,8 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        $this->authorize('update',$role);
+
         return view('role/update',['role' => $role]);
     }
 
@@ -90,6 +102,8 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        $this->authorize('update',$role);
+
         if ($request->has('role')) {
 
             $roleData = $request->input('role');
@@ -111,10 +125,20 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        $this->authorize('delete',$role);
+
     }
 
+    /**
+     * @param Request $request
+     * @param Role $role
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     */
     public function assign(Request $request, Role $role) {
+
+//        $this->authorize('assign',$role);
+
+
         if ($request->has('permissions')) {
             $permissions = $request->input('permissions');
             $role->permissions()->saveMany(Permission::find($permissions));

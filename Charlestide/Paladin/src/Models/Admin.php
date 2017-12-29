@@ -43,10 +43,14 @@ class Admin extends Authenticatable
      * @return \Illuminate\Support\Collection
      */
     public function allPermissions() {
-        return Cache::remember("admin_$this->id_permissions",1,function () {
-            $adminPermissions = $this->permissions()->pluck('name');
-            $rolePermissions = $this->roles->permissions()->pluck('name');
-            return $adminPermissions->merge($rolePermissions);
+        $self = $this;
+        return Cache::remember("admin_{$this->id}_permissions",1,function () use ($self) {
+            $adminPermissions = $self->permissions()->pluck('name');
+            foreach ($self->roles as $role) {
+                $rolePermissions = $role->permissions;
+                $adminPermissions = $adminPermissions->merge($rolePermissions);
+            }
+            return $adminPermissions;
         });
     }
 

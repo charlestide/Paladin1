@@ -20,9 +20,9 @@ class PermissionTableSeeder extends Seeder
      */
     public function run()
     {
-        $this->createCrud('admin','管理员');
-        $this->createCrud('permission','权限');
-        $this->createCrud('role','角色');
+//        $this->createCrud('admin','管理员');
+//        $this->createCrud('permission','权限');
+//        $this->createCrud('role','角色');
     }
 
     private function createCrud($modelName,$displayName = null) {

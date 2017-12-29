@@ -1,6 +1,6 @@
 <template>
     <pvc-field-layout v-bind="layoutProps">
-        <span v-if="$slots.left" class="input-group-addon">
+        <span v-if="this.$slots.left" class="input-group-addon 1">
             <slot name="left"/>
         </span>
         <span v-if="checkbox" class="input-group-addon">
@@ -21,9 +21,9 @@
                 <slot/>
             </ul>
         </div>
-        <span v-if="iconpos==='left'" class="input-group-addon"><i :class="iconClass"></i></span>
+        <span v-if="icon && iconpos==='left'" class="input-group-addon 1"><i :class="iconClass"></i></span>
             <input
-                class="form-control input-lg"
+                class="form-control"
                 :placeholder="placeholder"
                 :name="name"
                 :type="type"
@@ -32,8 +32,8 @@
                 :disabled="!inputEnabled"
                 v-bind="validationProps"
             >
-        <span v-if="iconpos==='right'" class="input-group-addon"><i :class="iconClass"></i></span>
-        <span v-if="$slots.right" class="input-group-addon">
+        <span v-if="icon && iconpos==='right'" class="input-group-addon"><i :class="iconClass"></i></span>
+        <span v-if="this.$slots.right" class="input-group-addon">
             <slot name="right"/>
         </span>
     </pvc-field-layout>
@@ -67,8 +67,14 @@
                 },
                 default:'text'
             },
-            checkbox: Boolean,
-            selectbox: [Boolean,Array]
+            checkbox: {
+                type: Boolean,
+                default: false
+            },
+            selectbox: {
+                type: [Boolean, Array],
+                default: false,
+            }
         },
         computed: {
             checkboxId() {

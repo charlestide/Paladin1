@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Policies;
+namespace Charlestide\Paladin\Policies;
 
-use App\Model\Admin;
-use App\Role;
+use Charlestide\Paladin\Models\Admin;
+use Charlestide\Paladin\Models\Role;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RolePolicy
@@ -20,8 +20,8 @@ class RolePolicy
     /**
      * Determine whether the user can view the role.
      *
-     * @param  \  $user
-     * @param  \App\Role  $role
+     * @param \Charlestide\Paladin\Models\Admin $user
+     * @param  \Charlestide\Paladin\Models\Role  $role
      * @return mixed
      */
     public function view(Admin $user, Role $role)
@@ -32,7 +32,7 @@ class RolePolicy
     /**
      * Determine whether the user can create roles.
      *
-     * @param  \App\Model\Admin $user
+     * @param  \Charlestide\Paladin\Models\Admin $user
      * @return mixed
      */
     public function create(Admin $user)
@@ -43,8 +43,8 @@ class RolePolicy
     /**
      * Determine whether the user can update the role.
      *
-     * @param  \App\Model\Admin $user
-     * @param  \App\Role  $role
+     * @param  \Charlestide\Paladin\Models\Admin $user
+     * @param  \Charlestide\Paladin\Models\Role  $role
      * @return mixed
      */
     public function update(Admin $user, Role $role)
@@ -55,8 +55,8 @@ class RolePolicy
     /**
      * Determine whether the user can delete the role.
      *
-     * @param  \App\Model\Admin $user
-     * @param  \App\Role  $role
+     * @param  \Charlestide\Paladin\Models\Admin $user
+     * @param  \Charlestide\Paladin\Models\Role  $role
      * @return mixed
      */
     public function delete(Admin $user, Role $role)

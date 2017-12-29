@@ -16,10 +16,11 @@ class Paladin
 
     public function __construct()
     {
+
     }
 
-    public static function routes()
+    public static function route()
     {
-        include ('routes.php');
+
     }
 }

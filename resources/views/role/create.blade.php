@@ -14,12 +14,11 @@
 
         <pvc-panel title="创建新角色">
             <pvc-form method="post" action="{{url('/role')}}" token="{{csrf_token()}}" :validation="true">
-                    <pvc-textfield name="role[name]" label="标识"></pvc-textfield>
-                    <pvc-textfield name="role[display_name]" label="显示名称"></pvc-textfield>
-                    <pvc-textfield name="role[description]" label="描述"></pvc-textfield>
-                                                                                            <pvc-textfield name="role[updated_at]" label="更新于"></pvc-textfield>
-                    <button type="submit" class="btn btn-theme" slot="footer">保存</button>
-                    <pvc-link-button href="{{url('/role')}}" slot="footer" title="返回列表"></pvc-link-button>
+                <pvc-textfield name="role[name]" label="标识"></pvc-textfield>
+                <pvc-textfield name="role[display_name]" label="显示名称"></pvc-textfield>
+                <pvc-textfield name="role[description]" label="描述"></pvc-textfield>
+                <button type="submit" class="btn btn-theme" slot="footer">保存</button>
+                <pvc-link-button href="{{url('/role')}}" slot="footer" title="返回列表"></pvc-link-button>
             </pvc-form>
         </pvc-panel>
 

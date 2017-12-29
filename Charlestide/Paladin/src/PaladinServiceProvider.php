@@ -8,6 +8,7 @@
 
 namespace Charlestide\Paladin;
 
+use Charlestide\Paladin\Providers\AuthProvider;
 use Charlestide\Paladin\Providers\RouteProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,5 +25,6 @@ class PaladinServiceProvider extends ServiceProvider
         });
 
         $this->app->register(RouteProvider::class);
+        $this->app->register(AuthProvider::class);
     }
 }

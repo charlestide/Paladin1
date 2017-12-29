@@ -7,6 +7,9 @@ use Charlestide\Paladin\Models\Menu;
 
 class MenuController extends Controller
 {
+
+    protected $authModel = Menu::class;
+
     /**
      * Display a listing of the resource.
      *
@@ -15,11 +18,11 @@ class MenuController extends Controller
     public function index(Request $request)
     {
 
+        $this->authorize('index',Menu::class);
+
         if ($request->input('format') == 'json') {
 
             $menus = Menu::query();
-
-
             return Datatables::of($menus)->make(true);
         }
 
@@ -34,6 +37,9 @@ class MenuController extends Controller
      */
     public function create(Menu $parent)
     {
+        $this->authorize('create',Menu::class);
+
+
         return view('menu/create',[
             'parent' => $parent
         ]);
@@ -47,6 +53,9 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create',Menu::class);
+
+
         if ($request->has('menu')) {
 
             $menuData = $request->input('menu');
@@ -67,8 +76,11 @@ class MenuController extends Controller
      * @param    Menu  $menu
      * @return  \Illuminate\Http\Response
      */
-    public function show(Menu $menu)
+    public function show(Request $request, Menu $menu)
     {
+        $this->authorize('view',$menu);
+
+
         return view('menu.show',['menu' => $menu]);
     }
 

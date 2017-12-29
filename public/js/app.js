@@ -552,8 +552,6 @@ var IconMixin = {
                 } else {
                     iconClass = 'fa fa-' + this.icon;
                 }
-            } else {
-                iconClass = 'fa fa-circle-o';
             }
 
             return iconClass;
