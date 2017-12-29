@@ -4,14 +4,15 @@ namespace App\Policies;
 
 use App\Model\Admin;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Cache;
 
 class AdminPolicy
 {
     use HandlesAuthorization;
 
-    public function before(Admin $admin,$ablility)
+    public function before(Admin $user, $ablility)
     {
-        if ($admin->isSuperAdmin()) {
+        if ($user->isSuperAdmin()) {
             return true;
         }
     }
@@ -25,7 +26,7 @@ class AdminPolicy
      */
     public function view(Admin $user, Admin $admin)
     {
-        //
+        return $user->permissions()->where('name','admin.view')->count();
     }
 
     /**

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePermissionRelationsTable extends Migration
+class CreateRoleAdminRelations extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreatePermissionRelationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('permission_relations', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('permission_id');
-            $table->integer('related_id');
-            $table->string('related_type',200);
+        Schema::create('role_admin_relations', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            $table->increments('id')->unsigned();
+            $table->integer('role_id');
+            $table->integer('admin_id');
+            $table->unique(['role_id','admin_id']);
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreatePermissionRelationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permission_relations');
+        Schema::dropIfExists('role_admin_relations');
     }
 }

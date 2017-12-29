@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Charlestide\Paladin\Controllers;
 
+use Charlestide\Paladin\Models\Role;
+use Charlestide\Paladin\Models\Admin;
+use Charlestide\Paladin\Models\Permission;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Model\Admin;
-use App\Model\Permission;
 
 class AdminController extends Controller
 {
@@ -50,6 +51,7 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('view',Admin::class);
         if ($request->has('admin')) {
 
             $adminData = $request->input('admin');
@@ -77,6 +79,7 @@ class AdminController extends Controller
      */
     public function show(Admin $admin)
     {
+        $this->authorize('view',$admin);
         return view('admin.show',['admin' => $admin]);
     }
 
@@ -141,6 +144,22 @@ class AdminController extends Controller
                 'admin' => $admin,
                 'permissions' => Permission::grouped(),
                 'related' => $admin->permissions->pluck('id')->toArray()
+            ]);
+        }
+    }
+
+    public function role(Request $request,Admin$admin) {
+        if ($request->has('roles')) {
+            $roles = $request->input('roles');
+            $admin->roles()->saveMany(Role::find($roles));
+
+            return redirect('/admin/'.$admin->id);
+        } else {
+
+            return view('admin.role',[
+                'admin' => $admin,
+                'roles' => Role::all(),
+                'related' => $admin->roles->pluck('id')->toArray()
             ]);
         }
     }

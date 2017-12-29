@@ -103,7 +103,6 @@
 
                 //数据
                 config.source = this.data ? this.data : this.childNodes;
-                console.log(this.childNodes);
 
                 //是否启用table模式，即调用table扩展
                 if (!_.isEmpty(this.table)) {

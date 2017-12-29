@@ -67,7 +67,7 @@ return [
     'providers' => [
         'admins' => [
             'driver' => 'eloquent',
-            'model' => 'Admin\Model\Admin',
+            'model' => \Charlestide\Paladin\Models\Admin::class,
         ],
 
         // 'users' => [

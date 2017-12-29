@@ -1,9 +1,9 @@
-<?php 
-namespace App\Http\Controllers;
+<?php
+namespace Charlestide\Paladin\Controllers;
 
+use Charlestide\Paladin\Models\Permission;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Model\Permission;
 
 class PermissionController extends Controller
 {

@@ -17,10 +17,11 @@
             <pvc-data-column data="name" title="名称" width="30%"></pvc-data-column>
             <pvc-data-column data="email" title="Email" width="20%"></pvc-data-column>
             <pvc-data-column data="updated_at" title="更新于" default="从未更新" width="20%"></pvc-data-column>
-            <pvc-data-column-action action="/admin/{$model.id}" title="操作" width="20%>
+            <pvc-data-column-action action="/admin/{$model.id}" title="操作" width="20%">
                 <pvc-button title="修改" action="/admin/{data.id}/edit" icon="edit" ></pvc-button>
                 <pvc-button title="详情" action="/admin/{data.id}" icon="eye"></pvc-button>
                 <pvc-button title="权限" action="/admin/{data.id}/assign" icon="user-secret"></pvc-button>
+                <pvc-button title="角色" action="/admin/{data.id}/role" icon="users"></pvc-button>
             </pvc-data-column-action>
         </pvc-datatable>
     </pvc-panel>

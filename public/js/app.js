@@ -524,7 +524,7 @@ var ItemListMixin = {
 var IconMixin = {
     props: {
         icon: String,
-        iconPos: {
+        iconpos: {
             type: String,
             default: 'left',
             validate: function validate(value) {
@@ -2777,7 +2777,6 @@ var defaultFancyConfig = {
 
             //数据
             config.source = this.data ? this.data : this.childNodes;
-            console.log(this.childNodes);
 
             //是否启用table模式，即调用table扩展
             if (!_.isEmpty(this.table)) {
@@ -3001,7 +3000,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -3091,8 +3090,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     });
                 }
             }
-
-            console.log(node.title, node.expanded);
 
             this.$parent.addChild(node);
         }

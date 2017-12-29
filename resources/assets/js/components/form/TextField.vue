@@ -21,9 +21,9 @@
                 <slot/>
             </ul>
         </div>
-        <span v-if="icon==='left'" class="input-group-addon"><i :class="iconClass"></i></span>
+        <span v-if="iconpos==='left'" class="input-group-addon"><i :class="iconClass"></i></span>
             <input
-                class="form-control"
+                class="form-control input-lg"
                 :placeholder="placeholder"
                 :name="name"
                 :type="type"
@@ -32,7 +32,7 @@
                 :disabled="!inputEnabled"
                 v-bind="validationProps"
             >
-        <span v-if="icon==='left'" class="input-group-addon"><i :class="iconClass"></i></span>
+        <span v-if="iconpos==='right'" class="input-group-addon"><i :class="iconClass"></i></span>
         <span v-if="$slots.right" class="input-group-addon">
             <slot name="right"/>
         </span>

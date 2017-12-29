@@ -3,7 +3,7 @@
 export let IconMixin = {
     props: {
         icon: String,
-        iconPos: {
+        iconpos: {
             type: String,
             default: 'left',
             validate: function(value) {

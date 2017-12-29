@@ -1,0 +1,14 @@
+{
+    "name": "charlstide/paladin",
+    "description": "Paladin is a Open Source Laravel Admin Panel",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "tangkeyu",
+            "email": "tangkeyu@vip.163.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}

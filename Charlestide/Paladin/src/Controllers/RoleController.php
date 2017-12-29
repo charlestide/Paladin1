@@ -1,10 +1,10 @@
-<?php 
-namespace App\Http\Controllers;
+<?php
+namespace Charlestide\Paladin\Controllers;
 
-use App\Model\Permission;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Model\Role;
+use Charlestide\Paladin\Models\Permission;
+use Charlestide\Paladin\Models\Role;
 
 class RoleController extends Controller
 {

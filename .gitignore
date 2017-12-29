@@ -21,3 +21,6 @@ Homestead.json
 
 # PHPStorm specific
 .idea
+
+#error
+php_errors.log

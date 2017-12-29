@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<!--[if !IE]><!--> <html lang="{{config('locale')}}"> <!--<![endif]-->
 
     <!-- START @HEAD -->
     <head>
@@ -11,7 +11,7 @@
         <meta name="description" content="Blankon is a theme fullpack admin template powered by Twitter bootstrap 3 front-end framework. Included are multiple example pages, elements styles, and javascript widgets to get your project started.">
         <meta name="keywords" content="admin, admin template, bootstrap3, clean, fontawesome4, good documentation, lightweight admin, responsive dashboard, webapp">
         <meta name="author" content="Djava UI">
-        <title>Diffearch 异世界</title>
+        <title>{{config('name')}}</title>
         <!--/ END META SECTION -->
 
         <!-- START @FAVICONS -->
@@ -36,18 +36,13 @@
         <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
         <link href="https://cdn.bootcss.com/dropzone/5.1.1/min/dropzone.min.css" rel="stylesheet">
-        <link href="https://cdn.bootcss.com/datatables/1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.bootcss.com/fuelux/3.16.1/css/fuelux.min.css" rel="stylesheet">
         <!--/ END PAGE LEVEL STYLES -->
 
         <!-- START @THEME STYLES -->
-        <link href="/css/admin/reset.css" type="text/css" rel="stylesheet">
-        <link href="/css/admin/layout.css" rel="stylesheet">
-        <link href="/css/admin/components.css" rel="stylesheet">
-        <link href="/css/admin/plugins.css" rel="stylesheet">
-        <link href="/css/admin/layout.css" rel="stylesheet">
-        <link href="/css/admin/pages/sign.css" rel="stylesheet">
-        <link href="{{asset('/css/admin/themes/laravel.theme.css')}}" id="laravel" rel="stylesheet">
+        <link href="/css/vendor/blankon/apps.css" type="text/css" rel="stylesheet">
+        <link href="/css/vendor/blankon/sign.css" rel="stylesheet">
+        <link href="{{asset('/css/vendor/blankon/themes/laravel.theme.css')}}" id="laravel" rel="stylesheet">
         <!--/ END THEME STYLES -->
 
         <!-- START @IE SUPPORT -->
@@ -104,19 +99,18 @@
  	<!-- START JAVASCRIPT SECTION (Load javascripts at bottom to reduce load time) -->
         <!-- START @CORE PLUGINS -->
         <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
         <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js"></script>
-        <script src="/js/form.js"></script>
         {{--<script src="/js/app.js"></script>--}}
 
         <!--/ END CORE PLUGINS -->
 
         <!-- START @PAGE LEVEL PLUGINS -->
-        <script src="https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.min.js"></script>
         <!--/ END PAGE LEVEL PLUGINS -->
 
         <!-- START @PAGE LEVEL SCRIPTS -->
-        <script type="text/javascript" src="/blankon/admin/js/blankon.sign.js"></script>
-        <script type="text/javascript" src="/blankon/admin/js/demo.js"></script>
+        {{--<script type="text/javascript" src="/blankon/admin/js/blankon.sign.js"></script>--}}
+        <script type="text/javascript" src="/js/form.js"></script>
         <!--/ END PAGE LEVEL SCRIPTS -->
 
 

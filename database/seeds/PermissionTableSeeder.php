@@ -29,9 +29,9 @@ class PermissionTableSeeder extends Seeder
         $displayName = $displayName ?: $modelName;
         foreach ($this->crudPermission as $permimissName => $permissionDisplayName) {
             DB::table('permissions')->insert([
-                'name' => $modelName.'.'.$permimissName,
-                'policy' => studly_case($modelName).'Policy@'.$permimissName,
-                'description' => '允许'.$permissionDisplayName.$displayName,
+                'name' => "$modelName.$permimissName",
+                'policy' => "\App\Policys\\".studly_case($modelName).'Policy@'.$permimissName,
+                'description' => "允许 $permissionDisplayName $displayName",
                 'created_at' => date('Y-m-d H:i:s')
             ]);
         }

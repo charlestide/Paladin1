@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace Charlestide\Paladin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,10 +25,10 @@ class Permission extends Model
     }
 
     public function roles() {
-        return $this->morphedByMany('App\Model\Role','related','permission_relations');
+        return $this->morphedByMany(Role::class,'related','permission_relations');
     }
 
     public function admins() {
-        return $this->morphedByMany('App\Model\Admin','related','permission_relations');
+        return $this->morphedByMany(Admin::class,'related','permission_relations');
     }
 }

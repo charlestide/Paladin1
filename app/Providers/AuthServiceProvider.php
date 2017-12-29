@@ -15,9 +15,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model\Admin' => 'App\Policies\AdminPolicy',
-        'App\Model\Role' => 'App\Policies\RolePolicy',
-        'App\Model\Rermission' => 'App\Policies\PermissionPolicy',
+        \App\Model\Admin::class => \App\Policies\AdminPolicy::class,
+        \App\Model\Role::class => \App\Policies\RolePolicy::class,
+        \App\Model\Permission::class => \App\Policies\PermissionPolicy::class,
     ];
 
     /**
@@ -34,10 +34,12 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerGates() {
 
-        if (Schema::hasTable('permissions')) {
-            foreach (Permission::all() as $permission) {
-                Gate::define($permission->name, $permission->policy);
-            }
-        }
+//        Gate::define('admin.view','AdminPolicy@view');
+//        dd(Gate::abilities());
+//        if (Schema::hasTable('permissions')) {
+//            foreach (Permission::all(['name','policy']) as $permission) {
+//                Gate::define($permission->name, $permission->policy);
+//            }
+//        }
     }
 }

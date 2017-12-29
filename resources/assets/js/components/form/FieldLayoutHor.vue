@@ -22,12 +22,8 @@
             },
             label: String,
             name: String,
-            value: String
-        },
-        computed: {
-            type: function () {
-                return this.$parent.type;
-            }
+            value: String,
+            type: String
         }
     }
 </script>

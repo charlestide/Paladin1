@@ -76,8 +76,6 @@
                     }
                 }
 
-                console.log(node.title,node.expanded);
-
                 this.$parent.addChild(node);
             }
         },

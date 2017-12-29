@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace Charlestide\Paladin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,11 +29,11 @@ class Menu extends Model
     }
 
     public function children() {
-        return $this->hasMany('App\Model\Menu','parent_id');
+        return $this->hasMany(Menu::class,'parent_id');
     }
 
     public function parent() {
-        return $this->belongsTo('App\Model\Menu','parent_id');
+        return $this->belongsTo(Menu::class,'parent_id');
     }
 
 }

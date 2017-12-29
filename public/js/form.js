@@ -524,7 +524,7 @@ var ItemListMixin = {
 var IconMixin = {
     props: {
         icon: String,
-        iconPos: {
+        iconpos: {
             type: String,
             default: 'left',
             validate: function validate(value) {
@@ -1770,7 +1770,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -1806,12 +1806,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         label: String,
         name: String,
-        value: String
-    },
-    computed: {
-        type: function type() {
-            return this.$parent.type;
-        }
+        value: String,
+        type: String
     }
 });
 
@@ -1984,7 +1980,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.input-group[data-v-4adf9cc8] {\n    width:100%;\n}\n", ""]);
 
 // exports
 
@@ -1995,6 +1991,8 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
 //
 //
 //
@@ -2014,7 +2012,14 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "input-group" }, [_vm._t("default")], 2)
+  return _c("div", { staticClass: "form-group" }, [
+    _c(
+      "div",
+      { staticClass: "input-group no-overflow" },
+      [_vm._t("default")],
+      2
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -2042,7 +2047,7 @@ var render = function() {
             label: _vm.label,
             required: _vm.required,
             name: _vm.name,
-            type: "type"
+            type: _vm.type
           }
         },
         [_vm._t("default")],
@@ -2056,7 +2061,7 @@ var render = function() {
               label: _vm.label,
               required: _vm.required,
               name: _vm.name,
-              type: "type"
+              type: _vm.type
             }
           },
           [_vm._t("default")],
@@ -2070,7 +2075,7 @@ var render = function() {
                 label: _vm.label,
                 required: _vm.required,
                 name: _vm.name,
-                type: "type"
+                type: _vm.type
               }
             },
             [_vm._t("default")],
@@ -2171,7 +2176,7 @@ var render = function() {
           ])
         : _vm._e(),
       _vm._v(" "),
-      _vm.icon === "left"
+      _vm.iconpos === "left"
         ? _c("span", { staticClass: "input-group-addon" }, [
             _c("i", { class: _vm.iconClass })
           ])
@@ -2181,7 +2186,7 @@ var render = function() {
         "input",
         _vm._b(
           {
-            staticClass: "form-control",
+            staticClass: "form-control input-lg",
             attrs: {
               placeholder: _vm.placeholder,
               name: _vm.name,
@@ -2197,7 +2202,7 @@ var render = function() {
         )
       ),
       _vm._v(" "),
-      _vm.icon === "left"
+      _vm.iconpos === "right"
         ? _c("span", { staticClass: "input-group-addon" }, [
             _c("i", { class: _vm.iconClass })
           ])
@@ -2899,7 +2904,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -2932,7 +2937,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: String,
             validate: function validate(value) {
                 return value in { checkbox: '', radio: '' };
-            }
+            },
+
+            default: 'checkbox'
         }
     },
     computed: {
@@ -2951,6 +2958,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         id: function id() {
             return this.parentName + Math.random();
+        },
+        parentType: function parentType() {
+            if (this.type) {
+                return this.type;
+            } else {
+                return this.$parent.type;
+            }
         }
     }
 });
@@ -2965,7 +2979,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { class: _vm.containerClass }, [
     _c("input", {
-      attrs: { type: _vm.type, name: _vm.parentName, id: _vm.id },
+      attrs: { type: _vm.parentType, name: _vm.parentName, id: _vm.id },
       domProps: { value: _vm.value, checked: _vm.checked }
     }),
     _vm._v(" "),

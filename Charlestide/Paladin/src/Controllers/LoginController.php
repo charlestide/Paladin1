@@ -1,11 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Charlestide\Paladin\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
 class LoginController extends Controller
 {
     /*
@@ -41,5 +38,9 @@ class LoginController extends Controller
     public function username()
     {
         return 'name';
+    }
+
+    public function redirectTo() {
+        return '/dashboard';
     }
 }

@@ -1,10 +1,9 @@
-<?php 
-namespace App\Http\Controllers;
+<?php
+namespace Charlestide\Paladin\Controllers;
 
 use Illuminate\Http\Request;
-use Mockery\Exception;
 use Yajra\DataTables\DataTables;
-use App\Model\Menu;
+use Charlestide\Paladin\Models\Menu;
 
 class MenuController extends Controller
 {

@@ -18,8 +18,10 @@ START @SIDEBAR LEFT
                 <i class="online"></i>
             </a>
             <div class="media-body">
-                <h4 class="media-heading">Hello, <span></span></h4>
-                <small>Web Designer</small>
+                <h4 class="media-heading">
+                    <img src="https://placeimg.com/50/50" width="50" height="50">
+                    {{__('welcome')}}, <span>{{auth()->user()->name}}</h4>
+                <small>{{auth()->user()->email}}</small>
             </div>
         </div>
     </div><!-- /.sidebar-content -->
@@ -29,16 +31,16 @@ START @SIDEBAR LEFT
     <ul class="sidebar-menu">
 
         <!-- Start navigation - dashboard -->
-        <li {!! Request::is('/') ? 'class="active"' : null !!}>
-            <a href="{{url('/')}}">
+        <li {!! Request::is('/dashboard') ? 'class="active"' : null !!}>
+            <a href="{{url('/dashboard')}}">
                 <span class="icon"><i class="fa fa-home"></i></span>
                 <span class="text">Dashboard</span>
-                {!! Request::is('/') ? '<span class="selected"></span>' : null !!}
+                {!! Request::is('/dashboard') ? '<span class="selected"></span>' : null !!}
             </a>
         </li>
         <!--/ End navigation - dashboard -->
 
-        @foreach(\App\Model\Menu::where('parent_id',0)->get() as $menu)
+        @foreach(\Charlestide\Paladin\Models\Menu::where('parent_id',0)->get() as $menu)
         <!-- Start category {{$menu->name}} -->
         <li class="sidebar-category">
             <span>{{$menu->name}}</span>

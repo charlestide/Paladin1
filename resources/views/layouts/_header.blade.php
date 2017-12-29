@@ -13,7 +13,7 @@
         <div class="navbar-header">
 
             <!-- Start brand -->
-            <a class="navbar-brand" href="{{url('dashboard/index')}}">
+            <a class="navbar-brand" href="{{url('dashboard')}}">
                 <img class="logo" src="{{asset('/logo.png')}}" alt="brand logo" width="150" height="45" />
             </a><!-- /.navbar-brand -->
             <!--/ End brand -->
@@ -226,19 +226,17 @@
                 <li class="dropdown navbar-profile">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <span class="meta">
-                            <span class="avatar"></span>
-                            <span class="text hidden-xs hidden-sm text-muted"></span>
+                            <span class="avatar"><img src="https://placeimg.com/35/35" width="35" height="35"> </span>
+                            <span class="text hidden-xs hidden-sm text-muted">{{auth()->user()->name}}</span>
                             <span class="caret"></span>
                         </span>
                     </a>
                     <!-- Start dropdown menu -->
                     <ul class="dropdown-menu animated flipInX">
-                        <li class="dropdown-header">Account</li>
-                        <li><a href="{{url('page/profile')}}"><i class="fa fa-user"></i>View profile</a></li>
-                        <li><a href="{{url('mail/inbox')}}"><i class="fa fa-envelope-square"></i>Inbox <span class="label label-info pull-right">30</span></a></li>
-                        {{--<li class="dropdown-header">Product</li>--}}
+                        <li class="dropdown-header">{{__('account')}}</li>
+                        <li><a href="{{url('page/profile')}}"><i class="fa fa-user"></i>@lang('profile')</a></li>
                         <li class="divider"></li>
-                        <li><a href="{{url('logout')}}"><i class="fa fa-sign-out"></i>登出</a></li>
+                        <li><a href="{{url('logout')}}"><i class="fa fa-sign-out"></i>@lang('logout')</a></li>
                     </ul>
                     <!--/ End dropdown menu -->
                 </li><!-- /.dropdown navbar-profile -->

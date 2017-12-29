@@ -6,6 +6,17 @@ use {{get_class($model)}};
 
 class {{$ModelName}}Controller extends Controller
 {
+
+    /**
+    * Contructor
+    *
+    * @return App\Http\Controllers\{{$ModelName}}
+    */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *

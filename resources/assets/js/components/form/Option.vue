@@ -1,6 +1,6 @@
 <template>
         <div :class="containerClass">
-            <input :type="type" :name="parentName" :id="id" :value="value" :checked="checked">
+            <input :type="parentType" :name="parentName" :id="id" :value="value" :checked="checked">
             <label :for="id">{{label}}</label>
         </div>
 </template>
@@ -20,8 +20,9 @@
                 type: String,
                 validate(value) {
                     return value in {checkbox:'',radio:''}
-                }
-            }
+                },
+                default: 'checkbox'
+            },
         },
         computed: {
             parentName: function () {
@@ -39,6 +40,13 @@
             },
             id: function () {
                 return this.parentName + Math.random();
+            },
+            parentType() {
+                if (this.type) {
+                    return this.type;
+                } else {
+                    return this.$parent.type;
+                }
             }
         }
     }
