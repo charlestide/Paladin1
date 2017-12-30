@@ -3,7 +3,6 @@
 <!-- START @PAGE CONTENT -->
 @section('content')
 
-<section id="page-content">
 
     <pvc-bread-crumb icon="user" title="角色" summary="角色列表">
         <pvc-bread-crumb-item title="角色" url="/role"></pvc-bread-crumb-item>
@@ -11,7 +10,7 @@
 
     <pvc-panel>
         
-        <pvc-link-button slot="head-right" target="_blank" href="{{url('/role/create')}}" title="新增" icon="plus-square" class="btn-theme" size="xs"></pvc-link-button>
+        <pvc-button slot="head-right" action="{{url('/role/create')}}" title="新增" icon="plus-square"></pvc-button>
         
         <pvc-datatable source="/role?format=json">
             <pvc-data-column data="id" title="ID" default="无数据"></pvc-data-column>
@@ -29,11 +28,7 @@
     </pvc-panel>
 
 
-    <!-- Start footer content -->
-    @include('layouts._footer-admin')
-    <!--/ End footer content -->
 
-</section><!-- /#page-content -->
 @stop
 <!--/ END PAGE CONTENT -->
 

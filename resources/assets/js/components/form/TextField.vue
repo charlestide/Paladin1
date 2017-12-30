@@ -1,6 +1,6 @@
 <template>
-    <pvc-field-layout v-bind="layoutProps">
-        <span v-if="this.$slots.left" class="input-group-addon 1">
+    <pvc-field-layout :layout="layout">
+        <span v-if="this.$slots.left" class="input-group-addon">
             <slot name="left"/>
         </span>
         <span v-if="checkbox" class="input-group-addon">
@@ -23,14 +23,13 @@
         </div>
         <span v-if="icon && iconpos==='left'" class="input-group-addon 1"><i :class="iconClass"></i></span>
             <input
+                v-bind="this.$props"
                 class="form-control"
-                :placeholder="placeholder"
-                :name="name"
+                :data-placeholder="placeholder"
                 :type="type"
-                :required="required"
-                :value="textValue"
-                :disabled="!inputEnabled"
-                v-bind="validationProps"
+                :disabled="!fieldEnabled"
+                @input="handlerInput($event.target.value)"
+                ref="input"
             >
         <span v-if="icon && iconpos==='right'" class="input-group-addon"><i :class="iconClass"></i></span>
         <span v-if="this.$slots.right" class="input-group-addon">
@@ -40,16 +39,19 @@
 </template>
 
 <script>
-    import {layoutMixin,valueMixin,validateMixin,formMixin} from "./formMixin";
+    import {layoutMixin,validateMixin,formMixin} from "./formMixin";
     import {IconMixin} from "../common/IconMixin";
-    import {ItemListMixin} from "../common/ItemListMixin";
+    import {fieldMixin} from "./fieldMixin";
+    import PvcFieldLayout from "./FieldLayout";
 
     export default {
+        components: {PvcFieldLayout},
         name: "pvc-textfield",
-        mixins: [layoutMixin,valueMixin,validateMixin,IconMixin,formMixin,ItemListMixin],
+        mixins: [layoutMixin,fieldMixin,validateMixin,IconMixin],
         data() {
             return {
-                textValue: this.value
+                pvcName: 'textfield',
+                pvcType: 'field',
             }
         },
         props: {
@@ -89,6 +91,10 @@
             handlerSelectOption(event) {
                 let index = $(event.target).attr('index');
                 this.textValue = this.items[index].value;
+            },
+            handlerInput(value) {
+                this.$emit('input',value);
+                this.$ref.input.value = value;
             }
         }
     }

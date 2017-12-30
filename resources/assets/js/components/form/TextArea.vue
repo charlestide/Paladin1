@@ -1,5 +1,5 @@
 <template>
-    <pvc-field-layout v-bind="layoutProps">
+    <pvc-field-layout>
             <textarea
                     class="form-control"
                     :placeholder="placeholder"
@@ -16,11 +16,18 @@
 </template>
 
 <script>
-    import {layoutMixin,valueMixin,validateMixin} from "./formMixin";
+    import {layoutMixin,validateMixin} from "./formMixin";
+    import {fieldMixin} from "./fieldMixin";
 
     export default {
         name: "pvc-textarea",
-        mixins: [layoutMixin,valueMixin,validateMixin],
+        mixins: [layoutMixin,fieldMixin,validateMixin],
+        data() {
+            return {
+                pvcName: 'textarea',
+                pvcType: 'field'
+            }
+        },
         props: {
             rows: Number,
             cols: Number

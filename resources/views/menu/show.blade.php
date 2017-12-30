@@ -3,7 +3,6 @@
 <!-- START @PAGE CONTENT -->
 @section('content')
 
-<section id="page-content">
 
     <pvc-bread-crumb icon="user" title="菜单信息" summary="菜单详情">
         <pvc-bread-crumb-item title="菜单" url="/menu"></pvc-bread-crumb-item>
@@ -26,12 +25,9 @@
     </div><!-- /.body-content -->
     <!--/ End body content -->
 
-    <!-- Start footer content -->
-    @include('layouts._footer-admin')
-    <!--/ End footer content -->
-
-</section><!-- /#page-content -->
+@push('scripts')
 <script type="text/javascript" src="/js/form.js"></script>
+@endpush
 
 @stop
 <!--/ END PAGE CONTENT -->

@@ -2,8 +2,6 @@
 
 <!-- START @PAGE CONTENT -->
 @section('content')
-<section id="page-content">
-
     <pvc-bread-crumb icon="user" title="管理员" summary="管理员管理界面">
         <pvc-bread-crumb-item title="系统管理" url="#"></pvc-bread-crumb-item>
         <pvc-bread-crumb-item title="管理员" url="/admin"></pvc-bread-crumb-item>
@@ -11,7 +9,7 @@
 
 
     <pvc-panel>
-        <pvc-link-button slot="head-right" target="_blank" href="{{url('/admin/create')}}" title="新增" icon="plus-square" class="btn-theme" size="xs"></pvc-link-button>
+        <pvc-button slot="head-right" action="{{url('/admin/create')}}" title="新增" icon="plus-square"></pvc-button>
         <pvc-datatable source="/admin?format=json">
             <pvc-data-column data="id" title="ID" width="10%"></pvc-data-column>
             <pvc-data-column data="name" title="名称" width="30%"></pvc-data-column>
@@ -26,10 +24,5 @@
         </pvc-datatable>
     </pvc-panel>
 
-    <!-- Start footer content -->
-    @include('layouts._footer-admin')
-    <!--/ End footer content -->
-
-</section><!-- /#page-content -->
 @stop
 <!--/ END PAGE CONTENT -->

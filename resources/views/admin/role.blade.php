@@ -2,14 +2,11 @@
 
 <!-- START @PAGE CONTENT -->
 @section('content')
-<section id="page-content">
 
     <pvc-bread-crumb icon="user" title="指定角色" summary="您可以为管理员指定角色">
         <pvc-bread-crumb-item title="系统管理" url="#"></pvc-bread-crumb-item>
         <pvc-bread-crumb-item title="管理员" url="/admin"></pvc-bread-crumb-item>
     </pvc-bread-crumb>
-
-
 
     <!-- Start body content -->
     <div class="body-content animated fadeIn">
@@ -20,19 +17,17 @@
                         <pvc-option value="{{$role->id}}" label="{{$role->display_name}} ({{$role->name}})" :checked="{{in_array($role->id,$related) ? 'true' : 'false'}}"></pvc-option>
                         @endforeach
                     </pvc-checkbox>
-                    <button type="submit" class="btn btn-theme" slot="footer">保存</button>
-                    <pvc-link-button href="{{url('/admin')}}" slot="footer" slot="footer" title="返回列表"></pvc-link-button>
+                    <pvc-button type="submit" icon="save" title="保存" slot="footer"></pvc-button>
+                    <pvc-button action="{{url('/admin')}}" slot="footer" icon="list" title="返回列表"></pvc-button>
                 </pvc-form>
             </pvc-panel>
 
     </div><!-- /.body-content -->
     <!--/ End body content -->
 
-    @include('layouts._footer-admin')
-    <!--/ End footer content -->
-
-</section><!-- /#page-content -->
+@push('scripts')
 <script type="text/javascript" src="/js/form.js"></script>
+@endpush
 
 @stop
 <!--/ END PAGE CONTENT -->

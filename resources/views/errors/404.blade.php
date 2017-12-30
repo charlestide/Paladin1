@@ -5,20 +5,20 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-ban"></i>Error 403 <span>access is denied</span></h2>
+        <h2><i class="fa fa-ban"></i>Error 404 <span>page not found</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">You are here:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="{{url('dashboard/index')}}">Dashboard</a>
+                    <a href="{{url('dashboard')}}">Dashboard</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li>
                     <a href="#">Pages</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
-                <li class="active">Error 403</li>
+                <li class="active">Error 404</li>
             </ol>
         </div>
     </div><!-- /.header-content -->
@@ -32,17 +32,18 @@
 
                 <!-- START @ERROR PAGE -->
                 <div class="error-wrapper">
-                    <h1>403!</h1>
-                    <h3>Forbidden: Access is denied.</h3>
-                    <h4>您没有权限访问此页面，如果您确实需要此权限，请联系管理员.</h4>
+                    <h1>404!</h1>
+                    <h3>您访问的页面找不到</h3>
+                    <h4>页面可能已经被 删除 或者 不可用 <br> <br/> 您可以使用左侧的导航来寻找功能</h4>
                 </div>
-                <!--/ END ERROR PAGE -->
+                <!--/ END @ERROR PAGE -->
 
             </div>
         </div><!-- /.row -->
 
     </div><!-- /.body-content -->
     <!--/ End body content -->
+
 
 @stop
 <!--/ END ERROR PAGE -->

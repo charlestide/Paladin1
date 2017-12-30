@@ -2,7 +2,6 @@
 
 <!-- START @PAGE CONTENT -->
 @section('content')
-<section id="page-content">
 
     <pvc-bread-crumb icon="user" title="CRUD生成" summary="用于生成某个MODEL的CRUD功能">
         <pvc-bread-crumb-item title="代码生成" url="#"></pvc-bread-crumb-item>
@@ -14,7 +13,8 @@
 
         <pvc-panel title="生成CRUD代码" :closeable="true" :validation="true">
             <pvc-form method="post" action="{{url('/generator/crud/run')}}" token="{{csrf_token()}}" :validation="false">
-                <pvc-chosen name="modelClass" label="请选择Model" :required="true" placeholder="请选择一个Model" v-on:changed="modelSelected" >
+                <pvc-textfield name="mdoelPath" label="搜索model的路径" :required="true" placeholder="您可以指定您项目中的model路径" v-model="modelPath" :desc="pathDesc"></pvc-textfield>
+                <pvc-chosen name="modelClass" label="请选择Model" :required="true" placeholder="请选择一个Model" @changed="modelSelected" desc="此处会显示存放在app/Model目录中的model" >
                     @foreach($models as $model)
                     <option value="{{$model}}">{{$model}}</option>
                     @endforeach
@@ -28,17 +28,11 @@
                     <pvc-textfield  :name="'modelColumns['+columnName+'][displayName]'" :value="column.displayName" :label="columnName+' ('+column.type+')'" placeholder="请定义一个显示名称"></pvc-textfield>
                     <pvc-hidden-field  :name="'modelColumns['+columnName+'][type]'" :value="column.type"></pvc-hidden-field>
                 </div>
-                <button type="submit" class="btn btn-theme" slot="footer">生成</button>
+                <pvc-button type="submit" icon="save" title="生成" slot="footer"></pvc-button>
             </pvc-form>
         </pvc-panel>
     </div><!-- /.body-content -->
     <!--/ End body content -->
-
-    <!-- Start footer content -->
-    @include('layouts._footer-admin')
-    <!--/ End footer content -->
-
-</section><!-- /#page-content -->
 
 @stop
 <!--/ END PAGE CONTENT -->
@@ -48,9 +42,16 @@
         const content = new Vue({
             el: '#page-content',
             data: {
+                modelPath: '{{$modelPath}}',
+                basePath: '{{$basePath}}',
                 modelClass: '',
                 modelDisplayName: '',
                 modelColumns: [],
+            },
+            computed: {
+                pathDesc() {
+                    return '将会搜索' + this.basePath + '/' + this.modelPath;
+                }
             },
             watch: {
                 modelClass: function (value, oldValue) {
@@ -61,7 +62,7 @@
                             self.modelDisplayName = json.modelDisplayName;
                         }
                     });
-                }
+                },
             },
             methods: {
                 modelSelected: function (modelClass) {

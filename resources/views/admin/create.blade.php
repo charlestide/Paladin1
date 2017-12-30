@@ -2,7 +2,6 @@
 
 <!-- START @PAGE CONTENT -->
 @section('content')
-<section id="page-content">
 
     <pvc-bread-crumb icon="user" title="创建管理员" summary="您可以在这里创建一个新管理员">
         <pvc-bread-crumb-item title="系统管理" url="#"></pvc-bread-crumb-item>
@@ -27,19 +26,16 @@
                     <pvc-textfield name="admin[name]" required="true" :required="true" label="名称"></pvc-textfield>
                     <pvc-textfield name="admin[email]" required="true" :required="true" :email="true" label="邮箱"></pvc-textfield>
                     <pvc-textfield name="admin[password]" type="password" :required="true" label="密码"></pvc-textfield>
-                    <button type="submit" class="btn btn-theme" slot="footer">保存</button>
-                    <pvc-link-button href="{{url('/admin')}}" slot="footer" title="返回列表"></pvc-link-button>
+                    <pvc-button type="submit" icon="save" title="保存" slot="footer"></pvc-button>
+                    <pvc-button action="{{url('/admin')}}" slot="footer" icon="list" title="返回列表"></pvc-button>
             </pvc-form>
         </pvc-panel>
 
     </div><!-- /.body-content -->
     <!--/ End body content -->
 
-    <!-- Start footer content -->
-    @include('layouts._footer-admin')
-    <!--/ End footer content -->
-
-</section><!-- /#page-content -->
+@push('scripts')
 <script type="text/javascript" src="/js/form.js"></script>
+@endpush
 @stop
 <!--/ END PAGE CONTENT -->

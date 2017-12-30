@@ -12,7 +12,10 @@ let mix = require('laravel-mix');
  */
 
 mix.js('resources/assets/js/app.js', 'public/js')
-    .sass('resources/assets/sass/app.scss', 'public/css')
+    // .sass('resources/assets/sass/app.scss', 'public/css')
+
+    // .styles([
+    // ],'public/css/app.css')
 
     .js('resources/assets/js/form.js','public/js')
 
@@ -27,6 +30,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'resources/assets/css/vendor/blankon/plugins.css',
         'resources/assets/css/vendor/blankon/reset.css',
         // 'resources/assets/css/vendor/blankon/themes/laravel.theme.css',
+        'resources/assets/css/app.css'
     ],'public/css/vendor/blankon/apps.css')
     // .js('resources/assets/js/components/Input.vue','public/js')
 

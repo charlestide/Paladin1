@@ -1,6 +1,6 @@
 <template>
-    <pvc-field-layout :layout="layout" :label="label" :required="required">
-        <select :data-placeholder="placeholder" :required="required" :name="name" class="chosen-select" :multiple="multiple">
+    <pvc-field-layout :layout="layout" :label="label" :required="required" :name="name">
+        <select :data-placeholder="placeholder" v-bind="this.$props" class="chosen-select" >
             <option v-if="placeholder"></option>
             <slot/>
         </select>
@@ -8,11 +8,28 @@
 </template>
 
 <script>
-    import {layoutMixin,valueMixin} from "./formMixin";
+    import {layoutMixin} from "./formMixin";
+    import {fieldMixin} from "./fieldMixin";
+    import {ListMixin} from "../common/ItemListMixin";
+
+    require('chosen-js');
 
     export default {
         name: "pvc-chosen",
-        mixins: [layoutMixin,valueMixin],
+        mixins: [layoutMixin,fieldMixin,ListMixin],
+        data() {
+            return {
+                pvcName: 'chosen',
+                pvcType: ['select','field'],
+                fieldType: 'select',
+                chosen: null,
+                chosenOption: {
+                    '.chosen-select-no-results': {
+                        no_results_text: '找不到数据!'
+                    },
+                }
+            }
+        },
         props: {
             multiple: {
                 type: Boolean,
@@ -21,21 +38,26 @@
         },
         mounted: function () {
             let self = this;
-
-            $.ajaxSetup({ cache: true });
-            $.getScript('https://cdn.bootcss.com/chosen/1.8.2/chosen.jquery.min.js',function () {
-                $.ajaxSetup({cache: false});
-            });
-
-            $(function () {
-                $('select',self.$el).chosen({
-                    '.chosen-select-no-results': {
-                        no_results_text: '找不到数据!'
-                    },
-                }).change(function (event,value) {
+            self.chosen = $('select',self.$el).chosen(self.chosenOption)
+                .change(function (event,value) {
                     self.$emit('changed',value.selected);
-                })
-            })
+                });
+
+            self.select(self.value);
+        },
+        methods: {
+            select(value) {
+                if (value) {
+                    let $selected = $('option[value=' + value + ']', this.$el),
+                        $all = $('option', this.$el);
+
+                    if ($selected.length) {
+                        $all.removeAttr('selected');
+                        $selected.attr('selected', true);
+                        this.chosen.trigger('chosen:updated');
+                    }
+                }
+            }
         }
     }
 </script>

@@ -1,8 +1,9 @@
 
 import PvcFieldLayout from "./FieldLayout";
 
+export {layoutMixin,validateMixin,formMixin};
 
-export let layoutMixin = {
+let layoutMixin = {
         components: {
             PvcFieldLayout,
         },
@@ -20,7 +21,6 @@ export let layoutMixin = {
                 type: Boolean,
                 default: false
             },
-            label: String,
             layout: {
                 type: String,
                 default: 'hor',
@@ -28,22 +28,6 @@ export let layoutMixin = {
                     return value in {hor:'',ver:'',none:''}
                 }
             }
-        }
-    },
-    valueMixin = {
-        data() {
-            return {
-                valueProps: {
-                    name: this.name,
-                    value: this.value,
-                    placeholder: this.placeholder
-                }
-            }
-        },
-        props: {
-            name: String,
-            value: String,
-            placeholder: String,
         }
     },
     validateMixin = {
@@ -59,7 +43,8 @@ export let layoutMixin = {
             accept: String,
             creditcard: String,
             extension: String,
-            require_from_group: String
+            require_from_group: String,
+            errormsg: String
         },
         data() {
             return {

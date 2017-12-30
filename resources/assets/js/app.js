@@ -9,12 +9,20 @@
 
 // window.Vue = require('vue');
 
+
+// var $ = require('jquery');
+// window.$ = $;
+// window.JQuery = $;
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+import paladin from "./components/plugins/paladin";
+
+Vue.use(paladin);
 
 Vue.component('pvc-bread-crumb', require('./components/special/BreadCrumb.vue'));
 Vue.component('pvc-bread-crumb-item', require('./components/special/BreadCrumbItem.vue'));

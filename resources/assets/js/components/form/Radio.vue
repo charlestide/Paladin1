@@ -5,14 +5,16 @@
 </template>
 
 <script>
-    import {layoutMixin,valueMixin} from "./formMixin";
+    import {layoutMixin} from "./formMixin";
+    import {fieldMixin} from "./fieldMixin";
 
     export default {
         name: "pvc-radio",
-        mixins: [layoutMixin,valueMixin],
+        mixins: [layoutMixin,fieldMixin],
         data() {
             return {
-                type: 'radio'
+                pvcName: 'radio',
+                pvcType: ['field','select']
             }
         }
     }

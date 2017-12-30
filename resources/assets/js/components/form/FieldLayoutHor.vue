@@ -5,25 +5,30 @@
         </label>
         <div class="col-sm-7 input-group">
             <slot/>
+            <span>{{desc}}</span>
         </div>
     </div>
 </template>
 
 <script>
-    import {ItemListMixin} from "../common/ItemListMixin";
-
     export default {
         name: "pvc-field-hor",
-        mixins: [ItemListMixin],
-        props: {
-            required: {
-                type: Boolean,
-                default: false
+        data() {
+            return {
+                pvcName: 'field-layout-hor',
+                pvcType: 'field-layout'
+            }
+        },
+        computed: {
+            required() {
+                return this.getParentAttribute('field','required',true);
             },
-            label: String,
-            name: String,
-            value: String,
-            type: String
+            label() {
+                return this.getParentAttribute('field','label',true);
+            },
+            desc() {
+                return this.getParentAttribute('field','desc',true);
+            }
         }
     }
 </script>

@@ -6,10 +6,10 @@
  * Time: 下午10:35
  */
 
-namespace App\Paladin\Generator;
+namespace Charlestide\Paladin\Generator;
 
 
-use App\Paladin\Util\StyledOutput;
+use Charlestide\Paladin\Util\StyledOutput;
 use Illuminate\Support\Facades\Storage;
 
 

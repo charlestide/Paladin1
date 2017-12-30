@@ -5,11 +5,11 @@
 </template>
 
 <script>
-    import {ItemListMixin} from "./ItemListMixin";
+    import {ItemMixin} from "./ItemListMixin";
 
     export default {
         name: "pvc-item",
-        mixins: [ItemListMixin],
+        mixins: [ItemMixin],
         props: {
             visiabled: {
                 type: Boolean,

@@ -1,35 +1,32 @@
 <template>
         <div :class="containerClass">
-            <input :type="parentType" :name="parentName" :id="id" :value="value" :checked="checked">
+            <input :type="parentType" :name="parentName" :id="id" :value="value" :checked="isChecked">
             <label :for="id">{{label}}</label>
         </div>
 </template>
 
 <script>
+    import {ItemMixin} from "../common/ItemListMixin";
+
     export default {
         name: "pvc-option",
+        mixins: [
+            ItemMixin
+        ],
         props: {
-            name: String,
             value: String,
             label: String,
             checked: {
                 type: Boolean,
                 default: false
             },
-            type: {
-                type: String,
-                validate(value) {
-                    return value in {checkbox:'',radio:''}
-                },
-                default: 'checkbox'
-            },
         },
         computed: {
             parentName: function () {
-                return this.$parent.name;
+                return this.getParentByType('select').name;
             },
             containerClass: function () {
-                switch (this.type) {
+                switch (this.parentType) {
                     case 'checkbox':
                         return ['ckbox','ckbox-theme'];
                     case 'radio':
@@ -42,10 +39,14 @@
                 return this.parentName + Math.random();
             },
             parentType() {
-                if (this.type) {
-                    return this.type;
+                return this.getParentAttribute('select','pvcName',true);
+            },
+            isChecked() {
+                if (this.checked) {
+                    return true;
                 } else {
-                    return this.$parent.type;
+                    let parentValue = this.getParentAttribute('select', 'value', true);
+                    return parentValue !== null && parentValue === this.value;
                 }
             }
         }

@@ -31,4 +31,8 @@ class Permission extends Model
     public function admins() {
         return $this->morphedByMany(Admin::class,'related','permission_relations');
     }
+
+    public function menus() {
+        return $this->hasMany(Menu::class);
+    }
 }

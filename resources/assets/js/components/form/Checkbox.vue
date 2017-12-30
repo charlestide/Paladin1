@@ -1,18 +1,20 @@
 <template>
-    <pvc-field-layout :layout="layout" :label="label" :required="required" :name="name" type="checkbox">
+    <pvc-field-layout :layout="layout" :label="label" :required="required" :name="name">
         <slot/>
     </pvc-field-layout>
 </template>
 
 <script>
-    import {layoutMixin,valueMixin} from "./formMixin";
+    import {layoutMixin} from "./formMixin";
+    import {fieldMixin} from "./fieldMixin";
 
     export default {
         name: "pvc-checkbox",
-        mixins: [layoutMixin,valueMixin],
+        mixins: [layoutMixin,fieldMixin],
         data() {
             return {
-                type: 'checkbox'
+                pvcName: 'checkbox',
+                pvcType: ['field','select']
             }
         },
         props: {

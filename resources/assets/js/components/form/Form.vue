@@ -14,12 +14,16 @@
 </template>
 
 <script>
-    import {ItemListMixin} from "../common/ItemListMixin";
     import RemoteLoader from "../../remoteLoader";
 
     export default {
         name: "pvc-form",
-        mixins: [ItemListMixin],
+        data() {
+            return {
+                pvcName: 'form',
+                pvcType: 'form'
+            }
+        },
         props: {
             token: String,
             validation: {

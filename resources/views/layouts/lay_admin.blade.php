@@ -35,9 +35,10 @@
         {{--<link href="https://cdn.bootcss.com/chosen/1.8.2/chosen.min.css" rel="stylesheet">--}}
         <link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" type="text/css" rel="stylesheet">
         <link href="https://cdn.bootcss.com/select2/4.0.4/css/select2.min.css" rel="stylesheet">
-
+        <link href="https://cdn.bootcss.com/jquery-confirm/3.3.2/jquery-confirm.min.css" rel="stylesheet">
         <link href="{{asset('/css/vendor/blankon/apps.css')}}" rel="stylesheet">
         <link href="{{asset('/css/vendor/blankon/themes/laravel.theme.css')}}" id="theme" rel="stylesheet">
+        <link href="{{asset('/css/app.css')}}" rel="stylesheet">
 
         <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
@@ -56,6 +57,7 @@
         <script src="https://cdn.bootcss.com/flot/0.8.3/jquery.flot.categories.min.js"></script>
         <script src="https://cdn.bootcss.com/flot/0.8.3/jquery.flot.resize.min.js"></script>
         <script src="https://cdn.bootcss.com/flot/0.8.3/jquery.flot.pie.min.js"></script>
+        <script src="https://cdn.bootcss.com/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
         <script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
         {{--<script src="https://cdn.bootcss.com/pleasejs/0.4.2/Please.min.js"></script>--}}
         <script src="https://cdn.bootcss.com/skycons/1396634940/skycons.min.js"></script>
@@ -65,10 +67,10 @@
         <script src="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.min.js"></script>
         <script src="https://cdn.bootcss.com/jquery-mockjax/1.6.2/jquery.mockjax.min.js"></script>
         <script src="https://cdn.bootcss.com/moment.js/2.18.1/locale/zh-cn.js"></script>
-        <script src="https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"></script>
+        {{--<script src="https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"></script>--}}
         {{--<script src="/js/components/echarts/themes/macarons.js"></script>--}}
         <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
-        <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js"></script>
+        <script src="https://cdn.bootcss.com/vue/2.5.13/vue.js"></script>
 
     <!--/ END PAGE LEVEL SCRIPTS -->
 
@@ -145,31 +147,38 @@
             	@include('layouts._sidebar_left')
             <!--/ END SIDEBAR LEFT -->
 
-            <!-- START @PAGE CONTENT -->
-            	@yield('content')
-            <!--/ END PAGE CONTENT -->
+            <section id="page-content">
+
+                <div id="page-inner">
+                    <!-- START @PAGE CONTENT -->
+                        @yield('content')
+                    <!--/ END PAGE CONTENT -->
+                </div>
+
+                <!-- Start footer content -->
+                @include('layouts._footer-admin')
+                <!--/ End footer content -->
+
+            </section><!-- /#page-content -->
 
             <!-- START @SIDEBAR RIGHT -->
             	@include('layouts._sidebar_right')
             <!--/ END SIDEBAR RIGHT -->
 
         </section><!-- /#wrapper -->
+
         <!--/ END WRAPPER -->
 
-        @if(session('tip'))
-        <div id="tip" status="{{session('tipStatus') ?: 'success'}}" style="display: none;">{{session('tip')}}</div>
-        @endif
-
+        <script type="text/javascript" src="/js/vendor/blankon/apps.js"></script>
         <script type="text/javascript" src="{{asset('/js/app.js')}}"></script>
         @stack('scripts')
         <script type="text/javascript">
             if (typeof(content) === 'undefined') {
                 const content = new Vue({
-                    el: '#page-content',
+                    el: '#page-inner',
                 });
             }
         </script>
-
 
         <!-- START @BACK TOP -->
         <div id="back-top" class="animated pulse circle">
@@ -177,11 +186,8 @@
         </div><!-- /#back-top -->
         <!--/ END BACK TOP -->
 
-        <script type="text/javascript" src="/js/vendor/blankon/apps.js"></script>
-
-
-        @if (Session::has('messageInfo'))
-            <p role="message" class="display-hide" title="{{Session::get('messageInfo')['title']}}" text="{{Session::get('messageInfo.text')}}"></p>
+        @if(session('tip'))
+            <div id="tip" status="{{session('tipStatus') ?: 'success'}}" style="display: none;">{{session('tip')}}</div>
         @endif
 
     </body>

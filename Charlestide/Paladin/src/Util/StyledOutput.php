@@ -6,7 +6,7 @@
  * Time: 下午5:14
  */
 
-namespace App\Paladin\Util;
+namespace Charlestide\Paladin\Util;
 
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\BufferedOutput;

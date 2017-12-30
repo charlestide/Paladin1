@@ -12,6 +12,12 @@
 <script>
     export default {
         name: "pvc-field-ver",
+        data() {
+            return {
+                pvcName: 'field-layout-ver',
+                pvcType: 'field-layout'
+            }
+        },
         props: {
             required: {
                 type: Boolean,

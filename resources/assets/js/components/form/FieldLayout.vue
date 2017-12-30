@@ -1,38 +1,39 @@
 <template>
-    <pvc-field-hor v-if="layout === 'hor'" :label="label" :required="required" :name="name" :type="type">
+    <pvc-field-hor v-if="layout === 'hor'" >
         <slot/>
     </pvc-field-hor>
-    <pvc-field-ver v-else-if="layout === 'ver'" :label="label" :required="required" :name="name" :type="type">
+    <pvc-field-ver v-else-if="layout === 'ver'">
         <slot/>
     </pvc-field-ver>
-    <pvc-field-none v-else-if="layout === 'none'" :label="label" :required="required" :name="name" :type="type">
+    <pvc-field-none v-else-if="layout === 'none'">
         <slot/>
     </pvc-field-none>
 </template>
 
 <script>
-
     import PvcFieldHor from "./FieldLayoutHor";
     import PvcFieldVer from "./FieldLayoutVer";
     import PvcFieldNone from "./FieldLayoutNone";
-    import {ItemListMixin} from "../common/ItemListMixin";
+
 
     export default {
         name: "pvc-field-layout",
-        mixins: [ItemListMixin],
         components: {
             PvcFieldVer,
             PvcFieldHor,
             PvcFieldNone,
+        },
+        data() {
+            return {
+                pvcName: 'field-layout',
+                pvcType: 'form-layout'
+            }
         },
         props: {
             required: {
                 type: Boolean,
                 default: false
             },
-            type:String,
-            label: String,
-            name: String,
             layout: {
                 type: String,
                 default: 'hor',
@@ -41,7 +42,6 @@
                 }
             }
         },
-
     }
 </script>
 

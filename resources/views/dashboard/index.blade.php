@@ -2,7 +2,6 @@
 
 <!-- START @PAGE CONTENT -->
 @section('content')
-<section id="page-content">
 
     <!-- Start page header -->
     <div class="header-content">
@@ -419,10 +418,5 @@
     </div><!-- /.body-content -->
     <!--/ End body content -->
 
-    <!-- Start footer content -->
-    @include('layouts._footer-admin')
-    <!--/ End footer content -->
-
-</section><!-- /#page-content -->
 @stop
 <!--/ END PAGE CONTENT -->

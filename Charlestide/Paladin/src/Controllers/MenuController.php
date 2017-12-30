@@ -1,6 +1,7 @@
 <?php
 namespace Charlestide\Paladin\Controllers;
 
+use Charlestide\Paladin\Models\Permission;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Charlestide\Paladin\Models\Menu;
@@ -92,7 +93,11 @@ class MenuController extends Controller
      */
     public function edit(Menu $menu)
     {
-        return view('menu/update',['menu' => $menu]);
+        $permssions = Permission::all(['id','name']);
+        return view('menu/update',[
+            'menu' => $menu,
+            'permissions' => $permssions
+        ]);
     }
 
     /**

@@ -8,7 +8,13 @@
 
 <script>
     export default {
-        name: "field-layout-none"
+        name: "field-layout-none",
+        data() {
+            return {
+                pvcName: 'field-layout-none',
+                pvcType: 'field-layout'
+            }
+        },
     }
 </script>
 

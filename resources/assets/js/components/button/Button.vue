@@ -35,7 +35,11 @@
             method: {
                 type: String,
                 default: 'get'
-            }
+            },
+            confirm: {
+                type: [Boolean,String],
+                default: false
+            },
         },
         mounted: function () {
             if (this.$parent.addButtonData) {
@@ -51,7 +55,7 @@
             }
         },
         methods: {
-            handlerClick: function (event) {
+            doClick: function () {
                 if (_.isFunction(this.action)) {
                     this.action();
                 } else {
@@ -75,11 +79,41 @@
                         window.location.href = this.action;
                     }
                 }
+            },
+            handlerClick() {
+                if (this.confirm) {
+                    this.showConfirm(this.confirm);
+                } else {
+                    this.doClick();
+                }
+            },
+
+            showConfirm(message) {
+                let self = this,
+                    config = {
+                        content: '一般出现此对话框表示此操作不可还原，请谨慎选择',
+                        title: message ? message : '您确定要进行此操作吗？',
+                        confirm() {
+                            self.doClick();
+                        },
+                        buttons: {
+                            ok: {
+                                text: '确定',
+                                btnClass: 'btn-theme'
+                            },
+                            close: {
+                                text: '关闭',
+                            }
+                        }
+                    };
+
+                $.confirm(config);
             }
         }
     }
 </script>
 
 <style scoped>
+
 
 </style>

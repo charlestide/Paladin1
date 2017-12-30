@@ -6,9 +6,9 @@
  * Time: 下午4:08
  */
 
-namespace App\Paladin\Generator\Crud;
+namespace Charlestide\Paladin\Generator\Crud;
 
-use App\Paladin\Generator\Generator;
+use Charlestide\Paladin\Generator\Generator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;

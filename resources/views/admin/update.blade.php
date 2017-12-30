@@ -2,8 +2,6 @@
 
 <!-- START @PAGE CONTENT -->
 @section('content')
-<section id="page-content">
-
     <pvc-bread-crumb icon="user" title="修改管理员" summary="在这里您可以修改已存在管理员">
         <pvc-bread-crumb-item title="系统管理" url="#"></pvc-bread-crumb-item>
         <pvc-bread-crumb-item title="管理员" url="/admin"></pvc-bread-crumb-item>
@@ -31,19 +29,16 @@
                     <pvc-textfield name="admin[password]" value="" label="密码" type="password"></pvc-textfield>
                     <pvc-label-field label="创建于" value="{!! Request::is('*/create') ? '未创建' : $admin->created_at !!}"></pvc-label-field>
                     <pvc-label-field label="更新于" value="{!! Request::is('*/create') ? '未创建' : $admin->updated_at !!}"></pvc-label-field>
-                    <button type="submit" class="btn btn-theme" slot="footer">保存</button>
-                    <pvc-link-button href="{{url('/admin')}}" slot="footer" slot="footer" title="返回列表"></pvc-link-button>
+                    <pvc-button type="submit" title="保存" icon="save" slot="footer"></pvc-button>
+                    <pvc-button action="{{url('/admin')}}" slot="footer" icon="list" title="返回列表"></pvc-button>
             </pvc-form>
         </pvc-panel>
 
     </div><!-- /.body-content -->
     <!--/ End body content -->
-
-    <!-- Start footer content -->
-    @include('layouts._footer-admin')
-    <!--/ End footer content -->
-
-</section><!-- /#page-content -->
+@push('scripts')
 <script type="text/javascript" src="/js/form.js"></script>
+@endpush
+
 @stop
 <!--/ END PAGE CONTENT -->

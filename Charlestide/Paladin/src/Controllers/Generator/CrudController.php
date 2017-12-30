@@ -6,26 +6,34 @@
  * Time: 下午4:45
  */
 
-namespace app\Http\Controllers\Generator;
+namespace Charlestide\Paladin\Controllers\Generator;
 
 
 use App\Http\Controllers\Controller;
-use App\Paladin\Generator\Crud\CrudGenerator;
+use Charlestide\Paladin\Generator\Crud\CrudGenerator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class CrudController extends Controller
 {
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show() {
 
         $models = CrudGenerator::getAllModels('app/Model');
 
         return view('generator.crud.show',[
             'models' => $models,
+            'modelPath' => 'app/Model',
+            'basePath' => base_path(),
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function model(Request $request) {
         if ($request->has('modelClass')) {
             $crud = new CrudGenerator($request->input('modelClass'));
@@ -36,6 +44,10 @@ class CrudController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function run(Request $request) {
 
         $crud = new CrudGenerator($request->input('modelClass'),$request->input('modelDisplayName'),$request->has('overwriteFile'));
