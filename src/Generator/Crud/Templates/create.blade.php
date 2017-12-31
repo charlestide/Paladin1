@@ -17,7 +17,6 @@
                     @foreach($fields as $fieldName => $field)
                         @if (!$field['primary'] and !in_array($fieldName,['created_at','updated_at']))
                 <pvc-textfield name="{{$modelName}}[{{$fieldName}}]" label="{{$field['displayName']}}"></pvc-textfield>
-
                         @endif
                     @endforeach
                 <pvc-button type="submit" icon="save" title="保存" slot="footer"></pvc-button>
@@ -28,9 +27,10 @@
     </div><!-- /.body-content -->
     <!--/ End body content -->
 @verbatim
+@endsection
+
 @push('scripts')
-<script type="text/javascript" src="/js/form.js"></script>
+<script type="text/javascript" src="/paladin/js/form.js"></script>
 @endpush
-@stop
 <!--/ END PAGE CONTENT -->
 @endverbatim

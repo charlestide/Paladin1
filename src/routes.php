@@ -37,15 +37,9 @@ Route::namespace('Charlestide\Paladin\Controllers')
            Route::post('run','CrudController@run');
         });
 
-        //Admin
-        Route::match(['get','post'],'/admin/{admin}/assign','AdminController@assign');
-        Route::get('admin/{admin}/delete','AdminController@destroy');
-        Route::match(['get', 'post'],'admin/{admin}/role','AdminController@role');
-        Route::resource('admin', 'AdminController');
-
         //Role
         Route::match(['get','post'],'/role/{role}/assign','RoleController@assign');
-        Route::get('role/{role}/delete','RoleController@destroy');
+        Route::get('role/{role}/delete','RoleController@destroy');;
         Route::resource('role','RoleController');
 
         //Permission

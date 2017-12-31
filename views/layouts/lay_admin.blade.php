@@ -218,6 +218,16 @@
             <div id="tip" status="{{session('tipStatus') ?: 'success'}}" style="display: none;">{{session('tip')}}</div>
         @endif
 
+        @if(count($errors))
+            <div id="errors">
+                <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{$error}}</li>
+                @endforeach
+                </ul>
+            </div>
+        @endif
+
     </body>
     <!--/ END BODY -->
 

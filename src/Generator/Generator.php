@@ -40,10 +40,14 @@ abstract class Generator
      * @return bool
      */
     protected function writeFile($content, $file,$overwrite = false) {
-        if ($overwrite) {
-            if ($this->filemanager->has($file)) {
+        if ($this->filemanager->has($file)) {
+            $this->warn('文件已经存在...',false);
+            if ($overwrite) {
+                $this->put('尝试覆盖...');
                 $this->filemanager->delete($file);
-                $this->put('删除文件: '.$file);
+                $this->comment('完成',false);
+            } else {
+                $this->comment('不覆盖',false);
             }
         }
 

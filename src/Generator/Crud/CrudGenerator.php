@@ -58,6 +58,7 @@ class CrudGenerator extends Generator
     public function run() {
         $this->route();
         $this->controller();
+        $this->policy();
         $this->view();
         $this->saveToCache();
     }
@@ -77,13 +78,18 @@ class CrudGenerator extends Generator
         $data['model'] = $this->model;
         $data['modelName'] = camel_case($this->modelName);
         $data['ModelName'] = studly_case($this->modelName);
+        $data['modelDisplayName'] = $this->displayName;
 
         $fileContent = $this->readTemplate('route','plain',$data);
+        $fileContent = str_replace('___modelName___','{'.camel_case($this->modelName).'}',$fileContent);
         $filePath = 'routes/web.php';
+
+        $this->info('将route写入到'.$filePath.'...',false);
+
         if ($this->appendToFile($fileContent,$filePath)) {
-            $this->put('已写入Route: ' . $filePath);
+            $this->comment('写入完成');
         } else {
-            $this->error('无需写入: '.$filePath);
+            $this->comment('路由已存在，无需写入');
         }
     }
 
@@ -91,16 +97,19 @@ class CrudGenerator extends Generator
      * 生成controller
      */
     public function controller() {
+
         $data['model'] = $this->model;
         $data['modelName'] = camel_case($this->modelName);
         $data['ModelName'] = studly_case($this->modelName);
-        $data['displayName'] = $this->displayName;
+        $data['modelDisplayName'] = $this->displayName;
 
         $fileContent = $this->readTemplate('controller','php',$data);
         $filePath = 'app/Http/Controllers/'.studly_case($this->modelName).'Controller.php';
 
+        $this->info('开始创建controller: '.$filePath,false);
+
         if ($this->writeFile($fileContent,$filePath,$this->overwriteFile)) {
-            $this->put('已创建Controller: '.$filePath);
+            $this->comment('已创建Controller: '.$filePath);
         } else {
             $this->error('失败! 创建Controller: '.$filePath);
         }
@@ -119,10 +128,16 @@ class CrudGenerator extends Generator
         $data['fields'] = $this->getColumns();
         $data['primaryKey'] = $this->model->getKeyName();
 
+
         foreach (['index','create','update','show'] as $viewName) {
-            $filePath = $this->writeFile($this->readTemplate($viewName,'plain',$data),$path.$viewName.'.blade.php',$this->overwriteFile);
+            $filePath = $path.$viewName.'.blade.php';
+            $this->info('开始创建view: '.$filePath);
+
+            $filePath = $this->writeFile($this->readTemplate($viewName,'plain',$data),$filePath,$this->overwriteFile);
             if ($filePath) {
-                $this->put('已创建View: '.$filePath);
+                $this->comment('已创建View: '.$filePath);
+            } else {
+                $this->error('失败！创建View: '.$filePath);
             }
 
         }
@@ -130,15 +145,25 @@ class CrudGenerator extends Generator
 
     /**
      * 生成Policy
-     * @param Persistent $storage
      */
-    public function policy(Persistent $storage) {
+    public function policy() {
 
-        if (!Gate::resolvePolicy($this->modelName)) {
+        $modelClassName = get_class($this->model);
+        $storage = app(Persistent::class);
+        $this->info('正在为 '.$modelClassName.' 创建鉴权策略...',false);
+        if (!Gate::getPolicyFor($modelClassName)) {
             $crudModels = $storage->crudModels;
-            if (isset($crudModels[$this->modelName])) {
-                $crudModels[] = $this->modelName;
+            if (!isset($crudModels[$modelClassName])) {
+                $crudModels[] = $modelClassName;
+                $storage->crudModels = $crudModels;
+                $storage->saveToDisk();
+                $this->comment('成功');
+
+            } else {
+                $this->put('忽略，已经存在CRUD策略');
             }
+        } else {
+            $this->comment('忽略，已有其他策略');
         }
     }
 

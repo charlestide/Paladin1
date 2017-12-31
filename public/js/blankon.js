@@ -34,6 +34,7 @@ var BlankonApp = function(){
             BlankonApp.handleClearCookie();
             BlankonApp.handleBoxModal();
             BlankonApp.handleTip();
+            BlankonApp.handleErrors();
             BlankonApp.handleCopyrightYear();
         },
 
@@ -733,6 +734,17 @@ var BlankonApp = function(){
                         default:
                             toastr.success(message);
                     }
+                }
+            });
+        },
+
+        handleErrors() {
+            toastr.options.progressBar = true;
+            $(function () {
+                let $errors = $('#errors');
+                if ($errors.length && ($lis = $('li',$errors))) {
+                    let message = $lis.text();
+                    toastr.error(message);
                 }
             });
         },

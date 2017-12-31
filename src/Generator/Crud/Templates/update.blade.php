@@ -32,9 +32,10 @@
 @verbatim
 
 @push('scripts')
-<script type="text/javascript" src="/js/form.js"></script>
+<script type="text/javascript" src="/paladin/js/form.js"></script>
 @endpush
+<!--/ END PAGE CONTENT -->
 
 @stop
-<!--/ END PAGE CONTENT -->
 @endverbatim
+

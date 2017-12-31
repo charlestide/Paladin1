@@ -24,11 +24,11 @@
     </div><!-- /.body-content -->
     <!--/ End body content -->
 @verbatim
-
+@endsection
 @push('scripts')
-<script type="text/javascript" src="/js/form.js"></script>
+<script type="text/javascript" src="/paladin/js/form.js"></script>
 @endpush
-@stop
 <!--/ END PAGE CONTENT -->
+
 @endverbatim
 

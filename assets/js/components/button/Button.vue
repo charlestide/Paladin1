@@ -96,7 +96,6 @@
                 }
             },
             handlerClick() {
-                console.log('bb');
                 if (this.confirm) {
                     this.showConfirm(this.confirm);
                 } else {

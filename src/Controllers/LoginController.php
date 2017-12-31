@@ -48,7 +48,7 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        return view('paladin::paladin::auth.login');
+        return view('paladin::auth.login');
     }
 
     public function logout(Request $request)

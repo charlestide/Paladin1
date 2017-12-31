@@ -22,7 +22,7 @@ class PaladinServiceProvider extends ServiceProvider
     public function boot() {
 
         $this->publishes([
-            __DIR__.'/config/paladin.php' => config_path('paladin.php')
+            __DIR__.'/../config/paladin.php' => config_path('paladin.php')
         ],'config');
 
         $this->loadRoutesFrom( __DIR__.'/routes.php');

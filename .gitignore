@@ -24,3 +24,6 @@ Homestead.json
 
 #error
 php_errors.log
+
+#npm run watch
+dist/

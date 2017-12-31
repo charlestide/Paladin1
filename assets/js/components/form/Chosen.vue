@@ -24,6 +24,10 @@
     export default {
         name: "pvc-chosen",
         mixins: [layoutMixin,fieldMixin,ListMixin],
+        model: {
+            props: 'value',
+            event: 'change'
+        },
         data() {
             return {
                 pvcName: 'chosen',
@@ -47,7 +51,8 @@
             let self = this;
             self.chosen = $('select',self.$el).chosen(self.chosenOption)
                 .change(function (event,value) {
-                    self.$emit('changed',value.selected);
+                    // self.$emit('changed',value.selected);
+                    self.$emit('change',value.selected);
                     self.$emit('change',value.selected);
                 });
 

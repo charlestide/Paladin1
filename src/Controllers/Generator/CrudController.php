@@ -51,11 +51,16 @@ class CrudController extends Controller
      */
     public function run(Request $request) {
 
+        $this->validate($request,[
+            'modelClass' => 'required',
+            'modelDisplayName' => 'required',
+            'modelColumns' => 'array'
+        ]);
 
         $crud = new CrudGenerator(
             $request->input('modelClass'),
             $request->input('modelDisplayName'),
-            $request->has('overwriteFile')
+            $request->input('overwriteFile',false)
         );
         $crud->setColumnsInfo($request->input('modelColumns'));
         $crud->run();

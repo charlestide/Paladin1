@@ -15,7 +15,7 @@
             <pvc-form>
                 <pvc-label-field label="Model: " value="{{$modelClass}} : {{$modelDisplayName}}"></pvc-label-field>
 
-                <pvc-form-divider label="{{$modelClass}}的字段"></pvc-form-divider>
+                <pvc-form-divider label="{{old('modelClass')}}的字段"></pvc-form-divider>
                 @foreach($modelColumns as $columnName => $column)
                     <pvc-label-field label="{{$columnName}}" value="{{$column['displayName']}}"></pvc-label-field>
                 @endforeach

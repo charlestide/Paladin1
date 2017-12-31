@@ -44,7 +44,7 @@ class Persistent
      */
     private function __construct()
     {
-        $this->persistentFile = config_path('paladin.storage');
+        $this->persistentFile = config('paladin.storage','paladin.json');
         $this->loadFromDisk();
     }
 
@@ -53,7 +53,7 @@ class Persistent
      * @return mixed
      */
     public function __get($name) {
-        return $this->data[$name];
+        return isset($this->data[$name]) ? $this->data[$name] : null;
     }
 
     /**
@@ -78,13 +78,18 @@ class Persistent
      * @return bool
      */
     public function loadFromDisk() {
-        $content = Storage::disk('local')->get($this->persistentFile);
 
-        if ($content) {
-            $this->data = json_decode($content);
-            return true;
-        } else {
-            return false;
+        $storage = Storage::disk('local');
+
+        if ($storage->has($this->persistentFile)) {
+            $content = $storage->get($this->persistentFile);
+
+            if ($content) {
+                $this->data = json_decode($content,true);
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -95,5 +100,15 @@ class Persistent
         $content = json_encode($this->data);
         Storage::disk('local')->put($this->persistentFile,$content);
     }
+
+    /**
+     * @return string
+     */
+    public function getPersistentFile(): string
+    {
+        return $this->persistentFile;
+    }
+
+
 
 }

@@ -33,7 +33,7 @@ class AuthService
 
     public static function detectDefintions() {
         foreach (Gate::abilities() as $defintionName => $function) {
-            $permission = Permission::firstOrCreate(['name' => $defintionName]);
+            Permission::firstOrCreate(['name' => $defintionName]);
         }
     }
 

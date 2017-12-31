@@ -13,8 +13,8 @@
 
         <pvc-panel title="生成CRUD代码" :closeable="true" :validation="true">
             <pvc-form method="post" action="{{url('/generator/crud/run')}}" token="{{csrf_token()}}" :validation="false">
-                <pvc-textfield name="mdoelPath" label="搜索model的路径" :required="true" placeholder="您可以指定您项目中的model路径" v-model="modelPath" :desc="pathDesc"></pvc-textfield>
-                <pvc-chosen name="modelClass" label="请选择Model" :required="true" placeholder="请选择一个Model" @changed="modelSelected" desc="此处会显示存放在app/Model目录中的model" >
+                <pvc-textfield name="modelPath" label="搜索model的路径" :required="true" placeholder="您可以指定您项目中的model路径" value="{{old('modelPath',$modelPath)}}" desc="这个路径的默认值可以在config/paladin.php中修改"></pvc-textfield>
+                <pvc-chosen name="modelClass" label="请选择Model" :required="true" placeholder="请选择一个Model" v-model="modelClassName" desc="此处会显示存放在app/Model目录中的model" >
                     @foreach($models as $model)
                     <option value="{{$model}}">{{$model}}</option>
                     @endforeach
@@ -42,34 +42,22 @@
         const content = new Vue({
             el: '#page-content',
             data: {
-                modelPath: '{{$modelPath}}',
-                basePath: '{{$basePath}}',
-                modelClassName: '',
-                modelDisplayName: '',
+                modelClassName: '{{old('modelClassName')}}',
+                modelDisplayName: '{{old('modelDisplayName')}}',
                 modelColumns: [],
-            },
-            computed: {
-                pathDesc() {
-                    return '将会搜索' + this.basePath + '/' + this.modelPath;
-                }
             },
             watch: {
                 modelClassName: function (value, oldValue) {
                     let self = this;
-                    $.getJSON('{{url('generator/crud/model')}}',{modelClass: value},function (json) {
-                        if (json) {
-                            self.modelColumns = json.columns;
-                            self.modelDisplayName = json.modelDisplayName;
-                        }
-                    });
-
-                    return value;
+                    if (value !== oldValue) {
+                        $.getJSON('{{url('generator/crud/model')}}', {modelClass: value}, function (json) {
+                            if (json) {
+                                self.modelColumns = json.columns;
+                                self.modelDisplayName = json.modelDisplayName;
+                            }
+                        });
+                    }
                 },
-            },
-            methods: {
-                modelSelected: function (modelClass) {
-                    this.modelClassName = modelClass;
-                }
             }
         });
 

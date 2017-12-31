@@ -2,6 +2,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Charlestide\Paladin\Controllers\Controller;
 use {{get_class($model)}};
 
 class {{$ModelName}}Controller extends Controller
@@ -11,6 +12,8 @@ class {{$ModelName}}Controller extends Controller
     * @var string 需要验证权限的Model
     */
     protected $authModel = {{$ModelName}}::class;
+
+
 
     /**
     * Contructor
@@ -37,7 +40,7 @@ class {{$ModelName}}Controller extends Controller
             return Datatables::of(${{$modelName}}s)->make(true);
         }
 
-        return view('paladin.{{$modelName}}/index');
+        return view('{{$modelName}}/index');
     }
 
     /**
@@ -48,7 +51,7 @@ class {{$ModelName}}Controller extends Controller
     public function create()
     {
 
-        return view('paladin.{{$modelName}}/create');
+        return view('{{$modelName}}/create');
     }
 
     /**
@@ -67,9 +70,9 @@ class {{$ModelName}}Controller extends Controller
 
             ${{$modelName}}->save();
 
-            return redirect('/{{$modelName}}/'.${{$modelName}}->id)->with('tip','保存成功');
+            return redirect('/{{$modelName}}/'.${{$modelName}}->id)->with('tip','{{$modelDisplayName}} 保存成功');
         } else {
-            return redirect()->back()->with('tip','保存失败');
+            return redirect()->back()->with('tip','{{$modelDisplayName}} 保存失败');
         }
     }
 
@@ -81,7 +84,7 @@ class {{$ModelName}}Controller extends Controller
      */
     public function show({{$ModelName}} ${{$modelName}})
     {
-        return view('paladin.{{$modelName}}.show',['{{$modelName}}' => ${{$modelName}}]);
+        return view('{{$modelName}}.show',['{{$modelName}}' => ${{$modelName}}]);
     }
 
     /**
@@ -92,7 +95,7 @@ class {{$ModelName}}Controller extends Controller
      */
     public function edit({{$ModelName}} ${{$modelName}})
     {
-        return view('paladin.{{$modelName}}/update',['{{$modelName}}' => ${{$modelName}}]);
+        return view('{{$modelName}}/update',['{{$modelName}}' => ${{$modelName}}]);
     }
 
     /**
@@ -111,9 +114,9 @@ class {{$ModelName}}Controller extends Controller
 
             ${{$modelName}}->save();
 
-            return redirect('/{{$modelName}}/'.${{$modelName}}->id)->with('tip','保存成功');
+            return redirect('/{{$modelName}}/'.${{$modelName}}->id)->with('tip','{{$modelDisplayName}} 保存成功');
         } else {
-            return redirect()->back()->with('tip','保存失败');
+            return redirect()->back()->with('tip','{{$modelDisplayName}} 保存失败');
         }
     }
 
@@ -127,9 +130,9 @@ class {{$ModelName}}Controller extends Controller
     {
         try {
             ${{$modelName}}->delete();
-            return redirect()->with('tip','删除成功');
+            return redirect()->with('tip','{{$modelDisplayName}} 删除成功');
         } catch (\Exception $e) {
-            return redirect()->back()->with('tip','删除失败');
+            return redirect()->back()->with('tip','{{$modelDisplayName}} 删除失败');
         }
     }
 }
