@@ -1,1 +1,0 @@
-/Users/yuyu/Documents/workspace/Barbarian/bar.web.js

@@ -1,60 +1,36 @@
 {
-    "name": "charlestide/Paladin",
-    "description": "An Backend Dashboard Framework writed by PHP and Laravel Framework.",
-    "keywords": ["backend", "laravel", "framework"],
+    "name": "charlestide/paladin",
+    "description": "Paladin is a Open Source Laravel Admin Panel",
+    "type": "library",
     "license": "MIT",
-    "type": "project",
+    "authors": [
+        {
+            "name": "tangkeyu",
+            "email": "tangkeyu@vip.163.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Charlestide\\Paladin\\PaladinServiceProvider"
+            ]
+        }
+    },
     "require": {
         "php": ">=7.0.0",
-        "doctrine/dbal": "^2.6",
-        "fideloper/proxy": "~3.3",
         "laravel/framework": "5.5.*",
-        "laravel/tinker": "~1.0",
-        "yajra/laravel-datatables": "^1.0",
-        "yajra/laravel-datatables-oracle": "^8.0"
-    },
-    "require-dev": {
-        "filp/whoops": "~2.0",
-        "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "~1.0",
-        "phpunit/phpunit": "~6.0"
+        "yajra/laravel-datatables": "^1.0"
+
     },
     "autoload": {
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ],
         "psr-4": {
-            "App\\": "app/",
-            "Charlestide\\Paladin\\": "Charlestide/Paladin/src"
+            "Charlestide\\Paladin\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Charlestide\\Paladin\\Tests\\": "tests/"
         }
-    },
-    "extra": {
-        "laravel": {
-            "dont-discover": [
-            ]
-        }
-    },
-    "scripts": {
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ],
-        "post-create-project-cmd": [
-            "@php artisan key:generate"
-        ],
-        "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
-        ]
-    },
-    "config": {
-        "preferred-install": "dist",
-        "sort-packages": true,
-        "optimize-autoloader": true
     }
 }
