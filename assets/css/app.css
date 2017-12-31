@@ -1,0 +1,18 @@
+
+#page-content {
+    height: 100%;
+    margin-top: -50px;
+    padding-top:50px;
+}
+
+#page-inner{
+    min-height: 100%;
+    padding-bottom: 50px;
+    margin-bottom: -50px;
+}
+
+#footer-content {
+    line-height: 40px;
+    height: 50px;
+    /*margin-top: -50px;*/
+}

@@ -9,9 +9,11 @@
 namespace Charlestide\Paladin\Generator\Crud;
 
 use Charlestide\Paladin\Generator\Generator;
+use Charlestide\Paladin\Storage\FileManager;
+use Charlestide\Paladin\Storage\Persistent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 
 class CrudGenerator extends Generator
 {
@@ -38,9 +40,10 @@ class CrudGenerator extends Generator
 
     protected $columns = [];
 
-
     public function __construct($modelClass,$displayName = null,$overwriteFile = false)
     {
+        parent::__construct();
+
         $modelClass = str_replace('/','\\',$modelClass);
         $this->model = new $modelClass;
         $this->modelName = ucfirst(class_basename($modelClass));
@@ -49,6 +52,7 @@ class CrudGenerator extends Generator
         if ($displayName) {
             $this->displayName = $displayName;
         }
+
     }
 
     public function run() {
@@ -66,7 +70,9 @@ class CrudGenerator extends Generator
         return $this->displayName;
     }
 
-
+    /**
+     * 写入路由
+     */
     public function route() {
         $data['model'] = $this->model;
         $data['modelName'] = camel_case($this->modelName);
@@ -81,6 +87,9 @@ class CrudGenerator extends Generator
         }
     }
 
+    /**
+     * 生成controller
+     */
     public function controller() {
         $data['model'] = $this->model;
         $data['modelName'] = camel_case($this->modelName);
@@ -97,6 +106,9 @@ class CrudGenerator extends Generator
         }
     }
 
+    /**
+     * 生成view
+     */
     public function view() {
         $path = 'resources/views/'.camel_case($this->modelName).'/';
 
@@ -116,6 +128,25 @@ class CrudGenerator extends Generator
         }
     }
 
+    /**
+     * 生成Policy
+     * @param Persistent $storage
+     */
+    public function policy(Persistent $storage) {
+
+        if (!Gate::resolvePolicy($this->modelName)) {
+            $crudModels = $storage->crudModels;
+            if (isset($crudModels[$this->modelName])) {
+                $crudModels[] = $this->modelName;
+            }
+        }
+    }
+
+    /**
+     * 设置显示名称
+     * @param string|array $columnaName 如果传入数组，则作为数据库中的列的显示名称
+     * @param null $displayName
+     */
     public function setDisplayName($columnaName,$displayName = null) {
         if ($displayName) {
             $this->columns[$columnaName] = $displayName;
@@ -124,12 +155,20 @@ class CrudGenerator extends Generator
         }
     }
 
+    /**
+     * 设置数据库中的列的信息
+     * @param array $columnsInfo
+     */
     public function setColumnsInfo(array $columnsInfo) {
         foreach ($columnsInfo as $columnName => $columnInfo) {
             $this->columns[$columnName]['displayName'] = $columnInfo['displayName'];
         }
     }
 
+    /**
+     * @param bool $compareWithDb 是否与数据库中比较
+     * @return array
+     */
     public function getColumns($compareWithDb = false) {
         if (empty($this->columns) or $compareWithDb) {
             $schemaBuilder = $this->model->getConnection()->getSchemaBuilder();
@@ -168,6 +207,9 @@ class CrudGenerator extends Generator
         return $this->columns;
     }
 
+    /**
+     * 存储到缓存中
+     */
     protected function saveToCache() {
         Cache::store('file')->forever($this->modelName,[
             'modelDisplayName' => $this->displayName,
@@ -175,6 +217,9 @@ class CrudGenerator extends Generator
         ]);
     }
 
+    /**
+     * 从缓存中读取
+     */
     protected function loadFromCache() {
         if (Cache::store('file')->has($this->modelName)) {
             $cacheData = Cache::store('file')->get($this->modelName);
@@ -189,12 +234,18 @@ class CrudGenerator extends Generator
     }
 
 
+    /**
+     * @param $modelPath
+     * @return array
+     */
     public static function getAllModels($modelPath) {
-        $files = Storage::disk('app')->listContents($modelPath);
+
+        $filemanager = app(FileManager::class);
+        $files = $filemanager->files($modelPath);
         $models = [];
 
         foreach ($files as $file) {
-            $fileContent = Storage::disk('app')->read($file['path']);
+            $fileContent = $filemanager->read($file);
             $namespace = self::matchFirst('/\bnamespace\b[\s]+([\w\\\\]+);/i',$fileContent);
             $class = self::matchFirst('/\bclass\b[\s]+([\w]+)/i',$fileContent);
             if ($namespace and $class) {

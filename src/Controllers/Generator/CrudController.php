@@ -9,7 +9,7 @@
 namespace Charlestide\Paladin\Controllers\Generator;
 
 
-use App\Http\Controllers\Controller;
+use Charlestide\Paladin\Controllers\Controller;
 use Charlestide\Paladin\Generator\Crud\CrudGenerator;
 use Illuminate\Http\Request;
 
@@ -21,11 +21,12 @@ class CrudController extends Controller
      */
     public function show() {
 
-        $models = CrudGenerator::getAllModels('app/Model');
+        $modelPath = config('paladin.genereator.crud.model_path','app/Model');
+        $models = CrudGenerator::getAllModels($modelPath);
 
-        return view('generator.crud.show',[
+        return view('paladin::generator.crud.show',[
             'models' => $models,
-            'modelPath' => 'app/Model',
+            'modelPath' => $modelPath,
             'basePath' => base_path(),
         ]);
     }
@@ -50,11 +51,16 @@ class CrudController extends Controller
      */
     public function run(Request $request) {
 
-        $crud = new CrudGenerator($request->input('modelClass'),$request->input('modelDisplayName'),$request->has('overwriteFile'));
+
+        $crud = new CrudGenerator(
+            $request->input('modelClass'),
+            $request->input('modelDisplayName'),
+            $request->has('overwriteFile')
+        );
         $crud->setColumnsInfo($request->input('modelColumns'));
         $crud->run();
 
-        return view('generator.crud.result',[
+        return view('paladin::generator.crud.result',[
             'modelClass' => $request->input('modelClass'),
             'modelDisplayName' => $request->input('modelDisplayName'),
             'modelColumns' => $request->input('modelColumns'),

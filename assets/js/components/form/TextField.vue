@@ -1,0 +1,115 @@
+<template>
+    <pvc-field-layout :layout="layout">
+        <span v-if="this.$slots.left" class="input-group-addon">
+            <slot name="left"/>
+        </span>
+        <span v-if="checkbox" class="input-group-addon">
+            <div class="ckbox ckbox-theme">
+                <input :id="checkboxId" :checked="inputEnabled" type="checkbox" v-on:click.native="handlerChecked" />
+                <label :for="checkboxId"></label>
+            </div>
+        </span>
+        <div v-if="selectbox" class="input-group-btn">
+            <button type="button" class="btn btn-theme" tabindex="-1">{{value}}</button>
+            <button type="button" class="btn btn-theme dropdown-toggle" data-toggle="dropdown" tabindex="-1" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li v-for="(option,index) in items" @click="handlerSelectOption"  >
+                    <a @click="handlerSelectOption" href="javascript:void(0)" :index="index">{{option.label}}</a>
+                </li>
+                <slot/>
+            </ul>
+        </div>
+        <span v-if="icon && iconpos==='left'" class="input-group-addon 1"><i :class="iconClass"></i></span>
+            <input
+                v-bind="this.$props"
+                class="form-control"
+                :data-placeholder="placeholder"
+                :type="type"
+                :disabled="!fieldEnabled"
+                @input="handlerInput($event.target.value)"
+                ref="input"
+            >
+        <span v-if="icon && iconpos==='right'" class="input-group-addon"><i :class="iconClass"></i></span>
+        <span v-if="this.$slots.right" class="input-group-addon">
+            <slot name="right"/>
+        </span>
+    </pvc-field-layout>
+</template>
+
+<script>
+
+    /**
+     * @module Pvc-TextField
+     */
+
+    import {layoutMixin,validateMixin,formMixin} from "./formMixin";
+    import {IconMixin} from "../common/IconMixin";
+    import {fieldMixin} from "./fieldMixin";
+    import PvcFieldLayout from "./FieldLayout";
+
+
+
+    /**
+     * 这是TextField
+     */
+    export default {
+        components: {PvcFieldLayout},
+        name: "pvc-textfield",
+        mixins: [layoutMixin,fieldMixin,validateMixin,IconMixin],
+        data() {
+            return {
+                pvcName: 'textfield',
+                pvcType: 'field',
+            }
+        },
+        props: {
+            size: {
+                type: String,
+                default: "sm",
+                validator: function (value) {
+                    return value in {lg:'',sm:'',sx:''};
+                }
+            },
+            type: {
+                type: String,
+                validator: function (value) {
+                    return value in {password:'',text:'',email:''};
+                },
+                default:'text'
+            },
+            checkbox: {
+                type: Boolean,
+                default: false
+            },
+            selectbox: {
+                type: [Boolean, Array],
+                default: false,
+            }
+        },
+        computed: {
+            checkboxId() {
+                return Math.random();
+            }
+        },
+        methods: {
+            handlerChecked() {
+                this.inputEnabled = !this.inputEnabled;
+                this.$emit('check',this.inputEnabled);
+            },
+            handlerSelectOption(event) {
+                let index = $(event.target).attr('index');
+                this.textValue = this.items[index].value;
+            },
+            handlerInput(value) {
+                this.$emit('input',value);
+                this.$refs.input.value = value;
+            }
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>

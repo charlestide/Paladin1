@@ -18,9 +18,6 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-
-//        $this->authorize('list',Role::class);
-
         if ($request->input('format') == 'json') {
 
             $roles = Role::query();
@@ -28,7 +25,7 @@ class RoleController extends Controller
             return Datatables::of($roles)->make(true);
         }
 
-        return view('role/index');
+        return view('paladin::role/index');
     }
 
     /**
@@ -38,9 +35,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $this->authorize('create',Role::class);
-
-        return view('role/create');
+        return view('paladin::role/create');
     }
 
     /**
@@ -51,8 +46,6 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create',Role::class);
-
         if ($request->has('role')) {
 
             $roleData = $request->input('role');
@@ -75,9 +68,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        $this->authorize('view',$role);
-
-        return view('role.show',['role' => $role]);
+        return view('paladin::role.show',['role' => $role]);
     }
 
     /**
@@ -88,9 +79,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $this->authorize('update',$role);
-
-        return view('role/update',['role' => $role]);
+        return view('paladin::role/update',['role' => $role]);
     }
 
     /**
@@ -102,8 +91,6 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        $this->authorize('update',$role);
-
         if ($request->has('role')) {
 
             $roleData = $request->input('role');
@@ -125,8 +112,18 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        $this->authorize('delete',$role);
-
+        try {
+            $role->delete();
+            return redirect()->with([
+                'title' => '删除信息',
+                'text' => '删除成功',
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'title' => '删除信息',
+                'text' => '删除失败: '. $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -136,9 +133,6 @@ class RoleController extends Controller
      */
     public function assign(Request $request, Role $role) {
 
-//        $this->authorize('assign',$role);
-
-
         if ($request->has('permissions')) {
             $permissions = $request->input('permissions');
             $role->permissions()->saveMany(Permission::find($permissions));
@@ -146,7 +140,7 @@ class RoleController extends Controller
             return redirect('/role/'.$role->id);
         } else {
 
-            return view('role.assign',[
+            return view('paladin::role.assign',[
                 'role' => $role,
                 'permissions' => Permission::grouped(),
                 'related' => $role->permissions->pluck('id')->toArray()

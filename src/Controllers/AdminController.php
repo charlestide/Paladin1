@@ -11,6 +11,9 @@ use Yajra\DataTables\DataTables;
 class AdminController extends Controller
 {
 
+    /**
+     * @var string 需要验证权限的Model
+     */
     protected $authModel = Admin::class;
 
     /**
@@ -25,15 +28,10 @@ class AdminController extends Controller
 
             $admins = Admin::query();
 
-            return Datatables::of($admins)
-                ->addColumn('action', function ( $admin) {
-                    return '<a href="'.url('/admin/'.$admin->id).'" class="btn btn-xs bg-color-blueDark txt-color-white">'
-                        . '<i class="fa fa-detail"></i> 查看</a>';
-                })
-                ->make(true);
+            return Datatables::of($admins)->make(true);
         }
 
-        return view('admin/index');
+        return view('paladin::admin/index');
     }
 
     /**
@@ -43,7 +41,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('admin/create');
+        return view('paladin::admin/create');
     }
 
     /**
@@ -66,10 +64,9 @@ class AdminController extends Controller
 
             $admin->save();
 
-            return redirect('/admin/'.$admin->id)->with('messageInfo',['title' => '保存管理员', 'text' => '保存成功']);
+            return redirect('/admin/'.$admin->id)->with('tip','管理员 保存成功');
         } else {
-//            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
-            die('错误的提交');
+            return redirect()->back()->with('tip','管理员 保存成功');
         }
     }
 
@@ -81,7 +78,7 @@ class AdminController extends Controller
      */
     public function show(Admin $admin)
     {
-        return view('admin.show',['admin' => $admin]);
+        return view('paladin::admin.show',['admin' => $admin]);
     }
 
     /**
@@ -92,7 +89,7 @@ class AdminController extends Controller
      */
     public function edit(Admin $admin)
     {
-        return view('admin/update',['admin' => $admin]);
+        return view('paladin::admin/update',['admin' => $admin]);
     }
 
     /**
@@ -117,7 +114,7 @@ class AdminController extends Controller
 
             return redirect('/admin/'.$admin->id)->with('messageInfo',['title' => '保存管理员', 'text' => '保存成功']);
         } else {
-//            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
+            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
             die('错误的提交');
         }
     }
@@ -125,12 +122,17 @@ class AdminController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  $admin
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Admin $admin)
     {
-        //
+        try {
+            $admin->delete();
+            return redirect()->with('tip','删除成功');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('tip','删除失败');
+        }
     }
 
     public function assign(Request $request, Admin $admin) {
@@ -141,7 +143,7 @@ class AdminController extends Controller
             return redirect('/admin/'.$admin->id);
         } else {
 
-            return view('admin.assign',[
+            return view('paladin::admin.assign',[
                 'admin' => $admin,
                 'permissions' => Permission::grouped(),
                 'related' => $admin->permissions->pluck('id')->toArray()
@@ -157,7 +159,7 @@ class AdminController extends Controller
             return redirect('/admin/'.$admin->id.'/role');
         } else {
 
-            return view('admin.role',[
+            return view('paladin::admin.role',[
                 'admin' => $admin,
                 'roles' => Role::all(),
                 'related' => $admin->roles->pluck('id')->toArray()

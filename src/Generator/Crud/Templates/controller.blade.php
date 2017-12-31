@@ -8,6 +8,11 @@ class {{$ModelName}}Controller extends Controller
 {
 
     /**
+    * @var string 需要验证权限的Model
+    */
+    protected $authModel = {{$ModelName}}::class;
+
+    /**
     * Contructor
     *
     * @return App\Http\Controllers\{{$ModelName}}
@@ -32,7 +37,7 @@ class {{$ModelName}}Controller extends Controller
             return Datatables::of(${{$modelName}}s)->make(true);
         }
 
-        return view('{{$modelName}}/index');
+        return view('paladin.{{$modelName}}/index');
     }
 
     /**
@@ -43,7 +48,7 @@ class {{$ModelName}}Controller extends Controller
     public function create()
     {
 
-        return view('{{$modelName}}/create');
+        return view('paladin.{{$modelName}}/create');
     }
 
     /**
@@ -62,9 +67,9 @@ class {{$ModelName}}Controller extends Controller
 
             ${{$modelName}}->save();
 
-            return redirect('/{{$modelName}}/'.${{$modelName}}->id)->with('messageInfo',['title' => '保存信息', 'text' => '保存成功']);
+            return redirect('/{{$modelName}}/'.${{$modelName}}->id)->with('tip','保存成功');
         } else {
-            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
+            return redirect()->back()->with('tip','保存失败');
         }
     }
 
@@ -76,7 +81,7 @@ class {{$ModelName}}Controller extends Controller
      */
     public function show({{$ModelName}} ${{$modelName}})
     {
-        return view('{{$modelName}}.show',['{{$modelName}}' => ${{$modelName}}]);
+        return view('paladin.{{$modelName}}.show',['{{$modelName}}' => ${{$modelName}}]);
     }
 
     /**
@@ -87,7 +92,7 @@ class {{$ModelName}}Controller extends Controller
      */
     public function edit({{$ModelName}} ${{$modelName}})
     {
-        return view('{{$modelName}}/update',['{{$modelName}}' => ${{$modelName}}]);
+        return view('paladin.{{$modelName}}/update',['{{$modelName}}' => ${{$modelName}}]);
     }
 
     /**
@@ -106,9 +111,9 @@ class {{$ModelName}}Controller extends Controller
 
             ${{$modelName}}->save();
 
-            return redirect('/{{$modelName}}/'.${{$modelName}}->id)->with('messageInfo',['title' => '保存信息', 'text' => '保存成功']);
+            return redirect('/{{$modelName}}/'.${{$modelName}}->id)->with('tip','保存成功');
         } else {
-            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
+            return redirect()->back()->with('tip','保存失败');
         }
     }
 
@@ -121,16 +126,10 @@ class {{$ModelName}}Controller extends Controller
     public function destroy({{$ModelName}} ${{$modelName}})
     {
         try {
-            $menu->delete();
-            return redirect()->with([
-                'title' => '删除信息',
-                'text' => '删除成功',
-            ]);
+            ${{$modelName}}->delete();
+            return redirect()->with('tip','删除成功');
         } catch (\Exception $e) {
-            return redirect()->back()->with([
-                'title' => '删除信息',
-                'text' => '删除失败: '. $e->getMessage(),
-            ]);
+            return redirect()->back()->with('tip','删除失败');
         }
     }
 }

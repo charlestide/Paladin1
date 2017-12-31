@@ -38,17 +38,17 @@ class RouteProvider extends ServiceProvider
 
         Route::model('admin',Admin::class);
         Route::model('role',Role::class);
-        Route::middlewareGroup('paladin',$this->middlewareGroups);
+        Route::middlewareGroup('paladin',[AutoAuth::class]);
 
     }
 
     public function map() {
-        Route::namespace($this->namespace)
-            ->middleware('paladin')
-            ->group(function () {
-                $this->mapAuths();
-                $this->mapWithAuth();
-            });
+//        Route::namespace($this->namespace)
+//            ->middleware('paladin')
+//            ->group(function () {
+//                $this->mapAuths();
+//                $this->mapWithAuth();
+//            });
     }
 
     public function mapAuths() {

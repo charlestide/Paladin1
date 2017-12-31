@@ -28,7 +28,7 @@ class MenuController extends Controller
         }
 
 
-        return view('menu/index');
+        return view('paladin::menu/index');
     }
 
     /**
@@ -41,7 +41,7 @@ class MenuController extends Controller
         $this->authorize('create',Menu::class);
 
 
-        return view('menu/create',[
+        return view('paladin::menu/create',[
             'parent' => $parent
         ]);
     }
@@ -82,7 +82,7 @@ class MenuController extends Controller
         $this->authorize('view',$menu);
 
 
-        return view('menu.show',['menu' => $menu]);
+        return view('paladin::menu.show',['menu' => $menu]);
     }
 
     /**
@@ -94,7 +94,7 @@ class MenuController extends Controller
     public function edit(Menu $menu)
     {
         $permssions = Permission::all(['id','name']);
-        return view('menu/update',[
+        return view('paladin::menu/update',[
             'menu' => $menu,
             'permissions' => $permssions
         ]);
@@ -135,15 +135,9 @@ class MenuController extends Controller
     {
         try {
             $menu->delete();
-            return redirect()->with([
-                'title' => '删除信息',
-                'text' => '删除成功',
-            ]);
+            return redirect()->with('tip','删除成功');
         } catch (\Exception $e) {
-            return redirect()->back()->with([
-                'title' => '删除信息',
-                'text' => '删除失败: '. $e->getMessage(),
-            ]);
+            return redirect()->back()->with('tip','删除失败');
         }
     }
 }

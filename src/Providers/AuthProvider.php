@@ -9,8 +9,9 @@
 namespace Charlestide\Paladin\Providers;
 
 
+use Charlestide\Paladin\Policies\CrudPolicy;
 use Charlestide\Paladin\Services\AuthService;
-use function foo\func;
+use Charlestide\Paladin\Storage\Persistent;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthProvider extends ServiceProvider
@@ -26,9 +27,6 @@ class AuthProvider extends ServiceProvider
 
     public function boot() {
         $this->registerPolicies();
-
-//        Gate::define('menu.index')
-
     }
 
     public function register()
@@ -36,5 +34,15 @@ class AuthProvider extends ServiceProvider
         $this->app->singleton(AuthService::class,function($app) {
            return new AuthService();
         });
+    }
+
+    public function loadCrudPolicy(Persistent $storage) {
+        if (isset($storage->crudPolicys) and is_array($storage->crudPolicys)) {
+            foreach ($storage->crudModels as $modelName) {
+                if (!Gate::resolvePolicy($modelName) and !isset($this->policies[$modelName])) {
+                    $this->policies[$modelName] = CrudPolicy::class;
+                }
+            }
+        }
     }
 }

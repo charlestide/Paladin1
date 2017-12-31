@@ -9,6 +9,7 @@
 namespace Charlestide\Paladin\Generator;
 
 
+use Charlestide\Paladin\Storage\FileManager;
 use Charlestide\Paladin\Util\StyledOutput;
 use Illuminate\Support\Facades\Storage;
 
@@ -23,6 +24,16 @@ abstract class Generator
     use StyledOutput;
 
     /**
+     * @var FileManager
+     */
+    protected $filemanager;
+
+    public function __construct()
+    {
+        $this->filemanager = app(FileManager::class);
+    }
+
+    /**
      * @param $content
      * @param $file
      * @param bool $overwrite
@@ -30,13 +41,13 @@ abstract class Generator
      */
     protected function writeFile($content, $file,$overwrite = false) {
         if ($overwrite) {
-            if (Storage::disk('app')->has($file)) {
-                Storage::disk('app')->delete($file);
+            if ($this->filemanager->has($file)) {
+                $this->filemanager->delete($file);
                 $this->put('删除文件: '.$file);
             }
         }
 
-        if (Storage::disk('app')->put($file,$content)) {
+        if ($this->filemanager->put($file,$content)) {
             return $file;
         } else {
             return false;
@@ -51,9 +62,7 @@ abstract class Generator
      */
     protected function readTemplate($templateName, $type = 'plain', array $data = []) {
 
-
-        $templateFile = app_path('Paladin/Generator/Crud/Templates/'.$templateName.'.blade.php');
-
+        $templateFile = __DIR__.'/Crud/Templates/'.$templateName.'.blade.php';
         $fileContent = view()->file($templateFile,$data)->render();
 
         switch ($type) {
@@ -73,11 +82,10 @@ abstract class Generator
      * @return bool
      */
     protected function appendToFile($content, $file) {
-        $storage = Storage::disk('app');
-        $oldContent = $storage->get($file);
+        $oldContent = $this->filemanager->get($file,true);
 
         if (strpos($oldContent,trim($content)) === false and
-            Storage::disk('app')->append($file,"\n".$content."\n")
+            $this->filemanager->append($file,"\n".$content."\n")
         ) {
             return $file;
         } else {

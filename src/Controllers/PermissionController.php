@@ -27,7 +27,7 @@ class PermissionController extends Controller
             return Datatables::of($permissions)->make(true);
         }
 
-        return view('permission/index');
+        return view('paladin::permission/index');
     }
 
     /**
@@ -38,7 +38,7 @@ class PermissionController extends Controller
     public function create()
     {
 
-        return view('permission/create');
+        return view('paladin::permission/create');
     }
 
     /**
@@ -71,7 +71,7 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        return view('permission.show',['permission' => $permission]);
+        return view('paladin::permission.show',['permission' => $permission]);
     }
 
     /**
@@ -82,7 +82,7 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
-        return view('permission/update',['permission' => $permission]);
+        return view('paladin::permission/update',['permission' => $permission]);
     }
 
     /**
@@ -115,6 +115,17 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        //
+        try {
+            $permission->delete();
+            return redirect()->with([
+                'title' => '删除信息',
+                'text' => '删除成功',
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'title' => '删除信息',
+                'text' => '删除失败: '. $e->getMessage(),
+            ]);
+        }
     }
 }

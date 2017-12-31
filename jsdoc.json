@@ -1,0 +1,29 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+  },
+  "source": {
+    "include": [
+        "assets/js"
+    ],
+    "includePattern": ".+\\.(js|doc|vue)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "plugins": [
+      "node_modules/jsdoc-vue"
+  ],
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "systemName"            : "Paladin",
+    "includeDate"           : true,
+    "navType"               : "inline",
+    "theme"                 : "cerulean",
+    "linenums"              : true,
+    "collapseSymbols"       : true,
+    "syntaxTheme"           : "dark",
+    "sort"					: true,
+    "search"                : true
+  }
+}
