@@ -9,7 +9,7 @@
             "email": "tangkeyu@vip.163.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "extra": {
         "laravel": {
             "providers": [
@@ -20,7 +20,9 @@
     "require": {
         "php": ">=7.0.0",
         "laravel/framework": "5.5.*",
-        "yajra/laravel-datatables": "^1.0"
+        "yajra/laravel-datatables": "^1.0",
+        "matriphe/larinfo": "^1.0",
+        "trntv/probe": "^1.0"
 
     },
     "autoload": {

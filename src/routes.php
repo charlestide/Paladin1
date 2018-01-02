@@ -21,7 +21,8 @@ Route::namespace('Charlestide\Paladin\Controllers')
     Route::middleware('auth')->group(function () {
 
         //首页
-        Route::resource('dashboard', 'DashBoardController');
+        Route::get('dashboard', 'DashBoardController@index');
+        Route::get('dashboard/routes', 'DashBoardController@routes');
 
         //Admin
         Route::get('/admin/{admin}/assign','AdminController@assign');

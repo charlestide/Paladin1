@@ -3388,7 +3388,7 @@ var render = function() {
   return _c(
     "table",
     {
-      staticClass: "table table-striped table-theme",
+      staticClass: "table table-striped table-theme table-responsive",
       attrs: { role: "datatable" }
     },
     [_c("thead", [_c("tr", [_vm._t("default")], 2)]), _vm._v(" "), _c("tbody")]

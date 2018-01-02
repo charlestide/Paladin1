@@ -697,16 +697,16 @@ var BlankonApp = function(){
                 // Add sound
                 soundManager.play('camera_flashing');
                 bootbox.dialog({
-                    message: 'Do you want to exit from Blankon?',
-                    title: 'Logout',
+                    message: '确定要退出吗？',
+                    title: '退出',
                     className: 'modal-danger modal-center',
                     buttons: {
                         danger: {
-                            label: 'No',
+                            label: '不',
                             className: 'btn-danger'
                         },
                         success: {
-                            label: 'Yes',
+                            label: '是',
                             className: 'btn-success',
                             callback: function() {
                                 window.location = $('#logout').data('url');

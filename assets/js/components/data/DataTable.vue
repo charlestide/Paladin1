@@ -1,5 +1,5 @@
 <template>
-    <table role="datatable" class="table table-striped table-theme">
+    <table role="datatable" class="table table-striped table-theme table-responsive">
         <thead>
         <tr>
             <slot></slot>

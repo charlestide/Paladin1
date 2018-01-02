@@ -99,7 +99,7 @@
         {{--paladin--}}
         <link href="{{asset('/paladin/css/paladin.css')}}" rel="stylesheet">
         <link href="{{asset('/paladin/css/themes/laravel.theme.css')}}" id="theme" rel="stylesheet">
-
+        <link href="https://at.alicdn.com/t/font_527081_hpb7nmm7vd706bt9.css" rel="stylesheet">
     <!--/ END PAGE LEVEL SCRIPTS -->
 
 
@@ -197,12 +197,14 @@
 
         <!--/ END WRAPPER -->
 
+        <script src="//at.alicdn.com/t/font_527081_hpb7nmm7vd706bt9.js"></script>
         <script type="text/javascript" src="/paladin/js/blankon.js"></script>
         <script type="text/javascript" src="{{asset('/paladin/js/app.js')}}"></script>
         @stack('scripts')
         <script type="text/javascript">
-            if (typeof(content) === 'undefined') {
-                const content = new Vue({
+            if (typeof(window.content) === 'undefined') {
+                console.log('没定义呀');
+                window.content = new Vue({
                     el: '#page-inner',
                 });
             }
