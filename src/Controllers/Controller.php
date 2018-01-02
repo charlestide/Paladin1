@@ -16,9 +16,7 @@ class Controller extends BaseController
 
     public function __construct()
     {
-        if ($this->authModel) {
-            $this->middleware(AutoAuth::class);
-        }
+
     }
 
     public function getAuthModel() {

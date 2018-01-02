@@ -6,6 +6,9 @@
 import paladin from "./components/plugins/paladin";
 Vue.use(paladin);
 
+Vue._ = require('underscore');
+Vue.$ = require('jquery');
+
 
 Vue.component('pvc-bread-crumb', require('./components/special/BreadCrumb.vue'));
 Vue.component('pvc-bread-crumb-item', require('./components/special/BreadCrumbItem.vue'));

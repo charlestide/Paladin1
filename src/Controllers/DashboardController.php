@@ -20,19 +20,11 @@ class DashboardController extends Controller
             $mysqlVersion = $mysqlVersion->version;
         }
 
-        $linfo = new Linfo();
-        $linfoParser = $linfo->getParser();
-
-
-
-
-
         $hardware = LarinfoFacade::getServerInfoHardware();
         $software = LarinfoFacade::getServerInfoSoftware();
 
         return view('paladin::dashboard.index',[
-            'mysqlVersion' => $mysqlVersion,
-            'systemInfo' => $linfoParser,
+            'mysqlVersion' => $mysqlVersion ?: '连接不可用',
             'memUsage' => $hardware['ram'],
             'diskUsage' => $hardware['disk'],
             'swapUsage' => $hardware['swap'],
@@ -64,8 +56,12 @@ class DashboardController extends Controller
     }
 
     public function usage() {
-        $system = ProviderFactory::create();
-        dd($system->getExternalIP());
+
+        $provider = ProviderFactory::create();
+        $freeMem = $provider->getFreeMem();
+
+        return ['freeMem' => $freeMem];
+
     }
 
 

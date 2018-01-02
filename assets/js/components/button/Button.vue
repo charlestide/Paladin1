@@ -1,5 +1,5 @@
 <template>
-    <button class="btn btn-theme rounded" :type="type" :class="['btn-'+size,'input-group-'+size]" data-container="body" @click="handlerClick" >
+    <button class="btn rounded" :type="type" :class="['btn-'+size,'input-group-'+size,{'btn-theme':theme}]" data-container="body" @click="handlerClick" >
         <i v-if="icon" :class="iconClass"></i> {{title}}
     </button>
 </template>
@@ -51,6 +51,10 @@
                 type: [Boolean,String],
                 default: false
             },
+            theme: {
+                type: Boolean,
+                default: true
+            }
         },
         mounted: function () {
             if (this.$parent.addButtonData) {

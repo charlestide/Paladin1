@@ -1,5 +1,17 @@
 let mix = require('laravel-mix');
 
+mix.webpackConfig({
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                include: [path.resolve('src'), path.resolve('test'), path.resolve('node_modules/vue-echarts-v3/src')]
+            }
+        ]
+    }
+});
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -16,6 +28,7 @@ mix
     .js('assets/js/app.js', 'public/js')
     .js('assets/js/form.js','public/js')
     .js('assets/js/data.js','public/js')
+    .js('assets/js/chart.js','public/js')
 
     .scripts([
         'assets/js/vendor/blankon/apps.js',
