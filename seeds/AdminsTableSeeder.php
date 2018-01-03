@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Model\Menu;
 
 class AdminsTableSeeder extends Seeder
 {

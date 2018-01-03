@@ -6,7 +6,7 @@
 
         <!-- Brand -->
         <div class="brand">
-            <img src="{{asset('/logo.png')}}" width="300" height="86" alt="brand logo"/>
+            <img src="{{asset('/paladin/logo.png')}}" width="300" height="86" alt="brand logo"/>
         </div>
         <!--/ Brand -->
 
@@ -17,7 +17,7 @@
             <div class="sign-header">
                 <div class="form-group">
                     <div class="sign-text">
-                        <span>{{config('name')}} {{__('管理后台')}}</span>
+                        <span>{{config('app.name')}} {{__('管理后台')}}</span>
                     </div>
                 </div><!-- /.form-group -->
             </div><!-- /.sign-header -->
