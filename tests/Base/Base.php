@@ -11,10 +11,10 @@ class Base extends TestCase
 
     protected $seeds = [
         'AdminsTableSeeder',
-        'MenuTableSeeder',
         'RoleTableSeeder',
         'PermissionTableSeeder',
         'PermissionRelationsTableSeeder',
+        'MenuTableSeeder'
     ];
 
     protected function getPackageProviders($application)
@@ -42,14 +42,9 @@ class Base extends TestCase
      * 运行$this->seeds中的seed
      */
     protected function runSeeds() {
-//        $oldIncludePath = get_include_path();
-//        set_include_path(__DIR__.'/../../seeds/');
-
         foreach ($this->seeds as $seed) {
             require_once(__DIR__.'/../../seeds/'.$seed .'.php');
             (new $seed)->run();
         }
-
-//        set_include_path($oldIncludePath);
     }
 }

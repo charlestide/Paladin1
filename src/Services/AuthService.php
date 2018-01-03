@@ -33,7 +33,7 @@ class AuthService
 
     public static function detectDefintions() {
         foreach (Gate::abilities() as $defintionName => $function) {
-            Permission::firstOrCreate(['name' => $defintionName]);
+            Permission::firstOrNew(['name' => $defintionName]);
         }
     }
 
@@ -45,7 +45,7 @@ class AuthService
         $prefix = camel_case(class_basename($modelClassName));
 
         foreach ($methods as $method) {
-            $permission = Permission::firstOrCreate(['name' => $prefix.'.'.$method->name]);
+            $permission = Permission::firstOrNew(['name' => $prefix.'.'.$method->name]);
             $permission->policy = $prefix.'@'.$method->name;
             $permission->save();
         }
