@@ -37,7 +37,7 @@ class PaladinServiceProvider extends ServiceProvider
 
 
         $this->publishes([
-            __DIR__.'/../public' => public_path('vendor/paladin')
+            __DIR__.'/../public' => public_path('paladin')
         ],'assets');
 
     }
