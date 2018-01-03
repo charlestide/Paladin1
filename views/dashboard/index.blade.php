@@ -102,7 +102,7 @@
                                             <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{$diskUsage['free']}}" aria-valuemin="0" aria-valuemax="{{$diskUsage['total']}}" style="width:{{ceil($diskUsage['free'] / $diskUsage['total']*100)}} %"></div>
                                         </div><!-- /.progress -->
 
-                                        <span>Swap剩余率</span><span class="pull-right">(({{ceil($swapUsage['free'] / $swapUsage['total']*100)}}%))</span>
+                                        <span>Swap剩余率</span><span class="pull-right">({{ceil($swapUsage['free'] / $swapUsage['total']*100)}}%)</span>
                                         <div class="progress progress-xs">
                                             <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{$swapUsage['free']}}" aria-valuemin="0" aria-valuemax="{{$swapUsage['total']}}" style="width: {{ceil($swapUsage['free'] / $swapUsage['total']*100)}}%"></div>
                                         </div><!-- /.progress -->

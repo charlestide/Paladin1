@@ -31,6 +31,15 @@ class PaladinServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__.'/../views','paladin');
 
+        $this->publishes([
+            __DIR__.'/../seeds' => database_path('seeds/vendor/paladin')
+        ],'seeder');
+
+
+        $this->publishes([
+            __DIR__.'/../public' => public_path('vendor/paladin')
+        ],'assets');
+
     }
 
     public function register()

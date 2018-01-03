@@ -4,10 +4,10 @@ namespace Charlestide\Paladin\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Linfo\Linfo;
 use Matriphe\Larinfo\LarinfoFacade;
 use Probe\ProviderFactory;
 use Yajra\DataTables\Facades\DataTables;
+use Linfo\Linfo;
 
 class DashboardController extends Controller
 {
@@ -22,6 +22,9 @@ class DashboardController extends Controller
 
         $hardware = LarinfoFacade::getServerInfoHardware();
         $software = LarinfoFacade::getServerInfoSoftware();
+
+//        $linfo = new Linfo();
+//        $linfoParser = $linfo->getParser();
 
         return view('paladin::dashboard.index',[
             'mysqlVersion' => $mysqlVersion ?: '连接不可用',
