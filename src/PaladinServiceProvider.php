@@ -30,7 +30,7 @@ class PaladinServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../views','paladin');
 
         $this->publishes([
-            __DIR__.'/../seeds' => database_path('seeds/vendor/paladin')
+            __DIR__.'/../seeds' => database_path('seeds/paladin')
         ],'paladin-seeder');
 
         $this->publishes([
