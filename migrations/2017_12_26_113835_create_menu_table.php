@@ -19,7 +19,7 @@ class CreateMenuTable extends Migration
                 $table->string('icon', 100)->nullable();
                 $table->string('name', 30)->unique();
                 $table->string('url', 200)->nullable();
-                $table->integer('permission_id');
+                $table->integer('permission_id')->nullable();
                 $table->integer('parent_id');
                 $table->timestamps();
             });

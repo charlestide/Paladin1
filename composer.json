@@ -20,7 +20,7 @@
     "require": {
         "php": ">=7.0.0",
         "laravel/framework": "5.5.*",
-        "yajra/laravel-datatables": "^1.0",
+        "yajra/laravel-datatables-oracle": "^8.0",
         "matriphe/larinfo": "^1.0",
         "trntv/probe": "^1.0"
 
@@ -34,5 +34,8 @@
         "psr-4": {
             "Charlestide\\Paladin\\Tests\\": "tests/"
         }
+    },
+    "require-dev": {
+        "orchestra/testbench": "~3.0"
     }
 }

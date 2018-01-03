@@ -11,9 +11,9 @@ class PaladinDatabaseSeeder extends Seeder
      */
     public function run()
     {
-         $this->call(AdminsTableSeeder::class);
-         $this->call(PermissionTableSeeder::class);
-         $this->call(RoleTableSeeder::class);
-         $this->call(MenuTableSeeder::class);
+//         $this->call(AdminsTableSeeder::class);
+//         $this->call(PermissionTableSeeder::class);
+//         $this->call(RoleTableSeeder::class);
+//         $this->call(MenuTableSeeder::class);
     }
 }
