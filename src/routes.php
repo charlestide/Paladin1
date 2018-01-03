@@ -12,6 +12,9 @@ Route::middlewareGroup('paladin',['Charlestide\Paladin\Middlewares\AutoAuth']);
 Route::namespace('Charlestide\Paladin\Controllers')
     ->middleware('web')
     ->group(function () {
+
+        Route::redirect('/','/dashboard',301);
+
         Route::get('login','LoginController@showLoginForm')->name('login');
         Route::post('login','LoginController@login');
         Route::get('logout', 'LoginController@logout')->name('logout');

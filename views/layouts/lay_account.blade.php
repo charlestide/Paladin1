@@ -40,9 +40,9 @@
         <!--/ END PAGE LEVEL STYLES -->
 
         <!-- START @THEME STYLES -->
-        <link href="/css/vendor/blankon/apps.css" type="text/css" rel="stylesheet">
-        <link href="/css/vendor/blankon/sign.css" rel="stylesheet">
-        <link href="{{asset('/css/vendor/blankon/themes/laravel.theme.css')}}" id="laravel" rel="stylesheet">
+        <link href="/paladin/css/paladin.css" type="text/css" rel="stylesheet">
+        <link href="/paladin/css/sign.css" rel="stylesheet">
+        <link href="{{asset('/paladin/css/themes/laravel.theme.css')}}" id="laravel" rel="stylesheet">
         <!--/ END THEME STYLES -->
 
         <!-- START @IE SUPPORT -->

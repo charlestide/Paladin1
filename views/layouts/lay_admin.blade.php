@@ -8,9 +8,9 @@
         <!-- START @META SECTION -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <meta name="description" content="Blankon is a theme fullpack admin template powered by Twitter bootstrap 3 front-end framework. Included are multiple example pages, elements styles, and javascript widgets to get your project started.">
+        <meta name="description" content="">
         <meta name="keywords" content="admin, admin template, bootstrap3, clean, fontawesome4, good documentation, lightweight admin, responsive dashboard, webapp">
-        <meta name="author" content="Djava UI">
+        <meta name="author" content="Charlestide.Tide">
         <title>Dashboard of {{config('app.name')}}</title>
         <!--/ END META SECTION -->
 
@@ -82,7 +82,6 @@
         <script src="https://cdn.bootcss.com/skycons/1396634940/skycons.min.js"></script>
         <script src="https://cdn.bootcss.com/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
         <script src="https://cdn.bootcss.com/jquery-mockjax/1.6.2/jquery.mockjax.min.js"></script>
-        {{--<script src="https://cdn.bootcss.com/moment.js/2.18.1/locale/zh-cn.js"></script>--}}
         {{--<script src="https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"></script>--}}
         {{--<script src="/js/components/echarts/themes/macarons.js"></script>--}}
         <script src="https://cdn.bootcss.com/vue/2.5.13/vue.js"></script>
@@ -91,7 +90,9 @@
         <link href="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.min.css" rel="stylesheet">
         <script src="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.min.js"></script>
 
-        <script src="https://cdn.bootcss.com/moment.js/2.18.1/moment.min.js"></script>
+        {{--<script src="https://cdn.bootcss.com/moment.js/2.18.1/moment.min.js"></script>--}}
+        {{--<script src="https://cdn.bootcss.com/moment.js/2.18.1/locale/zh-cn.js"></script>--}}
+
     {{--<link href="https://cdn.bootcss.com/chosen/1.8.2/chosen.min.css" rel="stylesheet">--}}
 
         {{--<link href="https://cdn.bootcss.com/dropzone/5.1.1/min/dropzone.min.css" rel="stylesheet">--}}
@@ -99,7 +100,7 @@
         {{--paladin--}}
         <link href="{{asset('/paladin/css/paladin.css')}}" rel="stylesheet">
         <link href="{{asset('/paladin/css/themes/laravel.theme.css')}}" id="theme" rel="stylesheet">
-        <link href="https://at.alicdn.com/t/font_527081_hpb7nmm7vd706bt9.css" rel="stylesheet">
+        {{--<link href="https://at.alicdn.com/t/font_527081_hpb7nmm7vd706bt9.css" rel="stylesheet">--}}
     <!--/ END PAGE LEVEL SCRIPTS -->
 
 

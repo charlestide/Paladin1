@@ -40,9 +40,12 @@ mix
         'assets/css/vendor/blankon/components.css',
         'assets/css/vendor/blankon/plugins.css',
         'assets/css/vendor/blankon/reset.css',
-        // 'assets/css/vendor/blankon/themes/laravel.theme.css',
         'assets/css/app.css'
     ],'public/css/paladin.css')
+
+    .styles([
+        'assets/css/vendor/blankon/pages/sign.css',
+    ],'public/css/sign.css')
 
     .setPublicPath('public')
 ;
