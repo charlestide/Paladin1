@@ -30,10 +30,8 @@ mix
     .js('assets/js/data.js','public/js')
     .js('assets/js/chart.js','public/js')
 
-    .scripts([
-        'assets/js/vendor/blankon/apps.js',
-        'assets/js/vendor/blankon/demo.js',
-    ],'public/js/blankon.js')
+    .js('assets/js/vendor/blankon/blankon.js','public/js/blankon.js')
+    .js('assets/js/vendor/blankon/demo.js','public/js/demo.js')
 
     .styles([
         'assets/css/vendor/blankon/layout.css',

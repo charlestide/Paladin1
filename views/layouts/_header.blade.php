@@ -14,7 +14,7 @@
 
             <!-- Start brand -->
             <a class="navbar-brand" href="{{url('dashboard')}}">
-                <img class="logo" src="{{asset('/logo.png')}}" alt="brand logo" width="150" height="45" />
+                <img class="logo" src="{{asset('/paladin/logo.png')}}" alt="brand logo" width="150" height="45" />
             </a><!-- /.navbar-brand -->
             <!--/ End brand -->
 

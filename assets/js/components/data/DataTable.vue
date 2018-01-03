@@ -102,6 +102,6 @@
 
 <style scoped>
     @import "https://cdn.bootcss.com/datatables/1.10.16/css/dataTables.bootstrap.min.css";
-    @import "/js/vendor/datatables/datatables.min.css";
+    @import "/paladin/js/vendor/datatables/datatables.min.css";
 
 </style>
