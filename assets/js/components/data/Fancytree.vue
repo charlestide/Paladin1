@@ -205,5 +205,5 @@
 </script>
 
 <style scoped>
-    @import "/paladin/js/vendor/fancytree/ui.fancytree.css";
+    @import "/paladin/js/3rd/fancytree/ui.fancytree.css";
 </style>

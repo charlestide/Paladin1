@@ -91,7 +91,7 @@
         mounted: function () {
             let self = this;
 
-            RemoteLoader.loadJs('/paladin/js/vendor/datatables/datatables.min.js',function () {
+            RemoteLoader.loadJs('/paladin/js/3rd/datatables/datatables.min.js',function () {
                 $(function () {
                     self.datatable = $(self.$el).DataTable(self.dataTableConfig);
                 })
@@ -102,6 +102,6 @@
 
 <style scoped>
     @import "https://cdn.bootcss.com/datatables/1.10.16/css/dataTables.bootstrap.min.css";
-    @import "/paladin/js/vendor/datatables/datatables.min.css";
+    @import "/paladin/js/3rd/datatables/datatables.min.css";
 
 </style>

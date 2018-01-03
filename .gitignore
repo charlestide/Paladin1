@@ -1,4 +1,4 @@
-./vendor/
+vendor/
 node_modules/
 npm-debug.log
 
@@ -26,4 +26,4 @@ Homestead.json
 php_errors.log
 
 #npm run watch
-./dist/
+dist/
