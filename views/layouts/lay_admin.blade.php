@@ -98,6 +98,10 @@
         {{--<link href="https://cdn.bootcss.com/dropzone/5.1.1/min/dropzone.min.css" rel="stylesheet">--}}
 
         {{--paladin--}}
+        {{--<link href="{{asset('/paladin/css/layout.css')}}" rel="stylesheet">--}}
+{{--        <link href="{{asset('/paladin/css/components.css')}}" rel="stylesheet">--}}
+        {{--<link href="{{asset('/paladin/css/plugins.css')}}" rel="stylesheet">--}}
+{{--        <link href="{{asset('/paladin/css/reset.css')}}" rel="stylesheet">--}}
         <link href="{{asset('/paladin/css/paladin.css')}}" rel="stylesheet">
         <link href="{{asset('/paladin/css/themes/laravel.theme.css')}}" id="theme" rel="stylesheet">
         {{--<link href="https://at.alicdn.com/t/font_527081_hpb7nmm7vd706bt9.css" rel="stylesheet">--}}

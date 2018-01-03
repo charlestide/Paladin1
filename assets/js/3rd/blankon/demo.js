@@ -3,7 +3,7 @@ var BlankonDemo = function () {
     // =========================================================================
     // SETTINGS APP
     // =========================================================================
-    var adminCssPath = BlankonApp.handleBaseURL()+'css/vendor/blankon';
+    let adminCssPath = '/paladin/css/themes';
 
     return {
 

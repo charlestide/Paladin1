@@ -30,20 +30,19 @@ mix
     .js('assets/js/data.js','public/js')
     .js('assets/js/chart.js','public/js')
 
-    .js('assets/js/vendor/blankon/blankon.js','public/js/blankon.js')
-    .js('assets/js/vendor/blankon/demo.js','public/js/demo.js')
+    .js('assets/js/3rd/blankon/blankon.js','public/js/blankon.js')
+    .js('assets/js/3rd/blankon/demo.js','public/js/demo.js')
 
     .styles([
-        'assets/css/vendor/blankon/layout.css',
-        'assets/css/vendor/blankon/components.css',
-        'assets/css/vendor/blankon/plugins.css',
-        'assets/css/vendor/blankon/reset.css',
+        'assets/css/3rd/blankon/layout.css',
+        'assets/css/3rd/blankon/components.css',
+        'assets/css/3rd/blankon/plugins.css',
+        'assets/css/3rd/blankon/reset.css',
         'assets/css/app.css'
     ],'public/css/paladin.css')
 
     .styles([
-        'assets/css/vendor/blankon/pages/sign.css',
+        'assets/css/3rd/blankon/pages/sign.css',
     ],'public/css/sign.css')
 
-    .setPublicPath('public')
 ;

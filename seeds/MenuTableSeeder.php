@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Charlestide\Paladin\Services\AuthService;
 
 class MenuTableSeeder extends Seeder
 {
@@ -11,6 +12,8 @@ class MenuTableSeeder extends Seeder
      */
     public function run()
     {
+        AuthService::detectPermissions();
+
         $systemId = $this->createMenu('系统管理','',0,'gear');
         $this->createMenu('管理员','/admin',$systemId,'users');
         $this->createMenu('角色','/role',$systemId,'user');
