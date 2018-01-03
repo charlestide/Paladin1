@@ -13,14 +13,16 @@ class CreateRoleAdminRelations extends Migration
      */
     public function up()
     {
-        Schema::create('role_admin_relations', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->increments('id')->unsigned();
-            $table->integer('role_id');
-            $table->integer('admin_id');
-            $table->unique(['role_id','admin_id']);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('role_admin_relations')) {
+            Schema::create('role_admin_relations', function (Blueprint $table) {
+                $table->engine = 'InnoDB';
+                $table->increments('id')->unsigned();
+                $table->integer('role_id');
+                $table->integer('admin_id');
+                $table->unique(['role_id', 'admin_id']);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

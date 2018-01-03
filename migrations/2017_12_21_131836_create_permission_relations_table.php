@@ -12,14 +12,16 @@ class CreatePermissionRelationsTable extends Migration
      * @return void
      */
     public function up()
-    {
-        Schema::create('permission_relations', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('permission_id');
-            $table->integer('related_id');
-            $table->string('related_type',200);
-            $table->timestamps();
-        });
+    {{
+        if (!Schema::hasTable('permission_relations'))
+            Schema::create('permission_relations', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('permission_id');
+                $table->integer('related_id');
+                $table->string('related_type', 200);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

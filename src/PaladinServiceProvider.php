@@ -21,9 +21,7 @@ class PaladinServiceProvider extends ServiceProvider
 
     public function boot() {
 
-        $this->publishes([
-            __DIR__.'/../config/paladin.php' => config_path('paladin.php')
-        ],'config');
+
 
         $this->loadRoutesFrom( __DIR__.'/routes.php');
 
@@ -33,12 +31,21 @@ class PaladinServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/../seeds' => database_path('seeds/vendor/paladin')
-        ],'seeder');
+        ],'paladin-seeder');
 
+        $this->publishes([
+            __DIR__.'/../config/paladin.php' => config_path('paladin.php')
+        ],'paladin-config');
 
         $this->publishes([
             __DIR__.'/../public' => public_path('paladin')
-        ],'assets');
+        ],'paladin-assets');
+
+        $this->publishes([
+            __DIR__.'/../config/paladin.php' => config_path('paladin.php'),
+            __DIR__.'/../public' => public_path('paladin'),
+            __DIR__.'/../seeds' => database_path('seeds/vendor/paladin')
+        ],'paladin');
 
     }
 
