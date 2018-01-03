@@ -44,7 +44,7 @@ class PaladinServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/paladin.php' => config_path('paladin.php'),
             __DIR__.'/../public' => public_path('paladin'),
-            __DIR__.'/../seeds' => database_path('seeds/vendor/paladin')
+            __DIR__.'/../seeds' => database_path('seeds/paladin')
         ],'paladin');
 
     }
