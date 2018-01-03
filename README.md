@@ -13,7 +13,7 @@ Paladin Admin Panel
 
 Paladin 使用Mysql作为数据库，请配置Mysql信息
 
-一般在项目根目标的 `.env` 文件中配置，这个文件一般在使用 `laravel/installer` 创建项目是，会自动生成
+一般在项目根目标的 `.env` 文件中配置，这个文件一般在使用 [laravel/installer](https://d.laravel-china.org/docs/5.5/installation) 创建项目时，会自动生成
 
 以下是示例
 ```ini

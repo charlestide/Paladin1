@@ -91,7 +91,7 @@
         mounted: function () {
             let self = this;
 
-            RemoteLoader.loadJs('/js/vendor/datatables/datatables.min.js',function () {
+            RemoteLoader.loadJs('/paladin/js/vendor/datatables/datatables.min.js',function () {
                 $(function () {
                     self.datatable = $(self.$el).DataTable(self.dataTableConfig);
                 })
