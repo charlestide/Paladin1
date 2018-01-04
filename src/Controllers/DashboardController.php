@@ -26,12 +26,20 @@ class DashboardController extends Controller
         $software = LarinfoFacade::getServerInfoSoftware();
 
 
-//        dd(auth()->user()->can('visiable',Menu::find(1)));
+        foreach (['ram','disk','swap'] as $item) {
+            $usage[$item] = $hardware[$item];
+            if (isset($hardware[$item]) and isset($hardware[$item]['total']) and $hardware[$item]['total']) {
+                $usage[$item]['usage'] =  min(ceil($hardware[$item]['free'] / $hardware[$item]['total']) * 100,100);
+            } else {
+                $usage[$item]['usage'] = 0;
+            }
+        }
+
         return view('paladin::dashboard.index',[
             'mysqlVersion' => $mysqlVersion ?: '连接不可用',
-            'memUsage' => $hardware['ram'],
-            'diskUsage' => $hardware['disk'],
-            'swapUsage' => $hardware['swap'],
+            'memUsage' => $usage['ram'],
+            'diskUsage' => $usage['disk'],
+            'swapUsage' => $usage['swap'],
             'software' => $software,
             'hardware' => $hardware,
             'uptime' => LarinfoFacade::getUptime()

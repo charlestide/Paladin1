@@ -67,7 +67,8 @@
                                 <div class="panel panel-theme stat-left no-margin no-box-shadow">
                                     <div class="panel-heading no-border">
                                         <div class="pull-left">
-                                            <h3 class="panel-title">空闲内存 (M)</h3>
+                                            <h3 class="panel-title">本地CPU计算性能 </h3>
+                                            <h5>数据大于0表示稍慢，小于0表示稍快</h5>
                                         </div><!-- /.pull-left -->
                                         <div class="pull-right">
                                             <div class="btn-group">
@@ -77,7 +78,7 @@
                                         <div class="clearfix"></div>
                                     </div><!-- /.panel-heading -->
                                     <div class="panel-body bg-theme">
-                                        <pvc-echart-line class="echart" :loading="true" text-color="#fff" :series="series" :tooltip="tooltip" :x-axis="xAxis" :y-axis="yAxis"></pvc-echart-line>
+                                        <pvc-echart-line class="echart" text-color="#fff" :series="series" :tooltip="tooltip" :x-axis="xAxis" :y-axis="yAxis" width="100%" :height="250"></pvc-echart-line>
                                     </div><!-- /.panel-body -->
                                 </div><!-- /.panel -->
                             </div><!-- /.col-sm-8 -->
@@ -92,19 +93,19 @@
                                         <p><span>CPU</span><span class="pull-right">{{$hardware['cpu']}} * {{$hardware['cpu_count']}}</span></p>
                                         <p><span>Web Server</span><span class="pull-right">{{$software['webserver']}} on {{$software['arc']}}</span></p>
 
-                                        <span>内存剩余率</span><span class="pull-right">({{ceil($memUsage['free'] / $memUsage['total']*100)}}%)</span>
+                                        <span>内存剩余率</span><span class="pull-right">({{$memUsage['usage']}}%)</span>
                                         <div class="progress progress-xs">
-                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{$memUsage['free']}}" aria-valuemin="0" aria-valuemax="{{$memUsage['total']}}" style="width: {{ceil($memUsage['free'] / $memUsage['total']*100)}}%"></div>
+                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{$memUsage['usage']/100}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$memUsage['usage']}}%"></div>
                                         </div><!-- /.progress -->
 
-                                        <span>硬盘剩余率</span><span class="pull-right">({{ceil($diskUsage['free'] / $diskUsage['total']*100)}}%)</span>
+                                        <span>硬盘剩余率</span><span class="pull-right">({{$diskUsage['usage']}}%)</span>
                                         <div class="progress progress-xs">
-                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{$diskUsage['free']}}" aria-valuemin="0" aria-valuemax="{{$diskUsage['total']}}" style="width:{{ceil($diskUsage['free'] / $diskUsage['total']*100)}} %"></div>
+                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{$diskUsage['free']}}" aria-valuemin="0" aria-valuemax="{{$diskUsage['total']}}" style="width:{{$diskUsage['usage']}} %"></div>
                                         </div><!-- /.progress -->
 
-                                        <span>Swap剩余率</span><span class="pull-right">({{ceil($swapUsage['free'] / $swapUsage['total']*100)}}%)</span>
+                                        <span>Swap剩余率</span><span class="pull-right">({{$swapUsage['usage']}}%)</span>
                                         <div class="progress progress-xs">
-                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{$swapUsage['free']}}" aria-valuemin="0" aria-valuemax="{{$swapUsage['total']}}" style="width: {{ceil($swapUsage['free'] / $swapUsage['total']*100)}}%"></div>
+                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{$swapUsage['free']}}" aria-valuemin="0" aria-valuemax="{{$swapUsage['total']}}" style="width: {{$swapUsage['usage']}}%"></div>
                                         </div><!-- /.progress -->
                                     </div><!-- /.panel-body -->
                                 </div><!-- /.panel -->
@@ -192,6 +193,7 @@
     <script src="/paladin/js/chart.js"></script>
     <script src="https://cdn.bootcss.com/skycons/1396634940/skycons.min.js"></script>
     <script type="text/javascript">
+        let testData = [], testTime;
         if (typeof(window.content) === 'undefined') {
             window.content = new Vue({
                 el: '#page-inner',
@@ -273,7 +275,7 @@
                 },
                 computed: {
                     cpuButtonText() {
-                        return this.enableUpdateCpuUsage ? '点击停止更新' : '更新10秒钟';
+                        return this.enableUpdateCpuUsage ? '点击停止更新' : '点击开始更新';
                     }
                 },
                 mounted() {
@@ -286,10 +288,10 @@
                         let inter = null, timeout = null,self = this;
                         if (newValue) {
                             inter = setInterval(this.updateCpuUsage,1000);
-                            timeout = setTimeout(function () {
-                                clearInterval(inter);
-                                self.enableUpdateCpuUsage = false;
-                            },5000);
+                            // timeout = setTimeout(function () {
+                            //     clearInterval(inter);
+                            //     self.enableUpdateCpuUsage = false;
+                            // },5000);
                         } else {
                             clearInterval(inter);
                         }
@@ -349,14 +351,25 @@
                     },
                     //每秒更新空闲内存的方法
                     updateCpuUsage() {
-                        const self = this;
-                        $.getJSON('/dashboard/usage',function (data) {
 
-                            let freeMem = data.freeMem;
-                            freeMem = Math.ceil(freeMem / 1024 / 1024);
+                        if (testTime) {
+                            testData = Date.now() - testTime;
+                        }
+                        if (this.enableUpdateCpuUsage) {
+                            testTime = Date.now();
+                            this.series[0].data.push([testTime, (testData / 1000 - 1) * 100]);
+                            if (this.series[0].data.length > 10) {
+                                this.series[0].data.shift();
+                            }
+                        }
 
-                            self.series[0].data.push([Date.parse(new Date()),freeMem]);
-                        })
+                        // $.getJSON('/dashboard/usage',function (data) {
+                        //
+                        //     let freeMem = data.freeMem;
+                        //     freeMem = Math.ceil(freeMem / 1024 / 1024);
+                        //
+                        //     self.series[0].data.push([Date.parse(new Date()),freeMem]);
+                        // })
                     },
 
                     //启用或关闭CPU使用率图表更新

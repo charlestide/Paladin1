@@ -84,7 +84,7 @@
         <script src="https://cdn.bootcss.com/jquery-mockjax/1.6.2/jquery.mockjax.min.js"></script>
         {{--<script src="https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"></script>--}}
         {{--<script src="/js/components/echarts/themes/macarons.js"></script>--}}
-        <script src="https://cdn.bootcss.com/vue/2.5.13/vue.js"></script>
+        <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
         <link href="https://cdn.bootcss.com/select2/4.0.4/css/select2.min.css" rel="stylesheet">
 
         <link href="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.min.css" rel="stylesheet">

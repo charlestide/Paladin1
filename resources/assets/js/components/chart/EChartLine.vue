@@ -40,23 +40,6 @@
             },
             textColor: String
         },
-        // data: () => ({
-        //     line: {
-        //         title: {
-        //             text: 'ECharts Hello World'
-        //         },
-        //         tooltip: {},
-        //         xAxis: {
-        //             data: ['Shirt', 'Sweater', 'Chiffon Shirt', 'Pants', 'High Heels', 'Socks']
-        //         },
-        //         yAxis: {},
-        //         series: [{
-        //             name: 'Sales',
-        //             type: 'bar',
-        //             data: [5, 20, 36, 10, 10, 20]
-        //         }]
-        //     }
-        // }),
         computed: {
             _xAxis() {
                 switch (typeof(this.xAxis)) {
