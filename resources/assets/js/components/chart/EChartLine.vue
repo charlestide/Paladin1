@@ -40,23 +40,23 @@
             },
             textColor: String
         },
-        data: () => ({
-            line: {
-                title: {
-                    text: 'ECharts Hello World'
-                },
-                tooltip: {},
-                xAxis: {
-                    data: ['Shirt', 'Sweater', 'Chiffon Shirt', 'Pants', 'High Heels', 'Socks']
-                },
-                yAxis: {},
-                series: [{
-                    name: 'Sales',
-                    type: 'bar',
-                    data: [5, 20, 36, 10, 10, 20]
-                }]
-            }
-        }),
+        // data: () => ({
+        //     line: {
+        //         title: {
+        //             text: 'ECharts Hello World'
+        //         },
+        //         tooltip: {},
+        //         xAxis: {
+        //             data: ['Shirt', 'Sweater', 'Chiffon Shirt', 'Pants', 'High Heels', 'Socks']
+        //         },
+        //         yAxis: {},
+        //         series: [{
+        //             name: 'Sales',
+        //             type: 'bar',
+        //             data: [5, 20, 36, 10, 10, 20]
+        //         }]
+        //     }
+        // }),
         computed: {
             _xAxis() {
                 switch (typeof(this.xAxis)) {
@@ -82,7 +82,7 @@
             },
             _options() {
                 let opt = {
-                    series: _.clone(this.series),
+                    series: this.series,
                     xAxis: this._xAxis,
                     yAxis: this._yAxis
                 };
@@ -98,7 +98,6 @@
                 if (!_.isEmpty(this.tooltip)) {
                     opt.tooltip = this.tooltip;
                 }
-                // opt.series = this.parseOption(opt.series);
 
                 return opt;
             },

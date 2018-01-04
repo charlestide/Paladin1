@@ -77,7 +77,7 @@
                                         <div class="clearfix"></div>
                                     </div><!-- /.panel-heading -->
                                     <div class="panel-body bg-theme">
-                                        <pvc-echart-line class="echart" text-color="#fff" :series="series" :tooltip="tooltip" :x-axis="xAxis" :y-axis="yAxis" width="100%" :height="250"></pvc-echart-line>
+                                        <pvc-echart-line class="echart" :loading="true" text-color="#fff" :series="series" :tooltip="tooltip" :x-axis="xAxis" :y-axis="yAxis"></pvc-echart-line>
                                     </div><!-- /.panel-body -->
                                 </div><!-- /.panel -->
                             </div><!-- /.col-sm-8 -->
@@ -273,7 +273,7 @@
                 },
                 computed: {
                     cpuButtonText() {
-                        return this.enableUpdateCpuUsage ? '停止更新' : '更新10秒钟';
+                        return this.enableUpdateCpuUsage ? '点击停止更新' : '更新10秒钟';
                     }
                 },
                 mounted() {
@@ -289,7 +289,7 @@
                             timeout = setTimeout(function () {
                                 clearInterval(inter);
                                 self.enableUpdateCpuUsage = false;
-                            },10000);
+                            },5000);
                         } else {
                             clearInterval(inter);
                         }
@@ -353,7 +353,7 @@
                         $.getJSON('/dashboard/usage',function (data) {
 
                             let freeMem = data.freeMem;
-                            freeMem =Math.ceil(freeMem / 1024 / 1024);
+                            freeMem = Math.ceil(freeMem / 1024 / 1024);
 
                             self.series[0].data.push([Date.parse(new Date()),freeMem]);
                         })

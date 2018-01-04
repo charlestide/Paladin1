@@ -26,6 +26,7 @@ class DashboardController extends Controller
         $software = LarinfoFacade::getServerInfoSoftware();
 
 
+//        dd(auth()->user()->can('visiable',Menu::find(1)));
         return view('paladin::dashboard.index',[
             'mysqlVersion' => $mysqlVersion ?: '连接不可用',
             'memUsage' => $hardware['ram'],

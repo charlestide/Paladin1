@@ -42,10 +42,9 @@ START @SIDEBAR LEFT
             </a>
         </li>
         <!--/ End navigation - dashboard -->
-
         @foreach($menus as $menu)
-{{--        @if(Auth::user()->isSuperAdmin() or Auth::user()->can($menu->permissionName,$menuClass))--}}
-        @can('visiable',$menuClass)
+
+        @can('visiable',$menu)
         <!-- Start category {{$menu->name}} -->
         <li class="sidebar-category">
             <span>{{$menu->name}}</span>
@@ -53,10 +52,11 @@ START @SIDEBAR LEFT
         </li>
         <!--/ End category {{$menu->name}} -->
         @endcan
+        {{--@endif--}}
 
         @if($menu->submenus)
         @foreach($menu->submenus as $submenu)
-        @can('visiable',$menuClass)
+        @can('visiable',$submenu)
 
         <!-- Start navigation - {{$submenu->name}} -->
         <li class="submenu {!! Request::is(trim($submenu->url,'/'),trim($submenu->url,'/').'/*') ? 'active' : '' !!}">
@@ -74,7 +74,7 @@ START @SIDEBAR LEFT
             <ul>
                 @if($submenu->submenus)
                 @foreach($submenu->submenus as $littleMenu)
-                @can('visiable',$menuClass)
+                @can('visiable',$littleMenu)
                 <li class="little-menu {!!  Request::is('generator/*') ? 'active' : '' !!} ">
                     <a href="{{url($littleMenu->url)}}">{{$littleMenu->name}}</a>
                 </li>

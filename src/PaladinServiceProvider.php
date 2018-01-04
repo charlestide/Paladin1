@@ -13,7 +13,6 @@ use Charlestide\Paladin\Providers\AuthProvider;
 use Charlestide\Paladin\Storage\FileManager;
 use Charlestide\Paladin\Storage\Persistent;
 use Illuminate\Filesystem\FilesystemManager;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
@@ -52,7 +51,7 @@ class PaladinServiceProvider extends ServiceProvider
             self::BASE_PATH . '/database/seeds' => database_path('seeds/paladin')
         ],'paladin');
 
-
+        $this->loadMenus();
 
     }
 
@@ -76,7 +75,7 @@ class PaladinServiceProvider extends ServiceProvider
 
     private function loadMenus() {
 
-        if (Schema::has('menus')) {
+        if (Schema::hasTable('menu')) {
             //读取导航菜单
             View::share('menus', Menu::wholeTree());
         } else {

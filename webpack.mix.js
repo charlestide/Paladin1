@@ -25,24 +25,24 @@ mix.webpackConfig({
 
 
 mix
-    .js('assets/js/app.js', 'public/js')
-    .js('assets/js/form.js','public/js')
-    .js('assets/js/data.js','public/js')
-    .js('assets/js/chart.js','public/js')
+    .js('resources/assets/js/app.js', 'public/js')
+    .js('resources/assets/js/form.js','public/js')
+    .js('resources/assets/js/data.js','public/js')
+    .js('resources/assets/js/chart.js','public/js')
 
-    .js('assets/js/3rd/blankon/blankon.js','public/js/blankon.js')
-    .js('assets/js/3rd/blankon/demo.js','public/js/demo.js')
+    .js('resources/assets/js/3rd/blankon/blankon.js','public/js/blankon.js')
+    .js('resources/assets/js/3rd/blankon/demo.js','public/js/demo.js')
 
     .styles([
-        'assets/css/3rd/blankon/layout.css',
-        'assets/css/3rd/blankon/components.css',
-        'assets/css/3rd/blankon/plugins.css',
-        'assets/css/3rd/blankon/reset.css',
-        'assets/css/app.css'
+        'resources/assets/css/3rd/blankon/layout.css',
+        'resources/assets/css/3rd/blankon/components.css',
+        'resources/assets/css/3rd/blankon/plugins.css',
+        'resources/assets/css/3rd/blankon/reset.css',
+        'resources/assets/css/app.css'
     ],'public/css/paladin.css')
 
     .styles([
-        'assets/css/3rd/blankon/pages/sign.css',
+        'resources/assets/css/3rd/blankon/pages/sign.css',
     ],'public/css/sign.css')
 
 ;
