@@ -12,7 +12,9 @@
     <div class="body-content animated fadeIn">
         <pvc-panel title="创建新权限">
             <pvc-form method="post" action="{{url('/permission')}}" token="{{csrf_token()}}" :validation="true">
-                <pvc-textfield name="permission[name]" label="标识"></pvc-textfield>
+                <pvc-textfield name="permission[name]" label="名称"></pvc-textfield>
+                <pvc-select name="permission[policy]" label="策略"></pvc-select>
+                <pvc-select name="permission[action]" label="方法"></pvc-select>
                 <pvc-textfield name="permission[description]" label="描述"></pvc-textfield>
                 <pvc-textfield name="permission[updated_at]" label="更新于"></pvc-textfield>
                 <pvc-button type="submit" icon="save" slot="footer" title="保存"></pvc-button>

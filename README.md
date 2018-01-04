@@ -1,7 +1,9 @@
-Paladin Admin Panel
+Paladin Admin Panel 
 =
+[![Build Status](https://travis-ci.org/charlestide/Paladin.svg?branch=master)](https://travis-ci.org/charlestide/Paladin)
+[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 
-目标是实现一个包含简单权限管理的后台脚手架
+    目标是实现一个包含简单权限管理的后台脚手架
 
 ##安装
 

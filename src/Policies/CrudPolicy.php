@@ -14,8 +14,8 @@ use Illuminate\Database\Eloquent\Model;
 class CrudPolicy extends Policy
 {
     /**
-     * Determine whether the user can view the menu.
-     *
+     * @name 查看
+     * @summary 拥有这个权限的用户，可以查看关联的对象
      * @param  Admin $user
      * @param  Model $model
      * @return mixed
@@ -26,7 +26,8 @@ class CrudPolicy extends Policy
     }
 
     /**
-     * Determine whether the user can create menus.
+     * @name 创建
+     * @summary 拥有这个权限的用户，可以创建关联的对象
      *
      * @param  Admin $user
      * @return mixed
@@ -37,7 +38,8 @@ class CrudPolicy extends Policy
     }
 
     /**
-     * Determine whether the user can update the menu.
+     * @name 修改
+     * @summary 拥有这个权限的用户，可以修改关联的对象
      *
      * @param  Admin $user
      * @param  Model  $model
@@ -49,7 +51,8 @@ class CrudPolicy extends Policy
     }
 
     /**
-     * Determine whether the user can delete the menu.
+     * @name 删除
+     * @summary 拥有这个权限的用户，可以删除关联的对象
      *
      * @param  Admin $user
      * @param  Model  $model
@@ -61,6 +64,8 @@ class CrudPolicy extends Policy
     }
 
     /**
+     * @name 浏览
+     * @summary 拥有这个权限的用户，可以浏览关联的对象
      * @param Admin $user
      * @return bool
      */

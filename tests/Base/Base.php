@@ -41,4 +41,17 @@ class Base extends TestCase
     {
         return realpath( __DIR__.'/../..');
     }
+
+    /**
+     *
+     * @param $object
+     * @param string $methodName
+     * @param null $parameters
+     * @return mixed
+     */
+    protected function runInaccessableMethod($object,string $methodName,$parameters = null) {
+        $method = new \ReflectionMethod(get_class($object),$methodName);
+        $method->setAccessible(true);
+        return $method->invokeArgs($object,$parameters);
+    }
 }

@@ -19,6 +19,7 @@ class PermissionFactory extends Factory
         $this->factory->define(Permission::class, function (Faker $faker) {
             return [
                 'name' => $faker->name,
+                'action' => $faker->name,
                 'policy' => $faker->name,
                 'created_at' => date('Y-m-d')
             ];

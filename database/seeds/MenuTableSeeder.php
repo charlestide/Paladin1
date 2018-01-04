@@ -26,7 +26,13 @@ class MenuTableSeeder extends Seeder
     }
 
     public function createMenu($name,$url,$parentId = 0,$permissionName,$icon = null) {
-        $permission = Permission::firstOrCreate(['name' => $permissionName]);
+        /**
+         * @todo 改为生成真正的policy和action
+         */
+        $permission = Permission::firstOrCreate([
+            'name' => $permissionName,
+            'action' => '',
+        ]);
         return DB::table('menu')->insertGetId([
             'name' => $name,
             'url' => $url,
