@@ -8,6 +8,8 @@ use Matriphe\Larinfo\LarinfoFacade;
 use Probe\ProviderFactory;
 use Yajra\DataTables\Facades\DataTables;
 use Linfo\Linfo;
+use Illuminate\Support\Facades\Gate;
+use Charlestide\Paladin\Models\Menu;
 
 class DashboardController extends Controller
 {
@@ -23,8 +25,6 @@ class DashboardController extends Controller
         $hardware = LarinfoFacade::getServerInfoHardware();
         $software = LarinfoFacade::getServerInfoSoftware();
 
-//        $linfo = new Linfo();
-//        $linfoParser = $linfo->getParser();
 
         return view('paladin::dashboard.index',[
             'mysqlVersion' => $mysqlVersion ?: '连接不可用',

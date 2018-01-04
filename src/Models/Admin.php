@@ -43,18 +43,18 @@ class Admin extends Authenticatable
 
     /**
      * 判断是否拥有某种权限
-     * @param string $action
+     * @param string $permissionId
      * @return bool
      */
-    public function allow(string $action): bool {
+    public function allow(int $permissionId): bool {
 
-        if ($this->permissions()->where('name',$action)->count()) {
+        if ($this->permissions()->where('permissions.id',$permissionId)->count()) {
             return true;
         }
 
         $hasCount = $this->roles()->withCount([
-                    'permissions' => function(Builder $query) use ($action) {
-                        $query->where('name',$action);
+                    'permissions' => function(Builder $query) use ($permissionId) {
+                        $query->where('permissions.id',$permissionId);
                     }
                 ])
                 ->pluck('permissions_count');

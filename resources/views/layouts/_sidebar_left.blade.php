@@ -43,8 +43,9 @@ START @SIDEBAR LEFT
         </li>
         <!--/ End navigation - dashboard -->
 
-        @foreach(\Charlestide\Paladin\Models\Menu::where('parent_id',0)->get() as $menu)
-        @can($menu->permission->name,\Charlestide\Paladin\Models\Menu::class)
+        @foreach($menus as $menu)
+{{--        @if(Auth::user()->isSuperAdmin() or Auth::user()->can($menu->permissionName,$menuClass))--}}
+        @can('visiable',$menuClass)
         <!-- Start category {{$menu->name}} -->
         <li class="sidebar-category">
             <span>{{$menu->name}}</span>
@@ -53,36 +54,40 @@ START @SIDEBAR LEFT
         <!--/ End category {{$menu->name}} -->
         @endcan
 
-        @foreach($menu->children as $submenu)
-        @can($submenu->permission->name)
+        @if($menu->submenus)
+        @foreach($menu->submenus as $submenu)
+        @can('visiable',$menuClass)
 
         <!-- Start navigation - {{$submenu->name}} -->
         <li class="submenu {!! Request::is(trim($submenu->url,'/'),trim($submenu->url,'/').'/*') ? 'active' : '' !!}">
             <a href="{!! $submenu->url ?: 'javascript:void(0);' !!}">
                 <span class="icon"><i class="fa fa-{{$submenu->icon}}"></i></span>
                 <span class="text">{{$submenu->name}}</span>
-                @if($submenu->children->count())
+                @if($submenu->submenus->count())
                 <span class="arrow"></span>
                 @endif
                 @if (Request::is(trim($submenu->url,'/'),trim($submenu->url,'/').'/*'))
                 <span class="selected"></span>
                 @endif
             </a>
-            @if($submenu->children->count())
+            @if($submenu->submenus->count())
             <ul>
-                @foreach($submenu->children as $littleMenu)
-                @can($littleMenu->permission->id)
+                @if($submenu->submenus)
+                @foreach($submenu->submenus as $littleMenu)
+                @can('visiable',$menuClass)
                 <li class="little-menu {!!  Request::is('generator/*') ? 'active' : '' !!} ">
                     <a href="{{url($littleMenu->url)}}">{{$littleMenu->name}}</a>
                 </li>
                 @endcan
                 @endforeach
+                @endif
             </ul>
             @endif
         </li>
-
         @endcan
+
         @endforeach
+        @endif
 
         <!--/ End navigation - {{$submenu->name}} -->
         @endforeach

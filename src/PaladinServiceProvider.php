@@ -8,14 +8,16 @@
 
 namespace Charlestide\Paladin;
 
-use Charlestide\Paladin\Generator\Crud\CrudGenerator;
 use Charlestide\Paladin\ModelFactories\FactoryManager;
 use Charlestide\Paladin\Providers\AuthProvider;
-use Charlestide\Paladin\Providers\RouteProvider;
 use Charlestide\Paladin\Storage\FileManager;
 use Charlestide\Paladin\Storage\Persistent;
 use Illuminate\Filesystem\FilesystemManager;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
+use Charlestide\Paladin\Models\Menu;
 
 class PaladinServiceProvider extends ServiceProvider
 {
@@ -30,7 +32,7 @@ class PaladinServiceProvider extends ServiceProvider
 
         $this->loadMigrationsFrom(self::BASE_PATH . '/database/migrations');
 
-        $this->loadViewsFrom(__DIR__.'/../resources/views','paladin');
+        $this->loadViewsFrom(self::BASE_PATH.'/resources/views','paladin');
 
         $this->publishes([
             self::BASE_PATH . '/database/seeds' => database_path('seeds/paladin')
@@ -50,6 +52,8 @@ class PaladinServiceProvider extends ServiceProvider
             self::BASE_PATH . '/database/seeds' => database_path('seeds/paladin')
         ],'paladin');
 
+
+
     }
 
     public function register()
@@ -68,5 +72,17 @@ class PaladinServiceProvider extends ServiceProvider
 
     private function loadModelFactories() {
         FactoryManager::defineAll();
+    }
+
+    private function loadMenus() {
+
+        if (Schema::has('menus')) {
+            //读取导航菜单
+            View::share('menus', Menu::wholeTree());
+        } else {
+            View::share('menus',[]);
+        }
+        View::share('menuClass',Menu::class);
+
     }
 }

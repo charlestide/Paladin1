@@ -13,10 +13,14 @@ class Menu extends Model
     protected $guarded = ['id'];
 
     public static function wholeTree($parentId = 0) {
-        $menus = self::where('parent_id',$parentId);
+        $menus = self::where('parent_id',$parentId)
+            ->with('permission')->get();
         foreach ($menus as $key => $menu) {
-            $menu->children();
+            $menu->permissionName = isset($menu->permission) ? $menu->permission->name : '';
+            $menu->submenus = self::wholeTree($menu->id);
         }
+
+        return $menus;
     }
 
     public function tree() {
