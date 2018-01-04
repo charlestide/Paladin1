@@ -36,5 +36,4 @@ class MenuPolicyTest extends Base
         $admin->permissions()->attach($permssions[1]);
         $this->assertFalse($menuPolicy->visiable($admin,$menu));
     }
-
 }

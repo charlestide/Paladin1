@@ -30,7 +30,7 @@ class PaladinServiceProvider extends ServiceProvider
 
         $this->loadMigrationsFrom(self::BASE_PATH . '/database/migrations');
 
-        $this->loadViewsFrom(__DIR__.'/../views','paladin');
+        $this->loadViewsFrom(__DIR__.'/../resources/views','paladin');
 
         $this->publishes([
             self::BASE_PATH . '/database/seeds' => database_path('seeds/paladin')
