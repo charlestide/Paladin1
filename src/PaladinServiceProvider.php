@@ -9,6 +9,7 @@
 namespace Charlestide\Paladin;
 
 use Charlestide\Paladin\Generator\Crud\CrudGenerator;
+use Charlestide\Paladin\ModelFactories\FactoryManager;
 use Charlestide\Paladin\Providers\AuthProvider;
 use Charlestide\Paladin\Providers\RouteProvider;
 use Charlestide\Paladin\Storage\FileManager;
@@ -19,32 +20,34 @@ use Illuminate\Support\ServiceProvider;
 class PaladinServiceProvider extends ServiceProvider
 {
 
+    const BASE_PATH = __DIR__.'/..';
+
     public function boot() {
 
-
+        $this->loadModelFactories();
 
         $this->loadRoutesFrom( __DIR__.'/routes.php');
 
-        $this->loadMigrationsFrom(__DIR__.'/../migrations');
+        $this->loadMigrationsFrom(self::BASE_PATH . '/database/migrations');
 
         $this->loadViewsFrom(__DIR__.'/../views','paladin');
 
         $this->publishes([
-            __DIR__.'/../seeds' => database_path('seeds/paladin')
+            self::BASE_PATH . '/database/seeds' => database_path('seeds/paladin')
         ],'paladin-seeder');
 
         $this->publishes([
-            __DIR__.'/../config/paladin.php' => config_path('paladin.php')
+            self::BASE_PATH.'/config/paladin.php' => config_path('paladin.php')
         ],'paladin-config');
 
         $this->publishes([
-            __DIR__.'/../public' => public_path('paladin')
+            self::BASE_PATH.'/public' => public_path('paladin')
         ],'paladin-assets');
 
         $this->publishes([
-            __DIR__.'/../config/paladin.php' => config_path('paladin.php'),
-            __DIR__.'/../public' => public_path('paladin'),
-            __DIR__.'/../seeds' => database_path('seeds/paladin')
+            self::BASE_PATH.'/config/paladin.php' => config_path('paladin.php'),
+            self::BASE_PATH.'/public' => public_path('paladin'),
+            self::BASE_PATH . '/database/seeds' => database_path('seeds/paladin')
         ],'paladin');
 
     }
@@ -61,5 +64,9 @@ class PaladinServiceProvider extends ServiceProvider
 
 
         $this->app->register(AuthProvider::class);
+    }
+
+    private function loadModelFactories() {
+        FactoryManager::defineAll();
     }
 }

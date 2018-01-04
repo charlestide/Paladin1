@@ -3,21 +3,15 @@
 namespace Charlestide\Paladin\Tests\Feature;
 
 use Charlestide\Paladin\Models\Menu;
-use Charlestide\Paladin\Models\Permission;
 use Charlestide\Paladin\Tests\Base\Base;
+use Charlestide\Paladin\Tests\Base\Migrated;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 class MigrateTest extends Base
 {
-    public function setUp()
-    {
-        parent::setUp();
-        $this->artisan('migrate',['--database' => 'testbench']);
-
-        $this->runSeeds();
-    }
+    use Migrated;
 
     public function testAdmin()
     {
@@ -64,11 +58,6 @@ class MigrateTest extends Base
             $this->assertGreaterThan(0,$menu->permission->id,"{$menu->name}的菜单关联权限ID是 {$menu->permission_id}, 但未找到权限");
         });
 
-        $this->assertEquals(Menu::whereIn('name',$names)->count(),$names->count());
-    }
-
-    protected function tearDown()
-    {
-        $this->artisan('migrate:reset',['--database' => 'testbench']);
+        $this->assertEquals(Menu::whereIn('name',$names->toArray())->count(),$names->count());
     }
 }

@@ -2,8 +2,10 @@
 
 namespace Charlestide\Paladin\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Charlestide\Paladin\Models\Role;
 use Illuminate\Support\Facades\Cache;
 
 class Admin extends Authenticatable
@@ -40,21 +42,23 @@ class Admin extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * 判断是否拥有某种权限
+     * @param string $action
+     * @return bool
      */
-    public function allPermissions() {
-        $self = $this;
-        return Cache::remember("admin_{$this->id}_permissions",1,function () use ($self) {
-            $adminPermissions = $self->permissions()->pluck('name');
-            foreach ($self->roles as $role) {
-                $rolePermissions = $role->permissions;
-                $adminPermissions = $adminPermissions->merge($rolePermissions);
-            }
-            return $adminPermissions;
-        });
-    }
+    public function allow(string $action): bool {
 
-    public function allow($action) {
-        return $this->allPermissions()->search($action);
+        if ($this->permissions()->where('name',$action)->count()) {
+            return true;
+        }
+
+        $hasCount = $this->roles()->withCount([
+                    'permissions' => function(Builder $query) use ($action) {
+                        $query->where('name',$action);
+                    }
+                ])
+                ->pluck('permissions_count');
+
+        return $hasCount->sum() > 0;
     }
 }

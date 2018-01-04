@@ -4,24 +4,23 @@ namespace Charlestide\Paladin\Tests\Base;
 
 
 use Charlestide\Paladin\PaladinServiceProvider;
+use Charlestide\Paladin\Providers\TestProvider;
 use Orchestra\Testbench\TestCase;
 
 class Base extends TestCase
 {
 
-    protected $seeds = [
-        'AdminsTableSeeder',
-        'RoleTableSeeder',
-        'PermissionTableSeeder',
-        'PermissionRelationsTableSeeder',
-        'MenuTableSeeder'
-    ];
+    protected function setUp()
+    {
+        require $this->getBasePath().'/vendor/autoload.php';
+        parent::setUp();
+    }
 
     protected function getPackageProviders($application)
     {
         return [
+            TestProvider::class,
             PaladinServiceProvider::class,
-
         ];
     }
 
@@ -38,13 +37,8 @@ class Base extends TestCase
         ]);
     }
 
-    /**
-     * 运行$this->seeds中的seed
-     */
-    protected function runSeeds() {
-        foreach ($this->seeds as $seed) {
-            require_once(__DIR__.'/../../seeds/'.$seed .'.php');
-            (new $seed)->run();
-        }
+    protected function getBasePath()
+    {
+        return realpath( __DIR__.'/../..');
     }
 }

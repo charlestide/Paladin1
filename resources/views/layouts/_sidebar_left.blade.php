@@ -44,14 +44,18 @@ START @SIDEBAR LEFT
         <!--/ End navigation - dashboard -->
 
         @foreach(\Charlestide\Paladin\Models\Menu::where('parent_id',0)->get() as $menu)
+        @can($menu->permission->name,\Charlestide\Paladin\Models\Menu::class)
         <!-- Start category {{$menu->name}} -->
         <li class="sidebar-category">
             <span>{{$menu->name}}</span>
             <span class="pull-right"><i class="fa fa-{{$menu->icon}}"></i></span>
         </li>
         <!--/ End category {{$menu->name}} -->
+        @endcan
 
         @foreach($menu->children as $submenu)
+        @can($submenu->permission->name)
+
         <!-- Start navigation - {{$submenu->name}} -->
         <li class="submenu {!! Request::is(trim($submenu->url,'/'),trim($submenu->url,'/').'/*') ? 'active' : '' !!}">
             <a href="{!! $submenu->url ?: 'javascript:void(0);' !!}">
@@ -67,13 +71,17 @@ START @SIDEBAR LEFT
             @if($submenu->children->count())
             <ul>
                 @foreach($submenu->children as $littleMenu)
+                @can($littleMenu->permission->id)
                 <li class="little-menu {!!  Request::is('generator/*') ? 'active' : '' !!} ">
                     <a href="{{url($littleMenu->url)}}">{{$littleMenu->name}}</a>
                 </li>
+                @endcan
                 @endforeach
             </ul>
             @endif
         </li>
+
+        @endcan
         @endforeach
 
         <!--/ End navigation - {{$submenu->name}} -->
