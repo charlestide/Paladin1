@@ -12,6 +12,7 @@ namespace Charlestide\Paladin\Tests\Base;
 trait Migrated
 {
 
+
     protected function setUp() {
         parent::setUp();
 
@@ -21,7 +22,7 @@ trait Migrated
 
     protected function tearDown()
     {
-        $this->artisan('migrate:reset',['--database' => 'testbench']);
+        $this->rollbackMigrate();
         parent::tearDown();
     }
 
@@ -32,11 +33,16 @@ trait Migrated
         ]);
     }
 
-    protected function runSeeder()
+    protected function runSeeder(): void
     {
         $this->artisan('db:seed',[
             '--database' => 'testbench',
         ]);
+    }
+
+    protected function rollbackMigrate(): void {
+        $this->artisan('migrate:reset',['--database' => 'testbench']);
+
     }
 
 }

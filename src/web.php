@@ -7,27 +7,54 @@
  */
 
 
-
 Route::aliasMiddleware('autoauth','Charlestide\Paladin\Middlewares\AutoAuth');
-Route::middlewareGroup('paladin',['Charlestide\Paladin\Middlewares\AutoAuth']);
+Route::middlewareGroup('paladin',[
+    'Charlestide\Paladin\Middlewares\AutoAuth',
+//    \App\Http\Middleware\EncryptCookies::class,
+//    \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+//    \Illuminate\Session\Middleware\StartSession::class,
+//    \Illuminate\Session\Middleware\AuthenticateSession::class,
+//    \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+//    \App\Http\Middleware\VerifyCsrfToken::class,
+//    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+]);
+
+Route::aliasMiddleware('auth-admin',\Charlestide\Paladin\Middlewares\AuthenticateAdminApi::class);
 
 Route::namespace('Charlestide\Paladin\Controllers')
-    ->middleware('web')
+//    ->middleware('api')
     ->group(function () {
 
+        Route::prefix('auth')
+//            ->middleware('web')
+            ->group(function() {
+                Route::get('clients','AuthController@clients');
+
+                Route::post('client','AuthController@client');
+                Route::get('logout', 'AuthController@logout')->name('logout');
+                Route::middleware('jwt.refresh')->get('refresh','AuthController@refresh');
+
+            });
+
+        Route::middleware('web')->group(function () {
+            Route::view('vue','paladin::vue.index');
+
+            Route::get('app','LayoutController@app');
+        });
+
+
         Route::redirect('/','/dashboard',301);
-        Route::view('vue','paladin::vue.index');
-
-        Route::get('layout/menu','LayoutController@menu');
-
-        Route::get('login','LoginController@showLoginForm')->name('login');
-        Route::post('login','LoginController@login');
-        Route::get('logout', 'LoginController@logout')->name('logout');
 
 
+
+        //'jwt.refresh'
         //需要登陆的页面
-        Route::middleware('auth','paladin')
+        Route::middleware(['auth:admin','api'])
             ->group(function () {
+                Route::get('me','AuthController@me');
+                Route::get('layout/menu','LayoutController@menu');
+
+
                 //首页
                 Route::get('dashboard', 'DashBoardController@index');
                 Route::get('dashboard/usage', 'DashBoardController@usage');
@@ -38,7 +65,7 @@ Route::namespace('Charlestide\Paladin\Controllers')
                 Route::post('admin/{admin}/assign','AdminController@assign');
                 Route::get('admin/{admin}/role','AdminController@role');
                 Route::post('admin/{admin}/role','AdminController@role');
-                Route::resource('admin', 'AdminController');
+                Route::apiResource('admin', 'AdminController');
 
                 //代码生成器
                 Route::namespace('Generator')->prefix('generator/crud')->group(function (){
@@ -53,13 +80,13 @@ Route::namespace('Charlestide\Paladin\Controllers')
                 Route::resource('role','RoleController');
 
                 //Permission
-                Route::get('permission/{permission}/delete','PermissionController@destroy');
+//                Route::get('permission/{permission}/delete','PermissionController@destroy');
                 Route::resource('permission','PermissionController');
 
                 //Menu
-                Route::get('menu/create/{parent?}','MenuController@create');
-                Route::get('menu/{menu}/delete','MenuController@destroy');
-                Route::resource('menu','MenuController',['except' => ['create','delete']]);
+//                Route::get('menu/create/{parent?}','MenuController@create');
+//                Route::get('menu/{menu}/delete','MenuController@destroy');
+                Route::resource('menu','MenuController');
 
             });
 

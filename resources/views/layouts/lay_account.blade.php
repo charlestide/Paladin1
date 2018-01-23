@@ -100,7 +100,7 @@
         <!-- START @CORE PLUGINS -->
         <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
-        <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js"></script>
+        <script src="https://cdn.bootcss.com/vue/2.5.9/vue-booter.js"></script>
         {{--<script src="/js/app.js"></script>--}}
 
         <!--/ END CORE PLUGINS -->

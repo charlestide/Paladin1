@@ -8,6 +8,8 @@
 
 namespace Charlestide\Paladin\Generator\Crud;
 
+use Charlestide\Paladin\ClassParser\Parser\ModelParser;
+use Charlestide\Paladin\ClassParser\Result\PropertyResult;
 use Charlestide\Paladin\Generator\Generator;
 use Charlestide\Paladin\Storage\FileManager;
 use Charlestide\Paladin\Storage\Persistent;
@@ -38,9 +40,12 @@ class CrudGenerator extends Generator
      */
     protected $overwriteFile = false;
 
+    /**
+     * @var PropertyResult[]
+     */
     protected $columns = [];
 
-    public function __construct($modelClass,$displayName = null,$overwriteFile = false)
+    public function __construct(string $modelClass,bool $overwriteFile = false)
     {
         parent::__construct();
 
@@ -48,10 +53,13 @@ class CrudGenerator extends Generator
         $this->model = new $modelClass;
         $this->modelName = ucfirst(class_basename($modelClass));
         $this->overwriteFile = (boolean)$overwriteFile;
-        $this->loadFromCache();
-        if ($displayName) {
-            $this->displayName = $displayName;
-        }
+//        $this->loadFromCache();
+
+        $parser = new ModelParser();
+        $classResult = $parser->parseClass($modelClass);
+
+        $this->displayName = $classResult->getDisplayName();
+        $this->columns = $classResult->getProperties();
 
     }
 
@@ -75,11 +83,8 @@ class CrudGenerator extends Generator
      * 写入路由
      */
     public function route() {
-        $data['model'] = $this->model;
-        $data['modelName'] = camel_case($this->modelName);
-        $data['ModelName'] = studly_case($this->modelName);
-        $data['modelDisplayName'] = $this->displayName;
 
+        $data = $this->getRenderData();
         $fileContent = $this->readTemplate('route','plain',$data);
         $fileContent = str_replace('___modelName___','{'.camel_case($this->modelName).'}',$fileContent);
         $filePath = 'routes/web.php';
@@ -98,10 +103,7 @@ class CrudGenerator extends Generator
      */
     public function controller() {
 
-        $data['model'] = $this->model;
-        $data['modelName'] = camel_case($this->modelName);
-        $data['ModelName'] = studly_case($this->modelName);
-        $data['modelDisplayName'] = $this->displayName;
+        $data = $this->getRenderData();
 
         $fileContent = $this->readTemplate('controller','php',$data);
         $filePath = 'app/Http/Controllers/'.studly_case($this->modelName).'Controller.php';
@@ -120,13 +122,7 @@ class CrudGenerator extends Generator
      */
     public function view() {
         $path = 'resources/views/'.camel_case($this->modelName).'/';
-
-        $data['model'] = $this->model;
-        $data['modelName'] = camel_case($this->modelName);
-        $data['ModelName'] = studly_case($this->modelName);
-        $data['displayName'] = $this->displayName;
-        $data['fields'] = $this->getColumns();
-        $data['primaryKey'] = $this->model->getKeyName();
+        $data = $this->getRenderData();
 
 
         foreach (['index','create','update','show'] as $viewName) {
@@ -151,85 +147,36 @@ class CrudGenerator extends Generator
         $modelClassName = get_class($this->model);
         $storage = app(Persistent::class);
         $this->info('正在为 '.$modelClassName.' 创建鉴权策略...',false);
-        if (!Gate::getPolicyFor($modelClassName)) {
-            $crudModels = $storage->crudModels;
-            if (!isset($crudModels[$modelClassName])) {
-                $crudModels[] = $modelClassName;
-                $storage->crudModels = $crudModels;
-                $storage->saveToDisk();
-                $this->comment('成功');
 
+        $data['ModelName'] = studly_case($this->modelName);
+        $fileContent = $this->readTemplate('policy','php',$data);
+        $filePath = 'app/Policies/'.studly_case($this->modelName).'Policy.php';
+
+        $this->info('开始创建Policy: '.$filePath,false);
+
+        if (!Gate::getPolicyFor($modelClassName)) {
+            if ($this->writeFile($fileContent,$filePath,$this->overwriteFile)) {
+                $this->comment('已创建Policy: '.$filePath);
             } else {
-                $this->put('忽略，已经存在CRUD策略');
+                $this->error('失败! 创建Policy: '.$filePath);
             }
+
         } else {
             $this->comment('忽略，已有其他策略');
         }
     }
 
     /**
-     * 设置显示名称
-     * @param string|array $columnaName 如果传入数组，则作为数据库中的列的显示名称
-     * @param null $displayName
-     */
-    public function setDisplayName($columnaName,$displayName = null) {
-        if ($displayName) {
-            $this->columns[$columnaName] = $displayName;
-        } else {
-            $this->displayName = $columnaName;
-        }
-    }
-
-    /**
-     * 设置数据库中的列的信息
-     * @param array $columnsInfo
-     */
-    public function setColumnsInfo(array $columnsInfo) {
-        foreach ($columnsInfo as $columnName => $columnInfo) {
-            $this->columns[$columnName]['displayName'] = $columnInfo['displayName'];
-        }
-    }
-
-    /**
-     * @param bool $compareWithDb 是否与数据库中比较
      * @return array
      */
-    public function getColumns($compareWithDb = false) {
-        if (empty($this->columns) or $compareWithDb) {
-            $schemaBuilder = $this->model->getConnection()->getSchemaBuilder();
-            $tableName = $this->model->getTable();
-            $primaryKey = $this->model->getKeyName();
-
-            foreach ($schemaBuilder->getColumnListing($tableName) as $columnName) {
-
-                //类型
-                $this->columns[$columnName]['type'] = $schemaBuilder->getColumnType($tableName, $columnName);
-
-                //显示名称
-                if (!isset($this->columns[$columnName]['displayName']) and empty($this->columns[$columnName]['displayName'])) {
-                    $displayName = $columnName;
-                    switch ($columnName) {
-                        case 'created_at':
-                            $displayName = '创建于';
-                            break;
-                        case 'updated_at':
-                            $displayName = '更新于';
-                            break;
-                        case 'id':
-                            $displayName = 'ID';
-                    }
-
-                    $this->columns[$columnName]['displayName'] = $displayName;
-                }
-
-                //是否主键
-                $this->columns[$columnName]['primary'] = $columnName == $primaryKey;
-            }
-
-            $this->saveToCache();
-        }
-
-        return $this->columns;
+    protected function getRenderData() : array {
+        $data['model'] = $this->model;
+        $data['modelName'] = camel_case($this->modelName);
+        $data['ModelName'] = studly_case($this->modelName);
+        $data['displayName'] = $this->displayName;
+        $data['primaryKey'] = $this->model->getKeyName();
+        $data['columns'] = $this->columns;
+        return $data;
     }
 
     /**
@@ -257,32 +204,4 @@ class CrudGenerator extends Generator
             }
         }
     }
-
-
-    /**
-     * @param $modelPath
-     * @return array
-     */
-    public static function getAllModels($modelPath) {
-
-        $filemanager = app(FileManager::class);
-        $files = $filemanager->files($modelPath);
-        $models = [];
-
-        foreach ($files as $file) {
-            $fileContent = $filemanager->read($file);
-            $namespace = self::matchFirst('/\bnamespace\b[\s]+([\w\\\\]+);/i',$fileContent);
-            $class = self::matchFirst('/\bclass\b[\s]+([\w]+)/i',$fileContent);
-            if ($namespace and $class) {
-                $models[] = $namespace.'\\'.$class;
-            }
-        }
-
-        return $models;
-    }
-
-
-
-
-
 }

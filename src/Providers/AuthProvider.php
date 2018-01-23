@@ -9,13 +9,20 @@
 namespace Charlestide\Paladin\Providers;
 
 
+use Charlestide\Paladin\Models\Permission;
 use Charlestide\Paladin\Policies\CrudPolicy;
 use Charlestide\Paladin\Services\AuthService;
-use Charlestide\Paladin\Storage\Persistent;
+use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
-class AuthProvider extends ServiceProvider
+use Charlestide\Paladin\Auth\AdminPassportRepository;
+use League\OAuth2\Server\Grant\PasswordGrant;
+use Laravel\Passport\PassportServiceProvider as BasePassportServiceProvider;
+use Laravel\Passport\Passport;
+
+class AuthProvider extends BasePassportServiceProvider
 {
 
     protected $policies = [
@@ -27,8 +34,38 @@ class AuthProvider extends ServiceProvider
 
 
     public function boot() {
-        $this->loadCrudPolicy();
-        $this->registerPolicies();
+
+//        $this->loadCrudPolicy();
+//        $this->registerPolicies();
+
+
+        Response::macro('success',function ($data, string $message = null) {
+            return Response::json([
+                'status' => true,
+                'data' => $data,
+                'auth' => auth('admin')->user(),
+                'message' => $message ?: '成功'
+            ]);
+        });
+
+        Response::macro('failure',function ($data, string $message = null) {
+            return Response::json([
+                'status' => false,
+                'data' => $data,
+                'auth' => auth('admin')->user(),
+                'message' => $message ?: '失败'
+            ]);
+        });
+
+        Response::macro('error',function (string $message = null,int $status = 401,$data = null) {
+            return Response::json([
+                'status' => false,
+                'data' => $data,
+                'message' => $message ?: '失败',
+            ])->setStatusCode($status);
+        });
+
+        parent::boot();
     }
 
     public function register()
@@ -36,16 +73,39 @@ class AuthProvider extends ServiceProvider
         $this->app->singleton(AuthService::class,function($app) {
            return new AuthService();
         });
+        parent::register();
     }
 
+    protected function makePasswordGrant()
+    {
+        $grant = new PasswordGrant(
+        //主要是这里，我们调用我们自己UserRepository
+            $this->app->make(AdminPassportRepository::class),
+            $this->app->make(\Laravel\Passport\Bridge\RefreshTokenRepository::class)
+        );
 
+        $grant->setRefreshTokenTTL(Passport::refreshTokensExpireIn());
+
+        return $grant;
+    }
+
+    /**
+     * 从数据库中的permisstions表中，读取相应的object和policy的对应关系
+     */
     public function loadCrudPolicy() {
-        $storage = app(Persistent::class);
-        if (isset($storage->crudModels) and is_array($storage->crudModels)) {
-            foreach ($storage->crudModels as $modelName) {
-                if (!Gate::getPolicyFor($modelName) and !isset($this->policies[$modelName])) {
-                    $this->policies[$modelName] = CrudPolicy::class;
-                }
+
+        $permisstions = Permission::query()
+            ->select('object','policy',DB::raw('count(action) as action_count'))
+            ->groupBy('object','policy');
+
+        /**
+         * @todo 如果发现同一个object对应两个不同的policy，就发出通知
+         */
+
+        foreach ($permisstions as $permisstion) {
+            $objectName = $permisstion->object;
+            if (class_exists($objectName) and !Gate::getPolicyFor($objectName) and !isset($this->policies[$objectName])) {
+                $this->policies[$objectName] = $permisstion->policy;
             }
         }
     }

@@ -8,23 +8,40 @@
 
 namespace Charlestide\Paladin\Policies;
 
+use Charlestide\Paladin\Models\Permission;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Charlestide\Paladin\Models\Admin;
 use Illuminate\Database\Eloquent\Model;
 use Charlestide\Paladin\Services\AuthService;
-use Illuminate\Support\Facades\Cache;
 
 
 class Policy
 {
     use HandlesAuthorization;
 
-
+    /**
+     * 是否只判断权限，
+     * @var bool
+     */
     protected $hasOnly = true;
 
+    /**
+     * 管理员与对象关联的外键
+     * @var string
+     */
     protected $userField = 'id';
 
+    /**
+     * 对象与管理员关联的外键
+     * @var string
+     */
     protected $modelField = 'admin_id';
+
+    /**
+     * 如果设置此成员，当调用can方法时，如果没有指定object，则什么此类名
+     * @var string
+     */
+    protected $defaultObjectClass;
 
     /**
      * @param Admin $user
@@ -37,32 +54,72 @@ class Policy
     }
 
     /**
-     * @param $permissionName
+     * @var array 允许的方法
+     */
+    protected $allowActions = [];
+
+    /**
+     * @var array 禁止的方法
+     */
+    protected $guardActions = [];
+
+
+    /**
+     * @param $name
+     * @param $arguments
+     */
+    public function __call($name, $arguments)
+    {
+        if ($name != 'isApproved') {
+            if (count($this->guardActions) and in_array($name, $this->guardActions)) {
+                throw new \BadMethodCallException();
+            }
+
+            if (count($this->allowActions) and !in_array($name,$this->allowActions)) {
+                throw new \BadMethodCallException();
+            }
+            array_unshift($arguments, $name);
+        }
+
+        return call_user_func_array([$this, 'isApproved'], $arguments);
+    }
+
+    /**
+     * 判断当前管理员是否可以做这个操作
+     *
+     * @param string $action
      * @param Admin $user
-     * @param Model|null $model
+     * @param $model
      * @return bool
      */
-    protected function can($permissionName,Admin $user, Model $model = null) {
+    public function isApproved(string $action, Admin $user, $model, bool $hasOnly = null):bool {
 
-        if ($model == null) {
-            $modelClass = AuthService::getModelClassByPolicy(static::class);
-        } else {
-            $modelClass = get_class($model);
-        }
-        $permissionName = camel_case(class_basename($modelClass)) . '.' . $permissionName;
+        $modelClass = is_object($model) ? get_class($model) : $model;
 
-        $permissions = Cache::remember('all_permisstions_for_admin_'.$user->id,1,function () use ($user){
-            return $user->allPermissions()->pluck('name','id')->toArray();
-        });
-
-        if (in_array($permissionName,$permissions)) {
-            if ($this->hasOnly) {
+        if ($user->hasPermissionByAction($action,$modelClass)) {
+            if ($hasOnly or $this->hasOnly) {
                 return true;
             } else {
                 $userField = $this->userField;
                 $modelField = $this->modelField;
-                return $user->$userField == $model->$modelField;
+                if (is_object($model)) {
+                    return $user->$userField == $model->$modelField;
+                } else {
+                    return true;
+                }
             }
+        } else {
+            return false;
         }
     }
+
+    /**
+     * @param array $allowActions
+     */
+    public function setAllowActions(array $allowActions): void
+    {
+        $this->allowActions = $allowActions;
+    }
+
+
 }

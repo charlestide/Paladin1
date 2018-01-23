@@ -4,6 +4,11 @@ namespace Charlestide\Paladin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @name 权限
+ * Class Permission
+ * @package Charlestide\Paladin\Models
+ */
 class Permission extends Model
 {
     protected $table = 'permissions';
@@ -11,7 +16,6 @@ class Permission extends Model
     protected $primaryKey = 'id';
     
     protected $fillable = ['name','display_name','description'];
-
 
     public static function grouped() {
         $permissions = static::all();

@@ -20,7 +20,7 @@ class PermissionFactory extends Factory
             return [
                 'name' => $faker->name,
                 'action' => $faker->name,
-                'policy' => $faker->name,
+                'object' => $faker->name,
                 'created_at' => date('Y-m-d')
             ];
         });

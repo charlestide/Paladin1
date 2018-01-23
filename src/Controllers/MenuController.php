@@ -3,8 +3,9 @@ namespace Charlestide\Paladin\Controllers;
 
 use Charlestide\Paladin\Models\Permission;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
 use Charlestide\Paladin\Models\Menu;
+use Charlestide\Paladin\Services\Datatable;
+
 
 class MenuController extends Controller
 {
@@ -18,32 +19,13 @@ class MenuController extends Controller
      */
     public function index(Request $request)
     {
-
-        $this->authorize('index',Menu::class);
-
-        if ($request->input('format') == 'json') {
-
-            $menus = Menu::query();
-            return Datatables::of($menus)->make(true);
-        }
-
-
-        return view('paladin::menu/index');
+        return Datatable::of(Menu::query()->orderBy('parent_id'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return  \Illuminate\Http\Response
-     */
-    public function create(Menu $parent)
-    {
-        $this->authorize('create',Menu::class);
+    public function tree() {
+        $menuTree = Menu::wholeTree();
 
-
-        return view('paladin::menu/create',[
-            'parent' => $parent
-        ]);
+        return response()->success($menuTree->toArray());
     }
 
     /**
@@ -54,21 +36,11 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create',Menu::class);
+//        $menuData = $request->only('name','id','parent_id','permission_id','icon','path');
+        $menu = new Menu($request->all());
+        $menu->save();
 
-
-        if ($request->has('menu')) {
-
-            $menuData = $request->input('menu');
-
-            $menu = new Menu($menuData);
-
-            $menu->save();
-
-            return redirect('/menu/'.$menu->id)->with('messageInfo',['title' => '保存信息', 'text' => '保存成功']);
-        } else {
-            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
-        }
+        return response()->success($menu,'菜单创建成功');
     }
 
     /**
@@ -79,25 +51,8 @@ class MenuController extends Controller
      */
     public function show(Request $request, Menu $menu)
     {
-        $this->authorize('view',$menu);
-
-
-        return view('paladin::menu.show',['menu' => $menu]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param    Menu  $menu
-     * @return  \Illuminate\Http\Response
-     */
-    public function edit(Menu $menu)
-    {
-        $permssions = Permission::all(['id','name']);
-        return view('paladin::menu/update',[
-            'menu' => $menu,
-            'permissions' => $permssions
-        ]);
+        $menu->parent;
+        return response()->success($menu);
     }
 
     /**
@@ -109,20 +64,9 @@ class MenuController extends Controller
      */
     public function update(Request $request, Menu $menu)
     {
-        if ($request->has('menu')) {
-
-            $menuData = $request->input('menu');
-            $menu->fill($menuData);
-
-            $menu->save();
-
-            $this->success('保存成功');
-
-            return redirect('/menu/'.$menu->id);
-        } else {
-            $this->error('错误的提交');
-            return redirect()->back();
-        }
+        $menu->fill($request->all());
+        $menu->save();
+        return response()->success($menu,'菜单 保存成功');
     }
 
     /**
@@ -135,9 +79,9 @@ class MenuController extends Controller
     {
         try {
             $menu->delete();
-            return redirect()->with('tip','删除成功');
+            return response()->success(null,'菜单删除成功');
         } catch (\Exception $e) {
-            return redirect()->back()->with('tip','删除失败');
+            return response()->failure(null,'菜单删除失败');
         }
     }
 }

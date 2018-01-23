@@ -1,14 +1,51 @@
 let mix = require('laravel-mix');
+const
+    webpack = require('webpack'),
+    CleanWebpackPlugin = require('clean-webpack-plugin'),
+    BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin,
+    UglifyJsPlugin = require('uglifyjs-webpack-plugin'),
+    LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 mix.webpackConfig({
+    entry: {
+        "/js/vendor": ['lodash'],
+        "/js/vue": ['vue','vuex','vue-router']
+    },
     module: {
         rules: [
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                include: [path.resolve('src'), path.resolve('test'), path.resolve('node_modules/vue-echarts-v3/src')]
+                include: [
+                    path.resolve('resource/assets/js'),
+                    // require.resolve('bootstrap-vue')
+                ],
+                options: {
+                    plugins: ['lodash'],
+                }
+            },
+            // {
+            //     test: /\.scss$/,
+            //     loaders: ['style-loader', 'css-loader', 'sass-loader'],
+            // },
+            {   test: /\.ts$/,
+                loader: 'ts-loader'
             }
         ]
+    },
+    plugins: [
+        new CleanWebpackPlugin(['public/components']),
+        new LodashModuleReplacementPlugin(),
+        // new BundleAnalyzerPlugin,
+        // new UglifyJsPlugin,
+        new webpack.optimize.CommonsChunkPlugin({
+            // name: 'vendor'
+            names: ['/js/vue','/js/vendor'],
+        })
+    ],
+    output: {
+        publicPath: '/paladin/',
+        chunkFilename: './components/[name].js'
     }
 });
 
@@ -25,24 +62,23 @@ mix.webpackConfig({
 
 
 mix
-    .js('resources/assets/js/app.js', 'public/js')
-    .js('resources/assets/js/form.js','public/js')
-    .js('resources/assets/js/data.js','public/js')
-    .js('resources/assets/js/chart.js','public/js')
-
+    .setPublicPath('public')
     .js('resources/assets/js/3rd/blankon/blankon.js','public/js/blankon.js')
     .js('resources/assets/js/3rd/blankon/demo.js','public/js/demo.js')
 
-    .styles([
-        'resources/assets/css/3rd/blankon/layout.css',
-        'resources/assets/css/3rd/blankon/components.css',
-        'resources/assets/css/3rd/blankon/plugins.css',
-        'resources/assets/css/3rd/blankon/reset.css',
-        'resources/assets/css/app.css'
-    ],'public/css/paladin.css')
+    // .sass('resources/assets/sass/bootstrap.scss','public/css/bootstrap.css')
+    // .sass('resources/assets/sass/element.scss','public/css/element.css')
+    // .sass('resources/assets/sass/app.scss','public/css/app.css')
 
-    .styles([
-        'resources/assets/css/3rd/blankon/pages/sign.css',
-    ],'public/css/sign.css')
+    .js('resources/assets/js/paladin-vue.js','public/js')
 
+    // .styles([
+    //         'resources/assets/css/3rd/blankon/pages/sign.css',
+    //     ],'public/css/sign.css')
+
+    // .copy('node_modules/bootstrap-vue/dist/bootstrap-vue.min.js','public/js/3rd/bootstrap-vue')
+    // .copy('node_modules/bootstrap-vue/dist/bootstrap-vue.css','public/css/3rd/bootstrap-vue')
+
+
+    .sourceMaps()
 ;

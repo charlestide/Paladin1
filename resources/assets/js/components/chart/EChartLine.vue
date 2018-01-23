@@ -1,20 +1,20 @@
 <template>
     <div class="echarts flot-overlay">
-        <IEcharts :option="_options" :loading="loading" :resizable="true" :style="sizeStyle" ></IEcharts>
+        <!--<IEcharts :option="_options" :loading="loading" :resizable="true" :style="sizeStyle" ></IEcharts>-->
     </div>
 </template>
 
 <script>
-    import IEcharts from 'vue-echarts-v3/src/lite';
+    // import IEcharts from 'vue-echarts-v3/src/lite';
     import 'echarts/lib/chart/line';
     import 'echarts/lib/component/title';
     let _ = require('underscore');
 
     export default {
         name: "pvc-echart-line",
-        components: {
-            IEcharts
-        },
+        // components: {
+        //     IEcharts
+        // },
         props: {
             options: {
                 type: [Object,String],

@@ -4,13 +4,20 @@ namespace Charlestide\Paladin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @name 菜单
+ * Class Menu
+ * @package Charlestide\Paladin\Models
+ */
 class Menu extends Model
 {
     protected $table = 'menu';
 
     protected $primaryKey = 'id';
 
-    protected $guarded = ['id'];
+//    protected $guarded = ['id'];
+
+    protected $fillable = ['name','parent_id','url','parent_path','permission_id'];
 
     public static function wholeTree($parentId = 0) {
         $menus = self::where('parent_id',$parentId)
@@ -43,5 +50,33 @@ class Menu extends Model
     public function permission() {
         return $this->belongsTo(Permission::class);
     }
+
+    /**
+     * 将数据库的用|分隔的字符串，转成数组
+     *
+     * @param $value
+     * @return array
+     */
+//    public function getPathAttribute($value) {
+//        if (is_string($value) && strpos($value,'|') !== false) {
+//            return explode('|', $value);
+//        } else {
+//            return $value;
+//        }
+//    }
+
+    /**
+     * 将外部传来的数组，转成用|分隔的字符串，写入数据库
+     *
+     * @param $value
+     * @return array
+     */
+//    public function setPathAttribute($value) {
+//        if (is_array($value)) {
+//            return implode('|', $value);
+//        } else {
+//            return $value;
+//        }
+//    }
 
 }

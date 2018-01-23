@@ -58,12 +58,11 @@ class AdminTest extends Base
         foreach ($admins as $admin) {
             $selfPermissions = $results->get($admin->id);
             if ($selfPermissions->count() and $permission = $selfPermissions->random()) {
-                $this->assertTrue($admin->allow($permission->id),"adminId:{$admin->id}  permission: {$permission->id} in {$selfPermissions->pluck('name')}");
-                $this->assertFalse($admin->allow($permissions->diff($selfPermissions)->random()->id),"admin:{$admin->id} permission: {$permissions->diff($selfPermissions)->random()->id} in {$selfPermissions->pluck('name')}");
+                $this->assertTrue($admin->allow($permission->id),"adminId:{$admin->id}  permission: {$permission->id} in {$selfPermissions->pluck('id')}");
+                $this->assertFalse($admin->allow($permissions->diff($selfPermissions)->random()->id),"admin:{$admin->id} permission: {$permissions->diff($selfPermissions)->random()->id} in {$selfPermissions->pluck('id')}");
             } else {
                 $this->assertFalse($admin->allow($permissions->random()->id));
             }
         }
-
     }
 }

@@ -1,107 +1,143 @@
 <template>
-    <table role="datatable" class="table table-striped table-theme table-responsive">
-        <thead>
-        <tr>
-            <slot></slot>
+    <div class="datatable">
+        <el-table :data="list" v-bind="$attrs" :stripe="stripe" v-loading="loading" @sort-change="handleSort" ref="el_table">
+            <slot/>
+        </el-table>
+        <tr role="searchBar">
+            <th v-for="(column,index) in columns" :key="index" v-if="column.searchable">
+                <el-input v-model="columns[index].search" :placeholder="'搜索'+column.label" @input="searchInput" >
+                    <i slot="prefix" class="el-input__icon el-icon-search" style="margin-left: 5px;"></i>
+                </el-input>
+            </th>
         </tr>
-        </thead>
-        <!--tbody section is required-->
-        <tbody></tbody>
-    </table>
+        <br />
+        <p class="text-center lead">
+            <el-pagination background layout="prev, pager, next" :current-page.sync="currentPage"
+                           :total="total" @current-change="pageChange" :page-size="perPage"/>
+        </p>
+    </div>
 </template>
 
 <script>
-
-    import RemoteLoader from '../../remoteLoader';
-    let _ = require('underscore');
-
     export default {
         name: "pvc-datatable",
         props: {
-            source: {
+            perPage: {
+                type: Number,
+                default: 20
+            },
+            searchBar: {
+                type: Boolean,
+                default: true
+            },
+            store: {
                 type: String,
                 required: true
             },
-            pageLength: Number,
-            ordering: Boolean,
-            processing: Boolean,
-            autoWidth: Boolean,
-            alignment: String
-
+            stripe: {
+                type: Boolean,
+                default: true
+            }
         },
         data() {
             return {
-                columns: [],
-                datatable: null,
+                tableData: null,
+                lastSearchInput: 0,
+                page: 1,
+                query: null,
+                searchValue: [],
+                columns: []
             }
         },
         computed:  {
-            dataTableConfig: function() {
-                let config = {
-                    autoWidth: this.autoWidth ? this.autoWidth : false,
-                    serverSide: true,
-                    processing: this.processing ? this.processing : true,
-                    pageLength: this.pageLength ? this.pageLength : 25,
-                    responsive: true,
-                    ordering: this.ordering ? this.ordering : true,
-                    language: {
-                        url: '/js/vendor/datatables/lang/Chinese.json'
-                    },
-                    ajax: this.source,
-                    columns: this.columns,
-                    className: '',
-                    pageType: 'simple_incremental_bootstrap'
-                },self = this;
-
-                config.className += ' ' + this.alignmentValue;
-
-
-                config.drawCallback = function () {
-                    //应用文字水平对齐方式
-                    $('td').addClass(self.alignmentValue);
-                };
-
-                return config;
+            total() {
+                return this.$store.getters[this.store + '/total'];
             },
-            //文字水平对齐方式
-            alignmentValue: function () {
-                let alignClass = 'text-center';
-                switch (this.alignment) {
-                    case 'left':
-                            alignClass = 'text-left';
-                        break;
-                    case 'right':
-                            alignClass = 'text-right';
-                        break;
-                    case 'center':
-                    default:
-                        alignClass = 'text-center';
+            list() {
+                return this.$store.getters[this.store + '/list'];
+            },
+            loading() {
+                return this.$store.getters[this.store + '/loading'];
+            },
+            currentPage: {
+                get() {
+                    return this.$store.getters[this.store + '/currentPage'];
+                },
+                set(value) {
+                    this.$store.commit(this.store + '/setCurrentPage',value);
+                }
+            }
+        },
+        methods: {
+            loadList() {
+                this.$store.dispatch(this.store+'/getList');
+            },
+
+            handleSort({ column, prop, order }) {
+                this.query.addSort(prop,order);
+                this.loadList(this.currentPage);
+                return false;
+            },
+            renderSearchBar() {
+                if (this.columns.length) {
+                    let searchableColumns = _.filter(this.columns,{searchable: true});
+                    this.searchValue = new Array(searchableColumns.length);
+                    this.$el.querySelector('thead').appendChild(
+                        this.$el.querySelector('[role=searchBar]')
+                    );
+                }
+            },
+            pageChange() {
+                this.loadList();
+            },
+
+            /**
+             * 启动搜索的延迟函数
+             */
+            search: _.debounce((value,name,self) => {
+                if (value) {
+                    self.query.addSearch(name, value);
+                } else {
+                    self.query.removeSearch(name);
                 }
 
-                return alignClass;
-            }
-        },
+                self.loadList();
+            },500),
 
-        methods: {
-            addColumn: function (columnData) {
-                this.columns.push(columnData);
-            }
-        },
+            /**
+             * 给子组件调用的，用于通知自己，有新的列加入
+             * @param column
+             */
+            addColumn(column) {
+                this.columns.push(column);
+            },
 
+            searchInput(value) {
+                let inputColumns = _.filter(this.columns,{search:value});
+                for (let inputColumn of inputColumns) {
+                    this.search(value,inputColumn.name,this);
+                }
+            }
+
+        },
+        created() {
+            this.loadList();
+            this.query = this.$store.getters[this.store + '/query'];
+        },
         mounted: function () {
-            let self = this;
-
-            RemoteLoader.loadJs('/paladin/js/3rd/datatables/datatables.min.js',function () {
-                $(function () {
-                    self.datatable = $(self.$el).DataTable(self.dataTableConfig);
-                })
-            });
+            this.renderSearchBar();
+        },
+        beforeRouteUpdate (to, from, next) {
+            this.loadList();
+            next();
         }
     }
 </script>
 
-<style scoped>
-    @import "https://cdn.bootcss.com/datatables/1.10.16/css/dataTables.bootstrap.min.css";
-    @import "/paladin/js/3rd/datatables/datatables.min.css";
+<style scoped lang="scss">
+    @import "../../../sass/global/_variable.scss";
 
+    .theme-head {
+        background: $primary-color-bg;
+    }
 </style>

@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Charlestide\Paladin\Models\Menu;
+use Laravel\Passport\Passport;
+use Laravel\Passport\PassportServiceProvider;
 
 class PaladinServiceProvider extends ServiceProvider
 {
@@ -27,7 +29,7 @@ class PaladinServiceProvider extends ServiceProvider
 
         $this->loadModelFactories();
 
-        $this->loadRoutesFrom( __DIR__.'/routes.php');
+        $this->loadRoutesFrom( __DIR__.'/web.php');
 
         $this->loadMigrationsFrom(self::BASE_PATH . '/database/migrations');
 
@@ -67,6 +69,8 @@ class PaladinServiceProvider extends ServiceProvider
 
 
         $this->app->register(AuthProvider::class);
+
+//        $this->app->register(PassportServiceProvider::class);
     }
 
     private function loadModelFactories() {

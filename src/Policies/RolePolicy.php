@@ -8,5 +8,4 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RolePolicy extends CrudPolicy
 {
-
 }

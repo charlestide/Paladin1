@@ -97,17 +97,4 @@ abstract class Generator
         }
     }
 
-    /**
-     * @param $pattern
-     * @param $content
-     * @return bool
-     */
-    protected static function matchFirst($pattern, $content) {
-        $result = preg_match($pattern,$content,$matches);
-        if ($result and count($matches) > 1) {
-            return $matches[1];
-        } else {
-            return false;
-        }
-    }
 }

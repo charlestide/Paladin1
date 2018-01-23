@@ -5,6 +5,12 @@ namespace Charlestide\Paladin\Models;
 use App\Paladin\Generator\hasSchema;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @角色
+ * Class Role
+ * @package Charlestide\Paladin\Models
+ * @property int id 是ID
+ */
 class Role extends Model
 {
     protected $table = 'roles';

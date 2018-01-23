@@ -19,6 +19,7 @@
   border: none;
   position: relative;
   z-index: $header-zindex;
+  padding: 0;
 }
 
 @media (max-width: 800px) {

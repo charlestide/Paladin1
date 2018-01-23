@@ -318,7 +318,7 @@
       padding: 3px 4px 4px 4px;
     }
   }
-  > li {
+   li.submenu {
     display: block;
     position: relative;
     &:after{
@@ -328,7 +328,7 @@
       &.active{
         margin-top: -1px;
       }
-      > a{
+       a{
         > .icon{
           &:after{
             top: -1px;
@@ -487,7 +487,7 @@
     }
     &.submenu {
       ul{
-        display: none;
+        //display: none;
       }
       &.active {
         .arrow {

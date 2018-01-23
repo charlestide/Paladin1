@@ -10,11 +10,19 @@ namespace Charlestide\Paladin\Policies;
 
 
 use Charlestide\Paladin\Models\Admin;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class DoPolicy extends Policy
 {
 
-    public function view(Admin $user) {
 
+    /**
+     * @param string $action
+     * @param Admin $admin
+     * @param $object
+     * @return bool
+     */
+    public function _has(string $action, Admin $admin, $object): bool {
+        return $admin->hasPermissionByAction($action,is_object($object) ? get_class($object) : $object);
     }
 }

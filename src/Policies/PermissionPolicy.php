@@ -8,4 +8,5 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PermissionPolicy extends CrudPolicy
 {
+    protected $defaultObjectClass = Permission::class;
 }

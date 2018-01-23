@@ -1,0 +1,45 @@
+
+@import "../global/variable";
+
+#sidebar-left {
+  width: $sidebar-width;
+  float: left;
+  z-index: $sidebar-zindex;
+  position: absolute;
+  background-color: $sidebar-left-bg;
+  &:after{
+    background-color: $sidebar-bg;
+    position: fixed;
+    height: 100%;
+    top: 0px;
+    bottom: 0px;
+    display: block;
+    content: "";
+    width: $sidebar-width;
+    z-index: -2;
+  }
+}
+
+@media (max-width: 768px){
+  #sidebar-left{
+    top: 100px;
+    left: -$sidebar-width;
+    z-index: 9999;
+    position: absolute;
+    &:after{
+      left: -$sidebar-width;
+    }
+    .sidebar-content{
+      padding: 23px 10px;
+    }
+    .sidebar-menu{
+      > li{
+        &:first-child{
+          a{
+            padding-top: 13px;
+          }
+        }
+      }
+    }
+  }
+}

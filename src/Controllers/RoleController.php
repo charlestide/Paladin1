@@ -2,7 +2,7 @@
 namespace Charlestide\Paladin\Controllers;
 
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
+use Charlestide\Paladin\Services\Datatable;
 use Charlestide\Paladin\Models\Permission;
 use Charlestide\Paladin\Models\Role;
 
@@ -18,24 +18,8 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->input('format') == 'json') {
+        return Datatable::of(Role::query());
 
-            $roles = Role::query();
-
-            return Datatables::of($roles)->make(true);
-        }
-
-        return view('paladin::role/index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return  \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('paladin::role/create');
     }
 
     /**
@@ -46,18 +30,13 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->has('role')) {
+        $roleData = $request->only('name','display_name');
 
-            $roleData = $request->input('role');
+        $role = new Role($roleData);
 
-            $role = new Role($roleData);
+        $role->save();
 
-            $role->save();
-
-            return redirect('/role/'.$role->id)->with('messageInfo',['title' => '保存信息', 'text' => '保存成功']);
-        } else {
-            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
-        }
+        return response()->success($role,'角色保存成功');
     }
 
     /**
@@ -68,18 +47,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        return view('paladin::role.show',['role' => $role]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param    Role  $role
-     * @return  \Illuminate\Http\Response
-     */
-    public function edit(Role $role)
-    {
-        return view('paladin::role/update',['role' => $role]);
+        return response()->success($role);
     }
 
     /**
@@ -91,17 +59,12 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        if ($request->has('role')) {
 
-            $roleData = $request->input('role');
-            $role->fill($roleData);
+        $roleData = $request->only('name');
+        $role->fill($roleData);
+        $role->save();
 
-            $role->save();
-
-            return redirect('/role/'.$role->id)->with('messageInfo',['title' => '保存信息', 'text' => '保存成功']);
-        } else {
-            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
-        }
+        return response()->success($role,'角色已经修改成功');
     }
 
     /**
@@ -114,15 +77,9 @@ class RoleController extends Controller
     {
         try {
             $role->delete();
-            return redirect()->with([
-                'title' => '删除信息',
-                'text' => '删除成功',
-            ]);
+            return response()->success('角色删除成功');
         } catch (\Exception $e) {
-            return redirect()->back()->with([
-                'title' => '删除信息',
-                'text' => '删除失败: '. $e->getMessage(),
-            ]);
+            return response()->failure('角色删除失败');
         }
     }
 

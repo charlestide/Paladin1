@@ -59,4 +59,9 @@ class LoginController extends Controller
 
         return redirect('/login');
     }
+
+    protected function authenticated(Request $request, $user)
+    {
+        return response()->success(null,'登陆成功');
+    }
 }

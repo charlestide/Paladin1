@@ -21,13 +21,14 @@ class AuthService
         'deny'
     ];
 
-
-
     public static function detectPermissions() {
         self::detectDefintions();
         self::detectPolicys();
     }
 
+    /**
+     * 检测现有的policy映射，将没有创建权限的映射，创建权限
+     */
     public static function detectPolicys() {
         foreach (Gate::policies() as $modelClassName => $policyClassName) {
             self::parsePolicy($modelClassName,$policyClassName);
@@ -45,7 +46,7 @@ class AuthService
      * @param $policyClassName
      * @return array
      */
-    protected static function parsePolicy($modelClassName,$policyClassName) {
+    public static function parsePolicy($modelClassName,$policyClassName) {
         $ref = new \ReflectionClass($policyClassName);
         $methods = collect($ref->getMethods())->reject(function ($method) {
             return in_array($method->name,self::$exceptPolicyMethods) || !$method->isPublic() || $method->isStatic();
@@ -53,11 +54,11 @@ class AuthService
         $prefix = camel_case(class_basename($modelClassName));
 
         $permissions = [];
-        $methods->each(function($method) use ($policyClassName,&$permissions) {
+        $methods->each(function($method) use ($policyClassName,&$permissions,$modelClassName) {
             $annotation = (new AnnoationService)->fromMethod(
                 $policyClassName,$method->getName()
             );
-            $permissions[] = self::createPermission($method,$annotation,$policyClassName);
+            $permissions[] = self::createPermission($method,$annotation,$policyClassName,$modelClassName);
         });
 
         return $permissions;
@@ -69,9 +70,12 @@ class AuthService
      * @param string $policyClassName
      * @return mixed
      */
-    protected static function createPermission(\ReflectionMethod $method, AnnotationsBagInterface $annotationsBag,string $policyClassName) {
+    public static function createPermission(\ReflectionMethod $method, AnnotationsBagInterface $annotationsBag,string $policyClassName,$object) {
+        $object = !is_object($object) ?: get_class($object);
         $permission = Permission::firstOrNew([
+            'name' => "$object.{$method->getName()}",
             'action' => $method->getName(),
+            'object' => $object,
             'policy' => $policyClassName
         ]);
         $permission->name = $annotationsBag->get('name',$method->name);
@@ -79,9 +83,6 @@ class AuthService
         $permission->save();
         return $permission;
     }
-
-
-
 
     /**
      * @param string $policyClassName
@@ -97,5 +98,10 @@ class AuthService
      */
     public static function getPolicyClassByModel(string $modelClassName):string {
         return collect(Gate::policies())->get($modelClassName);
+    }
+
+    public static function createCrudPermission($action)
+    {
+
     }
 }

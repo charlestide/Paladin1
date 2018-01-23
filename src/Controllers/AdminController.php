@@ -6,7 +6,7 @@ use Charlestide\Paladin\Models\Role;
 use Charlestide\Paladin\Models\Admin;
 use Charlestide\Paladin\Models\Permission;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
+use Charlestide\Paladin\Services\Datatable;
 
 class AdminController extends Controller
 {
@@ -21,27 +21,10 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
 
-        if ($request->input('format') == 'json') {
-
-            $admins = Admin::query();
-
-            return Datatables::of($admins)->make(true);
-        }
-
-        return view('paladin::admin/index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('paladin::admin/create');
+        return Datatable::of(Admin::query());
     }
 
     /**
@@ -52,44 +35,30 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->has('admin')) {
+        $adminData = $request->only('name','email');
 
-            $adminData = $request->input('admin');
+        $admin = new Admin($adminData);
 
-            $admin = new Admin($adminData);
-
-            if (isset($adminData['password']) and !empty($adminData['password']) ) {
-                $admin->password = $adminData['password'];
-            }
-
-            $admin->save();
-
-            return redirect('/admin/'.$admin->id)->with('tip','管理员 保存成功');
-        } else {
-            return redirect()->back()->with('tip','管理员 保存成功');
+        if ($password = $request->input('password') ) {
+            $admin->password = $password;
         }
+
+        $admin->save();
+
+        return response()->success($admin,'管理员 保存成功');
     }
 
     /**
      * Display the specified resource.
      *
      * @param  Admin  $admin
-     * @return \Illuminate\Http\Response
+     * @return Admin
      */
     public function show(Admin $admin)
     {
-        return view('paladin::admin.show',['admin' => $admin]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  Admin  $admin
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Admin $admin)
-    {
-        return view('paladin::admin/update',['admin' => $admin]);
+        $admin->roles;
+        $admin->permissions;
+        return response()->success($admin);
     }
 
     /**
@@ -101,21 +70,29 @@ class AdminController extends Controller
      */
     public function update(Request $request, Admin $admin)
     {
-        if ($request->has('admin') and $admin->id > 1) {
+        if ($admin->id > 1) {
 
-            $adminData = $request->input('admin');
+            $adminData = $request->only('name','email','description','status');
             $admin->fill($adminData);
 
-            if ($adminData['password']) {
-                $admin->password = $adminData['password'];
+            if ($request->has('password')) {
+                $admin->password = $request->input('password');
             }
 
             $admin->save();
 
-            return redirect('/admin/'.$admin->id)->with('messageInfo',['title' => '保存管理员', 'text' => '保存成功']);
+            if ($request->has('roleIds')) {
+                $admin->roles()->sync($request->input('roleIds'));
+            }
+
+            if ($request->has('permissionIds')) {
+                $admin->permissions()->sync($request->input('permissionIds'));
+            }
+
+
+            return response()->success($admin,'管理员已经修改成功');
         } else {
-            return redirect()->back()->with('messageInfo',['title' => '错误', 'text' => '错误的提交']);
-            die('错误的提交');
+            return response()->failure($admin,'您不能修改超级管理员');
         }
     }
 
@@ -129,11 +106,12 @@ class AdminController extends Controller
     {
         try {
             $admin->delete();
-            return redirect()->with('tip','删除成功');
+            return response()->success('管理员删除成功');
         } catch (\Exception $e) {
-            return redirect()->back()->with('tip','删除失败');
+            return response()->failure('管理员删除失败');
         }
     }
+
 
     public function assign(Request $request, Admin $admin) {
         if ($request->has('permissions')) {

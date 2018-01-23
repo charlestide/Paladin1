@@ -9,31 +9,71 @@
 namespace Charlestide\Paladin\Tests\Unit;
 
 use Charlestide\Paladin\Models\Admin;
+use Charlestide\Paladin\Models\Role;
 use Charlestide\Paladin\Policies\MenuPolicy;
 use Charlestide\Paladin\Models\Menu;
 use Charlestide\Paladin\Models\Permission;
+use Charlestide\Paladin\Policies\Policy;
 use Charlestide\Paladin\Tests\Base\Base;
 use Charlestide\Paladin\Tests\Base\Migrated;
 
-class MenuPolicyTest extends Base
+class PolicyTest extends Base
 {
     use Migrated;
 
-    public function testVisiable()
+    /**
+     * @var Permission
+     */
+    private $permission;
+
+    /**
+     * @var Admin
+     */
+    private $admin;
+
+    /**
+     * @var Menu
+     */
+    private $menu;
+
+    /**
+     * @var Policy
+     */
+    private $policy;
+
+    protected function setUp()
     {
-        $admin = factory(Admin::class)->create();
-        $menu = factory(Menu::class)->create();
-        $permssions = factory(Permission::class,2)->create();
+        parent::setUp();
+        $this->runMigrate();
+        $this->runSeeder();
 
-        $menu->permission()->associate($permssions[0]);
+        $this->permission = factory(Permission::class)->create([
+            'action' => 'create',
+            'object' => Role::class
+        ]);
+        $this->admin = factory(Admin::class)->create();
+        $this->menu = factory(Menu::class)->create();
+        $this->menu->permission()->associate($this->permission);
+        $this->admin->permissions()->attach($this->permission);
 
-        $admin->permissions()->attach($permssions[0]);
+        $this->policy = new Policy();
+        $this->policy->setAllowActions(['create']);
 
-        $menuPolicy = new MenuPolicy();
-        $this->assertTrue($menuPolicy->visiable($admin,$menu));
+    }
 
-        $admin->permissions()->detach($permssions[0]);
-        $admin->permissions()->attach($permssions[1]);
-        $this->assertFalse($menuPolicy->visiable($admin,$menu));
+    public function testCan()
+    {
+        $this->assertTrue($this->policy->create($this->admin,Role::class));
+
+        $this->admin->permissions()->detach($this->permission);
+        $this->assertFalse($this->policy->create($this->admin,Role::class));
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testException() {
+        $this->policy->update($this->admin,Role::class);
+        $this->expectException(\BadMethodCallException::class);
     }
 }

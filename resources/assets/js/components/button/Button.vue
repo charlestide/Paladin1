@@ -1,138 +1,63 @@
 <template>
-    <button class="btn rounded" :type="type" :class="['btn-'+size,'input-group-'+size,{'btn-theme':theme}]" data-container="body" @click="handlerClick" >
-        <i v-if="icon" :class="iconClass"></i> {{title}}
-    </button>
+    <el-button @click="handlerClick" v-bind="$attrs">
+        <slot/>
+    </el-button>
 </template>
 
 <script>
-    import {IconMixin} from "../common/IconMixin";
-
-    let _ = require('underscore');
 
     export default {
         name: "pvc-button",
-        mixins: [IconMixin],
-        data() {
-            return {
-                pvcName: 'button',
-                pvcType: 'button'
-            }
-        },
         props: {
-            action: [Function,String],
-            mixins: [IconMixin],
-            size: {
+            url: {
                 type: String,
-                default: "sm",
-                validator: function (value) {
-                    return value in {lg:'',sm:'',xs:''};
-                }
+                default: ''
             },
-            target: {
-                type: String,
-                default: '_self',
-                validator: function (value) {
-                    return value in {_self:'',_blank:''};
-                }
-            },
-            title: String,
-            type: {
-                type: String,
-                default: 'button',
-                validator(value) {
-                    return value in {button:'',submit:''}
-                }
-            },
-            method: {
-                type: String,
-                default: 'get'
-            },
-            confirm: {
-                type: [Boolean,String],
+            newPage: {
+                type: Boolean,
                 default: false
             },
-            theme: {
-                type: Boolean,
-                default: true
-            }
-        },
-        mounted: function () {
-            if (this.$parent.addButtonData) {
-                let button = {
-                    target: this.target,
-                    action: this.action,
-                    title: this.title,
-                    size: this.size,
-                    icon: this.icon
-                };
-
-                this.$parent.addButtonData(button);
+            confirm: {
+                type: String
             }
         },
         methods: {
-            doClick: function () {
-                if (this.type !== 'button') {
-                    return true;
+            doClick: function (event) {
+                if (this.url) {
+                    this.$router.push(this.url);
                 }
-
-                if (_.isFunction(this.action)) {
-                    this.action();
-                } else {
-                    if (this.method.toLowerCase() !== 'get') {
-                        $.ajax({
-                            type: this.method,
-                            url: this.action,
-                            dataType: 'json',
-                            success(data) {
-                                if (data.status) {
-                                    window.location.href = data;
-                                } else {
-                                    alert(data.message);
-                                }
-                            },
-                            error(httpRequest,textStatus) {
-                                alert('Error: ' + textStatus);
-                            }
-                        })
-                    } else {
-                        window.location.href = this.action;
-                    }
-                }
+                this.$emit('click',event);
             },
-            handlerClick() {
+            handlerClick(event) {
                 if (this.confirm) {
-                    this.showConfirm(this.confirm);
+                    this.showConfirm(event);
                 } else {
-                    this.doClick();
+                    this.doClick(event);
                 }
             },
-
-            showConfirm(message) {
+            showConfirm(event) {
                 let self = this,
-                    config = {
-                        content: '一般出现此对话框表示此操作不可还原，请谨慎选择',
-                        title: message ? message : '您确定要进行此操作吗？',
-                        confirm() {
-                            self.doClick();
-                        },
-                        buttons: {
-                            ok: {
-                                text: '确定',
-                                btnClass: 'btn-theme'
-                            },
-                            close: {
-                                text: '关闭',
-                            }
-                        }
-                    };
+                    message = this.confirm;
 
-                $.confirm(config);
+                this.$confirm(
+                    message ? message :'一般出现此对话框表示此操作不可还原，请谨慎选择',
+                    '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        self.doClick(event);
+                }).catch(error => {
+                    return error;
+                });
+
             }
         }
     }
 </script>
 
-<style scoped>
-
-
+<style>
+    .el-button [class*=fa-]+span {
+        margin-left: 5px;
+    }
 </style>

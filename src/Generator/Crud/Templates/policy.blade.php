@@ -1,12 +1,9 @@
-<?php
 
 namespace Charlestide\Paladin\Policies;
 
-use Charlestide\Paladin\Models\Admin;
-use Charlestide\Paladin\Models\Role;
-use Illuminate\Auth\Access\HandlesAuthorization;
+use Charlestide\Paladin\Models\{{$ModelName}};
 
-class RolePolicy extends CrudPolicy
+class {{$ModelName}}Policy extends CrudPolicy
 {
-    protected $defaultObjectClass = Role::class;
+    protected $defaultObjectClass = {{$ModelName}}::class;
 }

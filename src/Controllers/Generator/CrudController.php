@@ -9,6 +9,7 @@
 namespace Charlestide\Paladin\Controllers\Generator;
 
 
+use Charlestide\Paladin\ClassParser\Parser\ModelParser;
 use Charlestide\Paladin\Controllers\Controller;
 use Charlestide\Paladin\Generator\Crud\CrudGenerator;
 use Illuminate\Http\Request;
@@ -38,6 +39,8 @@ class CrudController extends Controller
     public function model(Request $request) {
         if ($request->has('modelClass')) {
             $crud = new CrudGenerator($request->input('modelClass'));
+
+            $parser = new ModelParser(Model::class);
             return response()->json([
                 'modelDisplayName' => $crud->getDisplayName(),
                 'columns' => $crud->getColumns(true)

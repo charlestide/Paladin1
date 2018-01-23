@@ -1,0 +1,13 @@
+{ 
+	"path": {
+		"root": "./resources/assets/js",
+		"exclude": ["test","node_modules"]
+	},
+	"files": [
+		{
+			"test": "/\\.vue$/",
+			"exclude": ["test"]
+		}
+	],
+	"cacheFile": "./preloader.mapping.js"
+}

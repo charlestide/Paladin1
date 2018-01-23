@@ -22,9 +22,12 @@ Mix.dispatch('init', Mix);
  * for Webpack. And that's all there is to it. Simple!
  */
 
-let WebpackConfig = require('laravel-mix/src/builder/WebpackConfig');
+let WebpackConfig = require('laravel-mix/setup/webpack.config');
 
-let webpackConfig = new WebpackConfig().build();
+// WebpackConfig.output.publicPath = '/paladin';
 
-module.exports = webpackConfig;
+// let fs = require('fs');
+// fs.writeFileSync('webpack.show.config.json',JSON.stringify(WebpackConfig,null,6));
+
+module.exports = WebpackConfig;
 

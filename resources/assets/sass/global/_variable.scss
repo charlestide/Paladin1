@@ -12,10 +12,27 @@
 // 09. LAYOUT COLOR
 // ===========================================================================
 
-// FONT STYLE --------------------------------------
+//背影色
+$primary-color-bg         : #F4645F;
+$secondary-color-bg       : #2A2A2A;
+$main-color-bg            : #F3F3F4;
+
+//字体颜色
+$primary-color-fg         : #FFFFFF;
+$secondary-color-fg       : #636E7B;
+$main-color-fg            : #636E7B;
+
+$main-font-size           : 13px;
+$main-family-base         : "Open Sans",sans-serif;
+
+$main-color-bd            : #d3d3d3;
+
+/*
+  // FONT STYLE --------------------------------------
 $font-family-open-sans    : "Open Sans",sans-serif;
 $font-family-oswald       : "Oswald",sans-serif;
 $font-family-base         : $font-family-open-sans;
+$font-size-base           : 13px;
 
 // CHOOSE COLOR FOR THEME --------------------------------------
 $color-theme-html         : #81B71A; // theme color for HTML version
@@ -26,8 +43,9 @@ $color-theme-php          : #5a67a5; // theme color for PHP version
 $color-theme-codeigniter  : #DD4814; // theme color for Codeigniter version
 $color-theme-material     : #2196F3; // theme color for Material design version
 
-// SET THEME
-$color-theme              : $color-theme-html;
+// SET THEME 这里设置主题颜色
+$color-theme              : $color-theme-laravel;
+*/
 
 // BASED COLOR (10 COLORS) --------------------------------------
 $gray                     : #EEEEEE;
@@ -164,4 +182,3 @@ $sidebar-danger           : $color-danger; // contextual classes sidebar theme d
 $rounded                  : 3px;
 $circle                   : 50%;
 $shadow                   : 0px 1px 1px rgba(0, 0, 0, 0.05);
-

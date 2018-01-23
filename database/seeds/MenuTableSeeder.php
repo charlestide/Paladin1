@@ -2,8 +2,6 @@
 
 use Illuminate\Database\Seeder;
 
-use Charlestide\Paladin\Models\Permission;
-
 class MenuTableSeeder extends Seeder
 {
     /**
@@ -26,18 +24,19 @@ class MenuTableSeeder extends Seeder
     }
 
     public function createMenu($name,$url,$parentId = 0,$permissionName,$icon = null) {
-        /**
-         * @todo 改为生成真正的policy和action
-         */
-        $permission = Permission::firstOrCreate([
-            'name' => $permissionName,
-            'action' => '',
-        ]);
+
+        $permissionId = PermissionTableSeeder::createPermission(
+            $name,
+            \Charlestide\Paladin\Models\Menu::class,
+            $permissionName,
+            '允许查看菜单 ['.$name.']'
+        );
+
         return DB::table('menu')->insertGetId([
             'name' => $name,
             'url' => $url,
             'parent_id' => $parentId,
-            'permission_id' => $permission->id,
+            'permission_id' => $permissionId,
             'icon' => $icon,
             'created_at' => date('Y-m-d H:i:s')
         ]);
