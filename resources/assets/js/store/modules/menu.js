@@ -34,20 +34,28 @@ factory.registerState({
         permission_id: 0,
         created_at: '',
         updated_at: '',
-        parent_path: ''
+        parent_path: []
     },
     fromRemote(menu) {
         menu.status = Boolean(menu.status);
         if (_.isString(menu.parent_path)) {
             menu.parent_path = menu.parent_path.split('|');
             menu.parent_path = _.map(menu.parent_path,Number);
+        } else if (!_.isArray(menu.parent_path)) {
+            menu.parent_path = [];
         }
         return menu;
     },
     toRemote(menu) {
         if (_.isArray(menu.parent_path)) {
-            menu.parent_path = menu.parent_path.join('|');
+            menu.parent_path = menu.parent_path.length ? menu.parent_path.join('|') : '';
+
+            if (!menu.parent_id && menu.parent_path.length) {
+                menu.parent_id = menu.parent_path[menu.parent_path.length-1];
+            }
         }
+
+
         return menu;
     }
 });

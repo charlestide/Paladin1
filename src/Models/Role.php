@@ -2,8 +2,7 @@
 
 namespace Charlestide\Paladin\Models;
 
-use App\Paladin\Generator\hasSchema;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Role as SpatieRole;
 
 /**
  * @角色
@@ -11,13 +10,17 @@ use Illuminate\Database\Eloquent\Model;
  * @package Charlestide\Paladin\Models
  * @property int id 是ID
  */
-class Role extends Model
+class Role extends SpatieRole
 {
-    protected $table = 'roles';
+//    protected $table = 'my_roles';
 
     protected $primaryKey = 'id';
     
     protected $fillable = ['name','display_name','description'];
+
+    protected $attributes = ['guard_name' => 'admin'];
+
+    protected $guard_name = 'admin';
 
 
     public static function grouped() {
@@ -31,11 +34,11 @@ class Role extends Model
         return $groups;
     }
 
-    public function permissions() {
-        return $this->morphToMany(Permission::class,'related','permission_relations');
-    }
-
-    public function admins() {
-        return $this->belongsToMany(Role::class,'role_admin_relations');
-    }
+//    public function permissions() {
+//        return $this->morphToMany(Permission::class,'related','permission_relations');
+//    }
+//
+//    public function admins() {
+//        return $this->belongsToMany(Role::class,'role_admin_relations');
+//    }
 }

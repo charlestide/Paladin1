@@ -10,6 +10,7 @@
 
 <script>
     import {mapGetters,mapActions} from 'vuex';
+    import Definition from "../../store/definition";
 
     export default {
         name: "pvc-init",

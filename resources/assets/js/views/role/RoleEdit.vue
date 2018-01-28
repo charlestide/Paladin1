@@ -1,6 +1,6 @@
 <template>
-    <el-form v-model="role" :rules="rules" label-position="top">
-        <el-card :header="'#'+role.id+' 更新角色的信息'">
+    <el-form :model="role" :rules="rules" label-position="top" ref="form">
+        <el-card :header="'#'+role.id+' '+role.name">
             <el-tabs>
                 <el-tab-pane label="基本信息">
                     <el-form-item label="名称" prop="name">
@@ -9,12 +9,11 @@
                     <el-form-item label="显示名称" prop="display_name">
                         <el-input v-model="role.display_name"/>
                     </el-form-item>
-
                 </el-tab-pane>
                 <el-tab-pane label="分配权限" prop="permission">
                     <el-form-item>
-                        <el-transfer filterable v-model="permissionIds" :titles="['可选择','已分配']"
-                                     :data="permissions" :props="{key:'id',label:'name'}"/>
+                        <el-transfer filterable v-model="role.permissionNames" :titles="['可选择','已分配']"
+                                     :data="permissions" :props="{key:'name',label:'name'}"/>
                     </el-form-item>
                 </el-tab-pane>
             </el-tabs>
@@ -29,14 +28,13 @@
 <script>
 
     import {mapActions,mapMutations,mapGetters} from "vuex";
-    import ElTabPane from "element-ui/packages/tabs/src/tab-pane";
+    import Definition from "../../store/definition";
+
 
     export default {
-        components: {ElTabPane},
         name: "pvc-role-edit",
         data() {
             return {
-                permissionIds:[],
                 rules: {
                     name: [
                         {required: true, message: '请输入角色名称', trigger: 'blur'},
@@ -46,35 +44,33 @@
             }
         },
         computed: {
+            ...mapGetters('role',{current:Definition.STORE_GETTER_CURRENT}),
             ...mapGetters('permission',{allPermissions:'filtered',permissionQuery:'filteredQuery'}),
             permissions() {
-                let self = this;
+                let permissionNames = _.map(this.role.permissions,'name');
                 _.filter(this.allPermissions,item => {
-                    return !_.includes(self.permissionIds,item.id);
+                    return !_.includes(permissionNames,item.name);
                 });
                 return this.allPermissions;
             },
-            role() {
-                let role = this.$store.getters['role/getById'](this.$route.params.id);
-                //获取已分配的permission.id
-                if (_.isArray(role.permissions) && role.permissions.length) {
-                    this.permissionIds = _.map(role.permissions, 'id');
+            role: {
+                get() {
+                    return this.current;
+                },
+                set(role) {
+                    this.setCurrent(role);
                 }
-                return role;
             }
         },
         methods: {
-            ...mapActions('role',['get','save']),
+            ...mapActions('role',{get: Definition.STORE_ACTION_GET,save: Definition.STORE_ACTION_UPDATE}),
             ...mapActions('permission',{getPermissions: 'getFiltered'}),
             ...mapMutations('permission',{resetPermissions: 'resetFilteredQuery'}),
-
             onSubmit(event) {
                 event.preventDefault();
-                let self = this;
                 this.$refs.form.validate( valid => {
-                    this.role.permissionIds = this.permissionIds;
                     if (valid) {
-                        self.save(self.role);
+                        this.save(this.role);
                     }
                 });
             }
@@ -82,10 +78,10 @@
         mounted() {
             this.get(this.$route.params.id);
             this.resetPermissions();
-            this.getPermissions();
+            this.getPermissions(true);
         },
         beforeRouteUpdate (to, from, next) {
-            this.get(this.$route.params.id);
+            this.get(to.$route.params.id);
             this.resetPermissions();
             this.getPermissions();
             next();

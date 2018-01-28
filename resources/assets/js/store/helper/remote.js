@@ -46,14 +46,20 @@ class RemoteHelper {
      * @param message
      */
     static showRemoteMessage(vm,data,message = '') {
-        if (!message && _.has(data,'message')) {
-            vm.$message({
-                message: data.message,
-                type: data.status ? 'success' : 'error'
-            });
-        } else {
-            vm.$message(message ? message : '未知信息');
+        let type = 'info';
+        if (!message) {
+            if (_.has(data,'data.message')) {
+                message = data.data.message;
+                type = data.status ? 'success' : 'error'
+            } else {
+                message = '未知信息';
+            }
         }
+
+        vm.$message({
+            message: message,
+            type: type
+        });
     }
 
     /**
@@ -63,14 +69,19 @@ class RemoteHelper {
      * @param message
      */
     static showRemoteError(vm,error,message = '') {
-        if (!message && _.has(error,'response.data.message')) {
-            vm.$message({
-                message: error.response.data.message,
-                type: 'error'
-            });
-        } else {
-            vm.$message(message ? message : '未知错误');
+        if (!message) {
+            if (_.has(error, 'response.data.message')) {
+                message = error.response.data.message;
+            } else {
+                message = '未知错误';
+            }
         }
+        console.error(error);
+
+        vm.$message({
+            message: message,
+            type: 'error'
+        });
     }
 
 

@@ -66,6 +66,7 @@ mix
     .js('resources/assets/js/3rd/blankon/blankon.js','public/js/blankon.js')
     .js('resources/assets/js/3rd/blankon/demo.js','public/js/demo.js')
 
+
     // .sass('resources/assets/sass/bootstrap.scss','public/css/bootstrap.css')
     // .sass('resources/assets/sass/element.scss','public/css/element.css')
     // .sass('resources/assets/sass/app.scss','public/css/app.css')

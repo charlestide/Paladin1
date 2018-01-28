@@ -1,13 +1,18 @@
 <template>
     <el-card :header="'#'+menu.id+' 更新菜单的信息'" v-loading="menuLoading">
-        <el-form v-model="menu" :rules="rules" label-position="top">
-            <el-form-item label="菜单名称">
+        <el-form :model="menu" :rules="rules" label-position="top">
+            <pvc-form-item label="菜单名称" required prop="name">
                 <el-input v-model="menu.name" :required="true"/>
-            </el-form-item>
-            <el-form-item label="图标">
+            </pvc-form-item>
+            <pvc-form-item label="URL" prop="url">
+                <el-input v-model="menu.url">
+                    <template slot="prepend">请以/开头</template>
+                </el-input>
+            </pvc-form-item>
+            <pvc-form-item label="图标" prop="icon">
                 <el-input v-model="menu.icon"/>
-            </el-form-item>
-            <el-form-item label="权限">
+            </pvc-form-item>
+            <pvc-form-item label="权限" prop="permission_id">
                 <el-select v-model="menu.permission_id" value-key="id" default-first-option class="d-flex"
                            filterable remote :remote-method="searchPermission" :loading="permissionLoading" >
                     <el-option v-for="permission in permissions" :key="permission.id"
@@ -16,12 +21,13 @@
                             <span class="float-right">{{permission.description}}</span>
                     </el-option>
                 </el-select>
-            </el-form-item>
-            <el-form-item label="上层菜单">
+                <span class="text-muted">如果留空，将自动为菜单创建一个同名权限</span>
+            </pvc-form-item>
+            <pvc-form-item label="上层菜单" prop="parent_path">
                 <el-cascader v-model="menu.parent_path" :props="menuProps" :options="menus" expand-trigger="hover"
                              change-on-select v-loading="menuLoading" class="d-flex" clearable placeholder="清空表示选择顶层菜单">
                 </el-cascader>
-            </el-form-item>
+            </pvc-form-item>
             <el-form-item>
                 <pvc-button type="primary" @click="onSubmit" icon="fa fa-save" :autofocus="true">保存</pvc-button>
                 <pvc-button type="primary" icon="fa fa-list" url="/menu">列表</pvc-button>
@@ -34,7 +40,7 @@
 
     import {ElCascader} from "element-ui";
 
-    import {mapGetters,mapMutations,mapActions,mapState} from "vuex";
+    import {mapGetters,mapMutations,mapActions} from "vuex";
 
     export default {
         name: "pvc-menu-edit",
@@ -44,6 +50,12 @@
                     name: [
                         {required: true, message: '请输入菜单名称', trigger: 'blur'},
                         {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+                    ],
+                    url: [
+                        {required: true, message: 'URL是必须的', trigger: 'blur'},
+                    ],
+                    permission_id: [
+                        {required: true, message: '请选择一个权限，没有此权限的用户将无法看到这个菜单', trigger: 'blur'},
                     ]
                 },
                 menuProps: {
@@ -80,7 +92,7 @@
                 this.query.addExcept('id',this.$route.params.id);
                 this.resetParent();
                 this.resetPermissions();
-                this.getPermissions();
+                this.getPermissions(100);
                 this.getParent();
                 this.get(this.$route.params.id);
             },

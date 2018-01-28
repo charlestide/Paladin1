@@ -14,6 +14,7 @@
 
 <script>
     import {mapGetters,mapActions} from "vuex";
+    import Definition from "../../store/definition";
 
     export default {
         name: "pvc-permission-create",
@@ -28,21 +29,16 @@
             }
         },
         computed: {
-            ...mapGetters('permission',{permission: 'empty'}),
+            ...mapGetters('permission',{permission: Definition.STORE_GETTER_EMPTY}),
         },
         methods: {
-            ...mapActions('permission',['create']),
+            ...mapActions('permission',{create: Definition.STORE_ACTION_CREATE}),
             onSubmit(event) {
                 event.preventDefault();
-                let self = this;
                 this.$refs.form.validate( valid => {
                     if (valid) {
-                        this.create({
-                            data:this.permission,
-                            callback(permission) {
-                                self.$router.push('/permission/'+permission.id);
-                            }
-                        });
+                        this.create(this.permission)
+                            .then((permission) => this.$router.push('/permission/'+permission.id))
                     }
                 });
             },

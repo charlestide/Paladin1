@@ -2,7 +2,6 @@
 namespace Charlestide\Paladin\Controllers;
 
 use Charlestide\Paladin\Models\Permission;
-use Charlestide\Paladin\Services\AuthService;
 use Illuminate\Http\Request;
 use Charlestide\Paladin\Services\Datatable;
 
@@ -18,7 +17,7 @@ class PermissionController extends Controller
      */
     public function index(Request $request)
     {
-        return Datatable::of(Permission::withCount('admins','roles'));
+        return Datatable::of(Permission::withCount('users as admins_count','roles'));
     }
 
 
@@ -30,9 +29,8 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        $permissionData = $request->only('name');
-
-        $permission = new Permission($permissionData);
+        $this->validatePermission($request,true);
+        $permission = new Permission($request->all());
         $permission->save();
 
         return response()->success($permission,'权限 保存成功');
@@ -47,7 +45,8 @@ class PermissionController extends Controller
     public function show(Permission $permission)
     {
         $permission->roles;
-        $permission->admins;
+        $permission->admins = $permission->users;
+        $permission->related;
         return response()->success($permission);
     }
 
@@ -61,8 +60,8 @@ class PermissionController extends Controller
      */
     public function update(Request $request, Permission $permission)
     {
-        $permissionData = $request->only('name');
-        $permission->fill($permissionData);
+        $this->validatePermission($request,false);
+        $permission->fill($request->all());
         $permission->save();
 
         return response()->success($permission,'权限 修改成功');
@@ -78,9 +77,21 @@ class PermissionController extends Controller
     {
         try {
             $permission->delete();
-            return response()->success('权限 删除成功');
+            return response()->success(null,'权限 删除成功');
         } catch (\Exception $e) {
-            return response()->failure('权限 删除失败');
+            return response()->failure(null,'权限 删除失败');
         }
+    }
+
+    private function validatePermission(Request $request, bool $isCreate) {
+        $rules = [
+            'name' => 'required|max:30'
+        ];
+
+        if ($isCreate) {
+            $rules['name'] .= '|unique:permissions';
+        }
+
+        $this->validate($request,$rules);
     }
 }

@@ -25,14 +25,15 @@
         </el-row>
         <el-row id="menu-row" >
             <el-menu background-color="#2a2a2a" active-text-color="#fff" text-color="#999"
-                     :unique-opened="true" default-active="1" :collapse="sidebar.collapse" :router="true">
-                <el-submenu v-for="(menu,menuIndex) in menus" :key="menu.id" :index="menu.url">
+                     :unique-opened="true" default-active="1" :collapse="sidebar.collapse"
+                     :router="true" :default-active="$route.path" :default-openeds="['']">
+                <el-submenu v-for="(menu,menuIndex) in menus" :key="menu.id" :index="menu.url || String(menu.id)">
                     <template slot="title">
                             <i :class="['fa','fa-'+menu.icon,'icon']"></i>
                             <span class="text">{{menu.name}}</span>
                     </template>
 
-                    <el-menu-item v-for="(submenu,submenuIndex) in menu.submenus" :index="submenu.url"
+                    <el-menu-item v-for="(submenu,submenuIndex) in menu.submenus" :index="submenu.url || String(menu.id)"
                                   :key="submenu.id">
                         <template slot="title">
                                 <i :class="['fa','fa-'+submenu.icon,'icon']"></i>
@@ -46,13 +47,12 @@
 </template>
 
 <script>
-    import {mapGetters,mapMutations} from "vuex";
+    import {mapGetters,mapMutations,mapActions,mapState} from "vuex";
 
     export default {
         name: "pvc-aside",
         data() {
             return {
-                menus: [],
                 menuLoading: true
 
             }
@@ -60,19 +60,21 @@
         computed: {
             ...mapGetters('auth',['admin']),
             ...mapGetters('layout',['sidebar']),
+            ...mapState('layout',['menus']),
             sidebarWidth() {
                 return this.sidebar.collapse ? '65px' : '200px';
             }
         },
         created() {
-            let self = this;
-            this.$axios.get('/layout/menu').then(response => {
-                self.menus = response.data;
-                self.menuLoading = false;
-            });
+            this.getMenus()
+                .then(() => {
+                    this.menuLoading = false;
+                })
         },
+
         methods: {
-            ...mapMutations('layout',['expandSideBar'])
+            ...mapMutations('layout',['expandSideBar']),
+            ...mapActions('layout',['getMenus'])
         }
     }
 </script>

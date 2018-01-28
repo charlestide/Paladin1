@@ -19,13 +19,8 @@ class MenuController extends Controller
      */
     public function index(Request $request)
     {
-        return Datatable::of(Menu::query()->orderBy('parent_id'));
-    }
 
-    public function tree() {
-        $menuTree = Menu::wholeTree();
-
-        return response()->success($menuTree->toArray());
+        return Datatable::of(Menu::with('permission')->orderBy('parent_id'));
     }
 
     /**
@@ -36,9 +31,21 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-//        $menuData = $request->only('name','id','parent_id','permission_id','icon','path');
+        $this->validateMenu($request,true);
         $menu = new Menu($request->all());
+
+        if (!$menu->permission_id) {
+            $permission = Permission::firstOrCreate([
+                'name' => $menu->name,
+                'description' => "能看到$menu->name菜单",
+                'guard_name' => 'admin'
+            ]);
+            $menu->permission_id = $permission->id;
+        }
         $menu->save();
+
+        $permissionIds = Menu::find(explode('|',$menu->parent_path))->pluck('permission_id');
+        $menu->permission->related()->attach($permissionIds);
 
         return response()->success($menu,'菜单创建成功');
     }
@@ -52,6 +59,7 @@ class MenuController extends Controller
     public function show(Request $request, Menu $menu)
     {
         $menu->parent;
+        $menu->permission;
         return response()->success($menu);
     }
 
@@ -64,8 +72,20 @@ class MenuController extends Controller
      */
     public function update(Request $request, Menu $menu)
     {
+        $this->validateMenu($request,false);
         $menu->fill($request->all());
+        if (!$menu->permission_id) {
+            $permission = Permission::firstOrCreate([
+                'name' => $menu->name,
+                'description' => '能看到'.$menu->name.'菜单',
+                'guard_name' => 'admin'
+            ]);
+            $menu->permission_id = $permission->id;
+        }
         $menu->save();
+
+        $menu->permission;
+
         return response()->success($menu,'菜单 保存成功');
     }
 
@@ -83,5 +103,19 @@ class MenuController extends Controller
         } catch (\Exception $e) {
             return response()->failure(null,'菜单删除失败');
         }
+    }
+
+    private function validateMenu(Request $request,bool $isCreate) {
+        $rules =[
+            'name' => 'required|max:30',
+            'parent_path' => 'required',
+            'parent_id' => 'required|integer',
+//            'permission_id' => 'required|integer',
+        ];
+
+        if ($isCreate) {
+            $rules['name'] .= '|unique:menu';
+        }
+        $this->validate($request, $rules);
     }
 }

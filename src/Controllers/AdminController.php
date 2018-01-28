@@ -35,15 +35,20 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        $adminData = $request->only('name','email');
-
-        $admin = new Admin($adminData);
+        $this->validateAdmin($request);
+        $admin = new Admin($request->all());
 
         if ($password = $request->input('password') ) {
             $admin->password = $password;
         }
 
         $admin->save();
+
+        $admin->syncPermissions($request->input('permissionNames'));
+        $admin->syncRoles($request->input('roleNames'));
+
+        $admin->permissions;
+        $admin->roles;
 
         return response()->success($admin,'管理员 保存成功');
     }
@@ -71,9 +76,7 @@ class AdminController extends Controller
     public function update(Request $request, Admin $admin)
     {
         if ($admin->id > 1) {
-
-            $adminData = $request->only('name','email','description','status');
-            $admin->fill($adminData);
+            $admin->fill($request->all());
 
             if ($request->has('password')) {
                 $admin->password = $request->input('password');
@@ -81,14 +84,11 @@ class AdminController extends Controller
 
             $admin->save();
 
-            if ($request->has('roleIds')) {
-                $admin->roles()->sync($request->input('roleIds'));
-            }
+            $admin->syncPermissions($request->input('permissionNames'));
+            $admin->syncRoles($request->input('roleNames'));
 
-            if ($request->has('permissionIds')) {
-                $admin->permissions()->sync($request->input('permissionIds'));
-            }
-
+            $admin->permissions;
+            $admin->roles;
 
             return response()->success($admin,'管理员已经修改成功');
         } else {
@@ -110,6 +110,12 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             return response()->failure('管理员删除失败');
         }
+    }
+
+    private function validateAdmin(Request $request) {
+        $this->validate($request, [
+            'name' => 'required|unique:admins|max:30',
+        ]);
     }
 
 

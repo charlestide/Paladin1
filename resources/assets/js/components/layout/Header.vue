@@ -6,15 +6,15 @@
             </button>
         </div>
         <div class="float-right">
-            <el-dropdown class="dropdown">
+            <el-dropdown class="dropdown" @command="handleCommand">
                 <span class="el-dropdown-link">
                     <i class="fa fa-user"></i>
                     {{admin.name}}
                     <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>我的信息</el-dropdown-item>
-                    <el-dropdown-item divided>退出</el-dropdown-item>
+                    <el-dropdown-item command="profile">我的信息</el-dropdown-item>
+                    <el-dropdown-item command="logout" divided>退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
 
@@ -36,7 +36,18 @@
             ...mapGetters('layout',['sidebar'])
         },
         methods: {
-            ...mapMutations('layout',['collapseSideBar'])
+            ...mapMutations('layout',['collapseSideBar']),
+            ...mapMutations('auth',['logout']),
+            handleCommand(command) {
+                switch (command) {
+                    case 'profile':
+                        break;
+                    case 'logout':
+                            this.logout();
+                            this.$router.push('/login');
+                        break;
+                }
+            }
         }
     }
 </script>

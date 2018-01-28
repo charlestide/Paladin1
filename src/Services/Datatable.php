@@ -25,7 +25,6 @@ class Datatable
         }
 
         return self::parse($query->newQuery());
-
     }
 
     /**
@@ -61,14 +60,28 @@ class Datatable
             }
         }
 
-        $pager = $query->paginate($request->input('perPage',20));
-        return [
-            'total' => $pager->total(),
-            'data' => $pager->items(),
-            'perPage' => $pager->perPage(),
-            'currentPage' => $pager->currentPage(),
-            'status' => true,
-            'message' => '获取数据成功'
-        ];
+        $perPage = $request->input('perPage',20);
+        if (is_numeric($perPage)) {
+            $pager = $query->paginate($perPage);
+            return [
+                'total' => $pager->total(),
+                'data' => $pager->items(),
+                'perPage' => intval($pager->perPage()),
+                'currentPage' => $pager->currentPage(),
+                'status' => true,
+                'message' => '获取数据成功'
+            ];
+        } else {
+            $data = $query->get();
+            return [
+                'total' => $data->count(),
+                'data' => $data,
+                'perPage' => $data->count(),
+                'currentPage' => 1,
+                'status' => true,
+                'message' => '获取数据成功'
+            ];
+        }
+
     }
 }

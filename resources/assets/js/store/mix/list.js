@@ -66,7 +66,13 @@ export default {
          */
         set(state,item) {
             if (item &&_.isObject(item)) {
-                state.list.push(item);
+                let index = 0, list = _.clone(state.list);
+                if (index =_.findIndex(list,{id:item.id})) {
+                    list[index] = item;
+                    state.list = list;
+                } else {
+                    state.list.push(item);
+                }
             }
         },
 
@@ -76,8 +82,11 @@ export default {
          * @param id
          */
         remove(state,id) {
-            if (_.findKey(state.list,{id: id})) {
-                _.remove(state.list, item => item.id === id);
+            let list = _.clone(state.list);
+            _.remove(list, item => item.id === id);
+
+            if (list.length !== state.list.length) {
+                state.list = list;
             }
         },
 
@@ -120,23 +129,23 @@ export default {
                     {
                         params: getters.query.getQuery(state.currentPage)
                     })
-                    .then(RemoteHelper.createThen(data => {
-                        if (data.status) {
-                            commit('setList', data.data);
-                            commit('setTotal', data.total);
-                            commit('add',_.clone(data.data));
-                        }
+                    .then(response => {
+                        let data = response.data.data;
+
+                        commit('setList', data);
+                        commit('setTotal', response.data.total);
+                        commit('add',_.clone(data));
                         commit('endLoading');
 
-                        resolve();
-                    }))
-                    .catch(RemoteHelper.createCatch(this._vm,commit,state.setting.listError,() => {
+                        resolve(data);
+                    })
+                    .catch((error) => {
+                        RemoteHelper.showRemoteError(this._vm,error,state.setting.listError);
+
                         commit('endLoading');
-                        reject();
-                    }));
+                        reject(error);
+                    });
             });
-
-
         }
     }
 };

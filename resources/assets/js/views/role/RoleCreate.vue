@@ -1,6 +1,6 @@
 <template>
-    <el-form v-model="role" :rules="rules" ref="form" label-position="top">
-        <el-card :header="'#'+role.id+' 更新角色的信息'">
+    <el-form :model="role" :rules="rules" ref="form" label-position="top">
+        <el-card :header="'创建新的角色：'+role.name">
             <el-tabs>
                 <el-tab-pane label="基本信息">
                     <el-form-item label="名称" prop="name">
@@ -13,8 +13,8 @@
                 </el-tab-pane>
                 <el-tab-pane label="分配权限" prop="permission">
                     <el-form-item>
-                        <el-transfer filterable v-model="permissionIds" :titles="['可选择','已分配']"
-                                     :data="permissions" :props="{key:'id',label:'name'}"/>
+                        <el-transfer filterable v-model="role.permissionNames" :titles="['可选择','已分配']"
+                                     :data="permissions" :props="{key:'name',label:'name'}"/>
                     </el-form-item>
                 </el-tab-pane>
             </el-tabs>
@@ -27,51 +27,52 @@
 </template>
 
 <script>
-
     import {mapGetters,mapMutations,mapActions} from "vuex";
+    import Definition from "../../store/definition";
+
 
     export default {
         name: "pvc-role-create",
         data() {
             return {
-                permissionIds:[],
+                roleData: null,
                 rules: {
                     name: [
-                        {required: true, message: '请输入角色用户名', trigger: 'blur'},
+                        {required: true, message: '请输入角色名称', trigger: 'blur'},
                         {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
                     ]
                 }
             }
         },
         computed: {
-            ...mapGetters('role',{role: 'empty'}),
-            ...mapGetters('permission',{allPermissions:'filtered',permissionQuery:'filteredQuery'}),
-            permissions() {
-                let self = this;
-                _.filter(this.allPermissions,item => {
-                    return !_.includes(self.permissionIds,item.id);
-                });
-                return this.allPermissions;
+            ...mapGetters('role',{empty: Definition.STORE_GETTER_EMPTY}),
+            ...mapGetters('permission',{permissions:'filtered',permissionQuery:'filteredQuery'}),
+            role: {
+                get() {
+                    if (!this.roleData) {
+                        this.roleData = this.empty;
+                    }
+                    return this.roleData;
+                },
+                set(role) {
+                    this.roleData = role;
+                }
             }
         },
         methods: {
-            ...mapActions('role',['load','create']),
+            ...mapActions('role',{get: Definition.STORE_ACTION_GET,create: Definition.STORE_ACTION_CREATE}),
             ...mapActions('permission',{getPermissions: 'getFiltered'}),
             ...mapMutations('permission',{resetPermissions: 'resetFilteredQuery'}),
             onSubmit(event) {
                 event.preventDefault();
-                let self = this;
-                this.$refs.form.validate( valid => {
-                    this.role.permissionIds = this.permissionIds;
-
-                    if (valid) {
-                        this.create({
-                            data:this.role,
-                            callback(role) {
-                                self.$router.push('/role/'+role.id);
-                            }
-                        });
-                    }
+                this.$refs.form.validate()
+                    .then( valid => {
+                        if (valid) {
+                            this.create(this.role)
+                                .then((role) => {
+                                    this.$router.push('/role/'+role.id)
+                                })
+                        }
                 });
             },
         },

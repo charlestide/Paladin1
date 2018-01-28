@@ -10,6 +10,7 @@ namespace Charlestide\Paladin;
 
 use Charlestide\Paladin\ModelFactories\FactoryManager;
 use Charlestide\Paladin\Providers\AuthProvider;
+use Charlestide\Paladin\Providers\ModelProvider;
 use Charlestide\Paladin\Storage\FileManager;
 use Charlestide\Paladin\Storage\Persistent;
 use Illuminate\Filesystem\FilesystemManager;
@@ -17,8 +18,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Charlestide\Paladin\Models\Menu;
-use Laravel\Passport\Passport;
-use Laravel\Passport\PassportServiceProvider;
 
 class PaladinServiceProvider extends ServiceProvider
 {
@@ -31,7 +30,7 @@ class PaladinServiceProvider extends ServiceProvider
 
         $this->loadRoutesFrom( __DIR__.'/web.php');
 
-        $this->loadMigrationsFrom(self::BASE_PATH . '/database/migrations');
+//        $this->loadMigrationsFrom(self::BASE_PATH . '/database/migrations');
 
         $this->loadViewsFrom(self::BASE_PATH.'/resources/views','paladin');
 
@@ -70,7 +69,7 @@ class PaladinServiceProvider extends ServiceProvider
 
         $this->app->register(AuthProvider::class);
 
-//        $this->app->register(PassportServiceProvider::class);
+        $this->app->register(ModelProvider::class);
     }
 
     private function loadModelFactories() {

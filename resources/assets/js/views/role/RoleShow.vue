@@ -1,35 +1,63 @@
 <template>
-    <div id="main">
-        <el-card :header="'#' + $route.params.id + ' 详细信息'">
-            <el-form >
-                <el-form-item label="名称">
-                    <el-input v-model="role.name" :required="true" readonly/>
-                </el-form-item>
-                <el-form-item label="显示名称">
-                    <el-input v-model="role.display_name" :required="true" readonly/>
-                </el-form-item>
-                <el-form-item>
-                    <pvc-button type="primary" :url="'/role/'+$route.params.id+'/edit'" icon="el-icon-edit" :autofocus="true">修改</pvc-button>
-                    <pvc-button type="primary" url="/role" icon="fa fa-list">列表</pvc-button>
-                </el-form-item>
-            </el-form>
-        </el-card>
-    </div>
+    <el-card>
+        <div slot="header">
+            <div class="float-left">
+                <p>
+                    #{{$route.params.id}} <b>{{role.name}}</b>
+                </p>
+            </div>
+            <div class="float-right">
+                <i class="el-icon-time"></i> {{role.updated_at}}
+            </div>
+            <br/>
+        </div>
+        <el-row>
+            <el-col :span="12">
+                <div style="min-height: 300px">
+                    <h5 class="mb-lg-3">拥有的管理员：</h5>
+                    <ul  class="list-group">
+                        <li v-for="admin in role.admins" class="list-group-item w-75">
+                            <div class="justify-content-between d-flex ">
+                                <p class="title">{{admin.name}}</p>
+                                <pvc-button type="primary" :url="'/admin/'+admin.id">查看</pvc-button>
+                            </div>
+                            <small>{{admin.description}}</small>
+                        </li>
+                    </ul>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div style="min-height: 300px">
+                    <h5 class="mb-lg-3">拥有以下权限：</h5>
+                    <ul  class="list-group">
+                        <li v-for="permission in role.permissions" class="list-group-item w-75">
+                            <div class="justify-content-between d-flex ">
+                                <p class="title">{{permission.name}}</p>
+                                <pvc-button type="primary" :url="'/permission/'+permission.id">查看</pvc-button>
+                            </div>
+                            <small>{{permission.description}}</small>
+                        </li>
+                    </ul>
+                </div>
+            </el-col>
+        </el-row>
+        <pvc-button type="primary" :url="'/role/'+$route.params.id + '/edit'" icon="el-icon-edit" :autofocus="true">修改</pvc-button>
+        <pvc-button type="primary" url="/role" icon="fa fa-list">列表</pvc-button>
+
+    </el-card>
 </template>
 
 <script>
-    import {mapActions} from "vuex";
+    import {mapActions,mapGetters} from "vuex";
+    import Definition from "../../store/definition";
 
     export default {
         name: "pvc-role-show",
         computed: {
-            role() {
-                return this.$store.getters['role/getById'](this.$route.params.id);
-            }
+            ...mapGetters('role',{role:Definition.STORE_GETTER_CURRENT})
         },
         methods: {
-            ...mapActions('role',['get']),
-
+            ...mapActions('role',{get: Definition.STORE_ACTION_GET}),
         },
         mounted() {
             this.get(this.$route.params.id);

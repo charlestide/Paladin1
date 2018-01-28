@@ -1,24 +1,27 @@
-import Vue from "vue";
-import Vuex from "vuex";
-
 import auth from "./modules/auth";
 import loader from "./modules/loader";
 import layout from "./modules/layout";
-import admin from "./modules/admin";
+// import admin from "./modules/admin";
 import menu from "./modules/menu";
-import permission from "./modules/permission";
-import role from "./modules/role";
+// import permission from "./modules/permission";
+import form from "./modules/form";
+import Role from "./model/role";
+import Admin from "./model/admin";
+import Permission from "./model/permission";
+import common from "./modules/common";
+// import permission from "./model/permission";
 
-Vue.use(Vuex);
 
-export default new Vuex.Store({
+export default {
     modules: {
         auth,
         loader,
         layout,
-        admin,
+        admin: new Admin(true),
         menu,
-        permission,
-        role
+        permission: new Permission(true),
+        role: new Role(true),
+        form,
+        common
     }
-});
+};

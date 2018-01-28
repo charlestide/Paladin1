@@ -3,6 +3,8 @@
 namespace Charlestide\Paladin\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @name 菜单
@@ -51,18 +53,21 @@ class Menu extends Model
         return $this->belongsTo(Permission::class);
     }
 
+    public function getParentsBuilder() {
+        $dirtyParentPath = $this->getDirty()['parent_path'];
+//        $this->finishSave()
+        return $this->newQuery()->whereIn('id',explode('|',$this->parent_path));
+    }
+
+
     /**
      * 将数据库的用|分隔的字符串，转成数组
      *
      * @param $value
      * @return array
      */
-//    public function getPathAttribute($value) {
-//        if (is_string($value) && strpos($value,'|') !== false) {
-//            return explode('|', $value);
-//        } else {
-//            return $value;
-//        }
+//    static public function allParentPermissionNames(array $permissionNames) {
+//        static::permission()->whereIn('name',$permissionNames)
 //    }
 
     /**

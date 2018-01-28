@@ -1,27 +1,28 @@
 import routeMap from "./routes";
 import Vue from "vue";
+import Vuex from "vuex";
 import VueRouter from "vue-router";
 import store from "../store";
 import componentMap from "../../../../preloader.mapping";
 import PreLoader from "../modules/preloader";
 import AxiosHelper from "../plugin/axios-helper";
-import ElementUI from 'element-ui'
-
+import ElementUI from 'element-ui';
+import Database from "../store/database/database";
+import Definition from "../store/definition";
 
 class VueBooter {
 
     constructor(document) {
         this.vueConfig = {};
         this.init();
-        this.document = document;
+        this.document = window.document;
+
     }
 
     init() {
         Vue.use(VueRouter);
         this._initLoader();
-        // this._initElementUI();
         Vue.use(ElementUI,{ size: 'small' });
-
     }
 
     _initLoader() {
@@ -55,19 +56,24 @@ class VueBooter {
                     self.$loader.loadAll();
                 };
 
+                this.$router.beforeEach((to,from,next) => {
+                    this.$store.commit(Definition.COMMON_MUTATION_RESET_REMOTE_FORM_ERROR);
+                    next();
+                });
+
                 //注册钩子函数，在路由完成后调用
                 this.$router.afterEach((to,from) => {
                     let page = {title: '', summary: '', icon: '', breadcrumb: []},
                         breadcrumb = {};
 
                     //路由注入，生成breadcrumb
-                    _.eachRight(to.matched,(route) => {
+                    _.each(to.matched,(route) => {
                         if (breadcrumb = _.get(route,'meta.breadcrumb')
                         ) {
                             page.title = breadcrumb.title;
                             page.icon = breadcrumb.icon;
                             page.summary = breadcrumb.summary;
-                            page.breadcrumb.unshift({
+                            page.breadcrumb.push({
                                 title: _.get(breadcrumb,'title'),
                                 to: route.path,
                             });
@@ -88,14 +94,14 @@ class VueBooter {
     }
 
     _setAxios() {
-        let token = VueBooter._getMeta('csrf-token');
-        if (!token) {
-            console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-        }
+        // let token = VueBooter._getMeta('csrf-token');
+        // if (!token) {
+        //     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+        // }
 
         Vue.use(AxiosHelper,{
             router: this.vueConfig.router,
-            csrf: token,
+            store: this.vueConfig.store
         });
     }
 
@@ -127,22 +133,13 @@ class VueBooter {
     }
 
     _setStore() {
-        // let clientInfo = {
-        //     clientId: VueBooter._getMeta('client-id'),
-        //     clientSecret: VueBooter._getMeta('client-secret')
-        // };
-        //
-        // if (!clientInfo.clientId || !clientInfo.clientSecret) {
-        //     console.error('client-id or client-secret not found, please check whether they are in meta tag of html page');
-        // } else {
-        //     store.commit('auth/setClient',clientInfo);
-        // }
-
-        this.vueConfig.store = store;
+        Vue.use(Vuex);
+        Database.setIndexedDB(window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB);
+        this.vueConfig.store = new Vuex.Store(store);
     }
 
     static _getMeta(key) {
-        let meta = document.head.querySelector('meta[name='+key+']');
+        let meta = window.document.head.querySelector('meta[name='+key+']');
         if (meta) {
             return meta.content;
         } else {

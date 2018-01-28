@@ -32,10 +32,14 @@ factory.registerState({
         description: '',
         status: true,
         created_at: '',
-        updated_at: ''
+        updated_at: '',
+        roles: [],
+        permissions:[]
     },
-    formatting(admin) {
+    fromRemote(admin) {
         admin.status = Boolean(admin.status);
+        admin.roleNames = _.map(admin.roles,'name');
+        admin.permissionNames = _.map(admin.permissions,'name');
         return admin;
     }
 });

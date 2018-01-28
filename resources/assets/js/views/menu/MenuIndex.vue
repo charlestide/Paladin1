@@ -44,7 +44,12 @@
                 return (
                     <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; padding-right: 8px">
                         <span>
-                            <span>{node.label}</span>
+                            <el-tooltip content={'点击跳转到 '+data.url}  placement="left">
+                                <pvc-button type="plain" url="data.url" icon={'fa fa-'+data.icon} > {node.label} {data.url}</pvc-button>
+                            </el-tooltip>
+                            <el-tooltip content="点击查看权限 "  placement="right">
+                                <pvc-button type="info" url={'/permission/'+data.permission_id} > 权限 {data.permission ? data.permission.name : ''}</pvc-button>
+                            </el-tooltip>
                         </span>
                         <span>
                             <el-button-group>

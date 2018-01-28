@@ -2,20 +2,22 @@
 
 namespace Charlestide\Paladin\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Permission as SpatiePermission;
 
 /**
  * @name 权限
  * Class Permission
  * @package Charlestide\Paladin\Models
  */
-class Permission extends Model
+class Permission extends SpatiePermission
 {
     protected $table = 'permissions';
 
     protected $primaryKey = 'id';
     
     protected $fillable = ['name','display_name','description'];
+
+    protected $attributes = ['guard_name' => 'admin'];
 
     public static function grouped() {
         $permissions = static::all();
@@ -28,15 +30,15 @@ class Permission extends Model
         return $groups;
     }
 
-    public function roles() {
-        return $this->morphedByMany(Role::class,'related','permission_relations');
-    }
-
-    public function admins() {
-        return $this->morphedByMany(Admin::class,'related','permission_relations');
+    public function category() {
+        return $this->belongsToMany(PermissionCategory::class);
     }
 
     public function menus() {
         return $this->hasMany(Menu::class);
+    }
+
+    public function related() {
+        return $this->belongsToMany(self::class,'permission_relations','permission_id','related_id');
     }
 }

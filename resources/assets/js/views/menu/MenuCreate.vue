@@ -1,14 +1,19 @@
 <template>
     <div id="main">
         <el-card header="创建一个新的菜单">
-            <el-form v-model="menu" :rules="rules" label-position="top">
-                <el-form-item label="菜单名称">
+            <el-form :model="menu" :rules="rules" label-position="top" ref="form">
+                <el-form-item label="菜单名称" required prop="name">
                     <el-input v-model="menu.name" :required="true"/>
+                </el-form-item>
+                <el-form-item label="URL" required prop="url">
+                    <el-input v-model="menu.url">
+                        <template slot="prepend">请以/开头</template>
+                    </el-input>
                 </el-form-item>
                 <el-form-item label="图标">
                     <el-input v-model="menu.icon"/>
                 </el-form-item>
-                <el-form-item label="权限">
+                <el-form-item label="权限" required prop="permission_id">
                     <el-select v-model="menu.permission_id" value-key="id" default-first-option class="d-flex"
                                filterable remote :remote-method="searchPermission" :loading="permissionLoading">
                         <el-option v-for="permission in permissions" :key="permission.id"
@@ -17,6 +22,7 @@
                             <span class="float-right">{{permission.description}}</span>
                         </el-option>
                     </el-select>
+                    <span class="text-muted">如果留空，将自动为菜单创建一个同名权限</span>
                 </el-form-item>
                 <el-form-item label="上层菜单">
                     <el-cascader v-model="menu.parent_path" :props="menuProps" :options="menus" expand-trigger="hover"
@@ -54,6 +60,12 @@
                     name: [
                         {required: true, message: '请输入菜单名称', trigger: 'blur'},
                         {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+                    ],
+                    url: [
+                        {required: true, message: 'URL是必须的', trigger: 'blur'},
+                    ],
+                    permission_id: [
+                        {required: true, message: '请选择一个权限，没有此权限的用户将无法看到这个菜单', trigger: 'blur'},
                     ]
                 },
                 menuProps: {
@@ -67,34 +79,6 @@
             ...mapGetters('permission',['current']),
             ...mapGetters('permission',{permissions:'filtered',permissionQuery:'filteredQuery',permissionLoading: 'loading'}),
             ...mapGetters('menu',{menus:'filteredTree',query:'filteredQuery',menuLoading: 'loading',empty: 'empty'}),
-            parents() {
-                let self = this;
-                return _.filter(this.searches,menu => menu.id !== self.menu.id);
-            },
-            parentIds: {
-                get() {
-                    if (this.menu) {
-                        return this.menu.path;
-                    } else {
-                        return [];
-                    }
-                },
-                set(ids) {
-                    if (ids.length) {
-                        this.menu.parent_id = ids[ids.length-1];
-                        this.menu.path = ids;
-                    }
-                    return ids;
-                }
-            },
-            permissionId: {
-                get() {
-                    return this.menu.parent_id;
-                },
-                set(id) {
-                    this.menu.parent_id = id;
-                }
-            }
         },
         methods: {
             ...mapActions('menu',['get','create']),
@@ -105,8 +89,13 @@
 
             onSubmit(event) {
                 event.preventDefault();
-                this.create(this.menu)
-                    .then(() => this.$router.push('/menu/'+this.current.id));
+                this.$refs.form.validate((valid) => {
+                    if (valid) {
+                        this.create(this.menu)
+                            .then(() => this.$router.push('/menu/'+this.current.id))
+                            .catch(error => console.log(error));
+                    }
+                });
             },
 
             searchPermission(keyword) {

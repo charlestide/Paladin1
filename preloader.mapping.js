@@ -1,8 +1,9 @@
 let PreLoaderMapping = { 
 "pvc-button": () => import(/* webpackChunkName: "pvc-button" */ "./resources/assets/js/components/button/Button.vue"), 
 "pvc-echart-line": () => import(/* webpackChunkName: "pvc-echart-line" */ "./resources/assets/js/components/chart/EChartLine.vue"), 
-"pvc-datatable": () => import(/* webpackChunkName: "pvc-datatable" */ "./resources/assets/js/components/data/DataTable.vue"), 
+"pvc-table": () => import(/* webpackChunkName: "pvc-table" */ "./resources/assets/js/components/data/DataTable.vue"), 
 "pvc-table-column": () => import(/* webpackChunkName: "pvc-table-column" */ "./resources/assets/js/components/data/TableColumn.vue"), 
+"pvc-form-item": () => import(/* webpackChunkName: "pvc-form-item" */ "./resources/assets/js/components/form/FormItem.vue"), 
 "pvc-aside": () => import(/* webpackChunkName: "pvc-aside" */ "./resources/assets/js/components/layout/Aside.vue"), 
 "pvc-bread-crumb": () => import(/* webpackChunkName: "pvc-bread-crumb" */ "./resources/assets/js/components/layout/BreadCrumb.vue"), 
 "pvc-footer": () => import(/* webpackChunkName: "pvc-footer" */ "./resources/assets/js/components/layout/Footer.vue"), 

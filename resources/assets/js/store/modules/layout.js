@@ -1,6 +1,9 @@
 
 const PVC_LAST_PAGE = 'pvc-last-page';
 
+import DataHelper from "../helper/data";
+import RemoteHelper from "../helper/remote";
+
 export default {
     namespaced: true,
     state: {
@@ -13,7 +16,8 @@ export default {
             title: '',
             summary: ''
         },
-        breadcrumb: []
+        breadcrumb: [],
+        menus: []
     },
     getters: {
         sidebar: (state) => state.sidebar,
@@ -39,6 +43,27 @@ export default {
             if (! (url in {'/init':'','/login':'','/':''})) {
                 sessionStorage.setItem(PVC_LAST_PAGE, url);
             }
+        },
+
+        setMenus(state,menus) {
+            state.menus = DataHelper.getChildren(menus);;
+        }
+    },
+    actions: {
+        getMenus({commit}) {
+            return new Promise(resolve => {
+                this._vm.$axios.get('/layout/menu')
+                    .then(response => {
+                        if (response.data.status) {
+                            commit('setMenus',response.data.data);
+                        }
+                        resolve(response.data.data);
+                    })
+                    .catch((error) => {
+                        RemoteHelper.showRemoteError(this._vm,error,'获取菜单失败');
+                    });
+            });
+
         }
     }
 };

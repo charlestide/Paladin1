@@ -5,7 +5,9 @@
 
 import VueBooter from "./bootstrap/vue-booter";
 
-let vueBooter = new VueBooter(document);
+let vueBooter = new VueBooter(window);
 window.app = vueBooter.boot().$mount('#app');
+
+
 
 

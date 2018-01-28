@@ -25,7 +25,8 @@
         "trntv/probe": "^1.0",
         "minime/annotations": "~3.0",
         "tymon/jwt-auth": "^0.5.12",
-        "laravel/passport": "^4.0"
+        "laravel/passport": "^4.0",
+        "spatie/laravel-permission": "^2.7"
 
     },
     "autoload": {

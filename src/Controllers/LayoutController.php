@@ -26,9 +26,13 @@ class LayoutController extends Controller
 
     public function menu() {
 
-        $menuTree = Menu::wholeTree();
+        $permissionIds = auth('admin')->user()->getAllPermissions()->pluck('id');
+        $menuTree = Menu::whereHas('permission', function($query) use ($permissionIds) {
+            $query->whereIn('id', $permissionIds);
+        })->get();
+//        $menuTree = Menu::wholeTree();
 
-        return $menuTree->toArray();
+        return response()->success($menuTree,'菜单列表 获取成功');
     }
 
     public function app(Request $request) {

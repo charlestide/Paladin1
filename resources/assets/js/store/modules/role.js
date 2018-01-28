@@ -32,9 +32,15 @@ factory.registerState({
         display_name: '',
         created_at: '',
         updated_at: '',
-        roles: []
+        permissions: []
+    },
+    fromRemote(role) {
+        // role.status = Boolean(role.status);
+        role.permissionNames = _.map(role.permissions,'name');
+        return role;
     }
 });
+
 
 export default factory.make();
 

@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Charlestide\Paladin\Models\Role;
-use Illuminate\Support\Facades\Cache;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * 管理员的类
@@ -27,7 +26,9 @@ use Laravel\Passport\HasApiTokens;
  */
 class Admin extends Authenticatable
 {
-    use Notifiable,HasApiTokens;
+    use Notifiable,HasApiTokens, HasRoles;
+
+    protected $guard_name = 'admin';
 
     protected $table = 'admins';
 
@@ -50,54 +51,54 @@ class Admin extends Authenticatable
         $this->attributes['password'] = bcrypt($password);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
-     */
-    public function permissions():MorphToMany {
-        return $this->morphToMany(Permission::class,'related','permission_relations');
-    }
+//    /**
+//     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+//     */
+//    public function permissions():MorphToMany {
+//        return $this->morphToMany(Permission::class,'related','permission_relations');
+//    }
+//
+//    /**
+//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+//     */
+//    public function roles(): BelongsToMany {
+//        return $this->belongsToMany(Role::class,'role_admin_relations');
+//    }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function roles(): BelongsToMany {
-        return $this->belongsToMany(Role::class,'role_admin_relations');
-    }
-
-    /**
-     * 按权限action和object判断，管理员是否有这种权限
-     *
-     * @param string $permissionAction
-     * @param string $class
-     * @return bool
-     */
-    public function hasPermissionByAction(string $permissionAction,string $class): bool {
-        $permissionId = Permission::where([
-            'action'=> $permissionAction,
-            'object' => $class
-        ])->value('id');
-        return $permissionId and $this->hasPermissionById($permissionId);
-    }
-
-    /**
-     * 按权限ID判断，管理员是否有这种权限
-     *
-     * @param int $permissionId
-     * @return bool
-     */
-    public function hasPermissionById(int $permissionId): bool {
-
-        if ($this->permissions()->where('permissions.id',$permissionId)->count()) {
-            return true;
-        }
-
-        $hasCount = $this->roles()->withCount([
-                    'permissions' => function(Builder $query) use ($permissionId) {
-                        $query->where('permissions.id',$permissionId);
-                    }
-                ])
-                ->pluck('permissions_count');
-
-        return $hasCount->sum() > 0;
-    }
+//    /**
+//     * 按权限action和object判断，管理员是否有这种权限
+//     *
+//     * @param string $permissionAction
+//     * @param string $class
+//     * @return bool
+//     */
+//    public function hasPermissionByAction(string $permissionAction,string $class): bool {
+//        $permissionId = Permission::where([
+//            'action'=> $permissionAction,
+//            'object' => $class
+//        ])->value('id');
+//        return $permissionId and $this->hasPermissionById($permissionId);
+//    }
+//
+//    /**
+//     * 按权限ID判断，管理员是否有这种权限
+//     *
+//     * @param int $permissionId
+//     * @return bool
+//     */
+//    public function hasPermissionById(int $permissionId): bool {
+//
+//        if ($this->permissions()->where('permissions.id',$permissionId)->count()) {
+//            return true;
+//        }
+//
+//        $hasCount = $this->roles()->withCount([
+//                    'permissions' => function(Builder $query) use ($permissionId) {
+//                        $query->where('permissions.id',$permissionId);
+//                    }
+//                ])
+//                ->pluck('permissions_count');
+//
+//        return $hasCount->sum() > 0;
+//    }
 }

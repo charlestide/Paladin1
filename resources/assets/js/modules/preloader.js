@@ -52,7 +52,7 @@ class PreLoader {
             let loaderFunction = _.get(item, 'loader');
             if (_.isFunction(callback)) {
                 return () => loaderFunction().then(function (com) {
-                    callback(name);
+                    // callback(name);
                     return com;
                 });
             }

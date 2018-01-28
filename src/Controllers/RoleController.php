@@ -18,8 +18,7 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        return Datatable::of(Role::query());
-
+        return Datatable::of(Role::with('permissions'));
     }
 
     /**
@@ -30,11 +29,10 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $roleData = $request->only('name','display_name');
-
-        $role = new Role($roleData);
-
+        $role = new Role($request->all());
+        $role->syncPermissions($request->input('permissions'));
         $role->save();
+
 
         return response()->success($role,'角色保存成功');
     }
@@ -47,6 +45,8 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
+        $role->admins = $role->users;
+        $role->permissions;
         return response()->success($role);
     }
 
@@ -59,10 +59,14 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-
-        $roleData = $request->only('name');
-        $role->fill($roleData);
+        $this->validateRole($request,false);
+        $role->fill($request->all());
+        if (is_array($request->input('permissionNames'))) {
+            $role->syncPermissions($request->input('permissionNames'));
+        }
         $role->save();
+
+        $role->permissions;
 
         return response()->success($role,'角色已经修改成功');
     }
@@ -83,25 +87,15 @@ class RoleController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @param Role $role
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
-     */
-    public function assign(Request $request, Role $role) {
+    private function validateRole(Request $request,bool $isCreate) {
+        $rules =[
+            'name' => 'required|max:30',
+//            'permissionNames' => 'array'
+        ];
 
-        if ($request->has('permissions')) {
-            $permissions = $request->input('permissions');
-            $role->permissions()->saveMany(Permission::find($permissions));
-
-            return redirect('/role/'.$role->id);
-        } else {
-
-            return view('paladin::role.assign',[
-                'role' => $role,
-                'permissions' => Permission::grouped(),
-                'related' => $role->permissions->pluck('id')->toArray()
-            ]);
+        if ($isCreate) {
+            $rules['name'] .= '|unique:menu';
         }
+        $this->validate($request, $rules);
     }
 }

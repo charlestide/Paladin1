@@ -3,11 +3,11 @@
         <p class="lead text-right">
             <pvc-button type="primary" icon="el-icon-plus" url="/permission/create">添加</pvc-button>
         </p>
-        <pvc-datatable store="permission" :perPage="perPage">
-            <pvc-table-column prop="id" label="ID" :searchable="true"/>
+        <pvc-table store="permission" :perPage="perPage">
+            <pvc-table-column prop="id" label="ID" :searchable="true" align="center"/>
             <pvc-table-column prop="name" :sortable="true" label="名称" searchable />
-            <el-table-column prop="roles_count" :sortable="true" label="角色数"/>
-            <el-table-column prop="permissions_count" :sortable="true" label="权限数"/>
+            <pvc-table-column prop="roles_count" :sortable="true" label="关联角色" align="center"/>
+            <pvc-table-column prop="admins_count" :sortable="true" label="关联管理员" align="center"/>
             <el-table-column prop="updated_at" label="更新于"/>
             <el-table-column prop="action" label="操作">
                 <template slot-scope="scope">
@@ -18,20 +18,22 @@
                     </el-button-group>
                 </template>
             </el-table-column>
-        </pvc-datatable>
+        </pvc-table>
     </div>
 </template>
 
 <script>
     import {mapGetters,mapActions} from "vuex";
+    import Definition from "../../store/definition";
+
 
     export default {
         name: "pvc-permission-index",
         computed: {
-            ...mapGetters('permission',['perPage'])
+            ...mapGetters('permission',{perPage: Definition.STORE_GETTER_PAGE_LENGTH})
         },
         methods: {
-            ...mapActions('permission',['delete']),
+            ...mapActions('permission',{delete: Definition.STORE_ACTION_DELETE}),
             handlerDelete(index,row) {
                 this.delete(row.id);
             }

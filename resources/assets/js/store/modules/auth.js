@@ -41,7 +41,9 @@ export default {
                 name: 'nobody'
             };
             sessionStorage.removeItem(PVC_ADMIN);
-            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('access-token');
+            sessionStorage.removeItem('refresh-token');
+            sessionStorage.removeItem('expires_at');
         },
         setToken(state,{access_token,refresh_token,expires_in}) {
             sessionStorage.setItem('access-token',access_token);

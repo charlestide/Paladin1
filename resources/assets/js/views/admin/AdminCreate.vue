@@ -30,8 +30,8 @@
                 </el-tab-pane>
                 <el-tab-pane label="分配角色" >
                     <el-form-item>
-                        <el-transfer filterable v-model="roleIds" :titles="['可选择','已分配']"
-                                     :data="roles" :props="{key:'id',label:'name'}"/>
+                        <el-transfer filterable v-model="admin.roleNames" :titles="['可选择','已分配']"
+                                     :data="roles" :props="{key:'name',label:'name'}"/>
                     </el-form-item>
                     <el-button type="primary" @click="prev()" icon="el-icon-arrow-left"
                                :autofocus="true">下一步</el-button>
@@ -40,8 +40,8 @@
                 </el-tab-pane>
                 <el-tab-pane label="分配权限" >
                     <el-form-item>
-                        <el-transfer filterable v-model="permissionIds" :titles="['可选择','已分配']"
-                                     :data="permissions" :props="{key:'id',label:'name'}"/>
+                        <el-transfer filterable v-model="admin.permissionNames" :titles="['可选择','已分配']"
+                                     :data="permissions" :props="{key:'name',label:'name'}"/>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="prev()" icon="el-icon-arrow-left"
@@ -68,6 +68,7 @@
                 roleIds: [],
                 permissionIds:[],
                 currentStep: 0,
+                adminData:null,
                 rules: {
                     name: [
                         {required: true, message: '请输入管理员用户名', trigger: 'blur'},
@@ -81,10 +82,21 @@
             }
         },
         computed: {
-            ...mapGetters('admin',{admin:'empty'}),
+            ...mapGetters('admin',{empty:'empty'}),
             ...mapGetters('admin',['loading']),
             ...mapGetters('role',{roles:'filtered',roleQuery:'filteredQuery'}),
             ...mapGetters('permission',{permissions:'filtered',permissionQuery:'filteredQuery'}),
+            admin: {
+                get() {
+                    if (!this.adminData) {
+                        this.adminData = this.empty;
+                    }
+                    return this.adminData;
+                },
+                set(role) {
+                    this.adminData = role;
+                }
+            }
         },
         methods: {
             ...mapActions('admin',['create']),
@@ -94,26 +106,28 @@
             ...mapMutations('permission',{resetPermissions: 'resetFilteredQuery'}),
             onSubmit(event) {
                 event.preventDefault();
-                let self = this;
 
-                this.$refs.form.validate( valid => {
-                    this.admin.roleIds = this.roleIds;
-                    this.admin.permissionIds = this.permissionIds;
-                    if (valid) {
-                        this.create({
-                            data:this.admin,
-                            callback(admin) {
-                                self.$router.push('/admin/'+admin.id);
-                            }
-                        });
-                    } else {
-                        this.$notify({
-                            title: '检查',
-                            message: '填写的信息有问题，请切换标签检查',
-                            type: 'warning'
-                        });
-                    }
-                })
+                this.$refs.form.validate()
+                    .then(valid => {
+                        // this.admin.roleIds = this.roleIds;
+                        // this.admin.permissionIds = this.permissionIds;
+                        //判断验证结果
+                        if (valid) {
+                            //创建
+                            this.create(this.admin)
+                                //跳转
+                                .then((admin) =>{
+                                        this.$router.push('/admin/'+admin.id);
+                                    }
+                                )
+                        } else {
+                            this.$notify({
+                                title: '检查',
+                                message: '填写的信息有问题，请切换标签检查',
+                                type: 'warning'
+                            });
+                        }
+                    })
 
             },
             next() {

@@ -28,7 +28,11 @@ export default {
         empty: (state) => _.clone(state.empty),
         getById: (state) => (id) => {
             if (_.has(state.store,id)) {
-                return _.get(state.store,id);
+                return _.get(state.store, id);
+            } else if (_.has(state,'list') && _.findIndex(state.list,{id: id})) {
+                return _.find(state.list,{id:id});
+            } else if (_.has(state,'filtered') && _.findIndex(state.filtered,{id: id})) {
+                return _.find(state.filtered,{id:id});
             } else {
                 return state.empty;
             }
@@ -42,10 +46,22 @@ export default {
             }
         },
         current(state) {
-            if (!_.isArray(state.current.parent_path)) {
-                state.current.parent_path = []
+            if (_.isEmpty(state.current)) {
+                return _.clone(state.empty);
+            } else {
+                return state.current;
             }
-            return state.current;
+        },
+        has: (state) => (id) => {
+            if (_.has(state.store,id)) {
+                return true;
+            } else if (_.has(state,'list') && _.findIndex(state.list,{id: id})) {
+                return true;
+            } else if (_.has(state,'filtered') && _.findIndex(state.filtered,{id:id})) {
+                return true;
+            } else {
+                return false;
+            }
         }
     },
 
@@ -55,16 +71,18 @@ export default {
          * 将一组item加入list
          *
          * @param state
-         * @param item
+         * @param items
          */
-        add(state,item) {
-            if (item) {
-                if (!_.has(state.store,item.id)) {
-                    //加入列表中
-                    Vue.set(state.store,item.id,item);
-
-                    //设置当前item
-                    state.current = item;
+        add(state,items) {
+            if (!_.isArray(items)) {
+                items = [items];
+            }
+            if (items) {
+                for (let item of items) {
+                    if (!_.has(state.store, item.id)) {
+                        //加入列表中
+                        Vue.set(state.store, item.id, item);
+                    }
                 }
             }
         },
@@ -95,7 +113,6 @@ export default {
                 Vue.set(state.store,item.id,item);
             }
         },
-
 
         startLoading(state) {
             state.loading = true;
@@ -128,18 +145,21 @@ export default {
         get({commit,state,getters},id) {
             return new Promise((resolve,reject) => {
                 commit('startLoading');
-                if (id > 0 && !_.has(state.store,id)) {
+
+                //判断请求的item是否已经下载
+                if (id > 0 && getters.has(id)) {
                     this._vm.$axios.get(state.setting.getUrl.replace(':id',id))
-                        .then(RemoteHelper.createThen(data => {
-                            commit('setCurrent',_.clone(data.data));
+                        .then(response => {
+                            commit('setCurrent',_.clone(response.data.data));
                             commit('endLoading');
-                            resolve();
-                        }))
-                        .catch(RemoteHelper.createCatch(this._vm,commit,state.setting.getError),() => {
+                            resolve(response.data.data);
+                        })
+                        .catch((error) => {
                             commit('endLoading');
-                            reject();
+                            reject(error);
                         });
                 } else {
+                    commit('setCurrent',getters.getById(id));
                     resolve();
                 }
             })
@@ -164,16 +184,21 @@ export default {
                     state.setting.saveUrl.replace(':id',item.id),
                     item
                 )
-                    .then(RemoteHelper.createThen(data => {
-                        commit('update',data.data);
-                        commit('set',data.data);
-
-                        RemoteHelper.showRemoteMessage(this._vm,data);
-                        resolve();
-                    }))
-                    .catch(RemoteHelper.createCatch(this._vm,commit,state.setting.saveError),() => {
+                    .then(response => {
+                        let data = response.data.data;
+                        commit('update',data);
+                        commit('set',data);
+                        commit('setCurrent',_.clone(data));
+                        commit('resetFormError',null,{root:true});
+                        RemoteHelper.showRemoteMessage(this._vm,response);
+                        resolve(data);
+                    })
+                    .catch((error) => {
                         commit('endLoading');
-                        reject();
+                        commit('setFormError',error,{root:true});
+                        RemoteHelper.showRemoteError(this._vm,error,state.setting.saveError);
+
+                        return error.response;
                     });
             })
 
@@ -193,18 +218,20 @@ export default {
                 }
 
                 this._vm.$axios.post(state.setting.createUrl,item)
-                    .then(RemoteHelper.createThen(data => {
-                        commit('add',data.data);
-                        commit('set',data.data);
-                        commit('setCurrent',_.clone(data.data));
+                    .then(RemoteHelper.createThen(response => {
+                        let data = response.data.data;
+                        commit('add',data);
+                        commit('set',data);
+                        commit('setCurrent',_.clone(data));
 
-                        RemoteHelper.showRemoteMessage(this._vm,data);
-                        resolve();
+                        RemoteHelper.showRemoteMessage(this._vm,response);
+                        resolve(data);
 
                     }))
-                    .catch(RemoteHelper.createCatch(this._vm,commit,state.setting.createError),() => {
+                    .catch((error) => {
                         commit('endLoading');
-                        reject();
+                        RemoteHelper.showRemoteError(vm,error,state.setting.createError);
+                        reject(error.response);
                     })
             })
 
@@ -221,17 +248,19 @@ export default {
         delete({commit,state,dispatch},id) {
             return new Promise((resolve,reject) => {
                 this._vm.$axios.delete(state.setting.deleteUrl.replace(':id',id))
-                    .then(RemoteHelper.createThen(data => {
+                    .then(response => {
                         commit('delete',id);
                         commit('remove',id);
                         commit('removeFiltered',id);
 
                         RemoteHelper.showRemoteMessage(this._vm,data);
-                        resolve();
-                    }))
-                    .catch(RemoteHelper.createCatch(this._vm,commit,state.setting.deleteError),() => {
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        RemoteHelper.showRemoteError(vm,error,state.setting.deleteError);
+
                         commit('endLoading');
-                        reject();
+                        reject(error);
                     })
             });
 

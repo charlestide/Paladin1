@@ -1,5 +1,4 @@
 <template>
-    <div id="main">
         <el-card>
             <div slot="header">
                 <div class="float-left">
@@ -16,17 +15,29 @@
             <el-row>
                 <el-col :span="12">
                     <div style="min-height: 300px">
-                        <h5>属于以下角色：</h5>
-                        <ul v-if="admin.roles">
-                           <li v-for="role in admin.roles">{{role.name}}</li>
+                        <h5 class="mb-lg-3">属于以下角色：</h5>
+                        <ul  class="list-group">
+                            <li v-for="role in admin.roles" class="list-group-item w-75">
+                                <div class="justify-content-between d-flex ">
+                                    <p class="title">{{role.name}}</p>
+                                    <pvc-button type="primary" :url="'/role/'+role.id">查看</pvc-button>
+                                </div>
+                                <small>{{role.description}}</small>
+                            </li>
                         </ul>
                     </div>
                 </el-col>
                 <el-col :span="12">
-                    <div style="min-height: 50%">
-                        <h5>拥有以下权限：</h5>
-                        <ul v-if="admin.permissions">
-                            <li v-for="permission in admin.permissions">{{permission.name}}</li>
+                    <div style="min-height: 300px">
+                        <h5 class="mb-lg-3">拥有以下权限：</h5>
+                        <ul  class="list-group">
+                            <li v-for="permission in admin.permissions" class="list-group-item w-75">
+                                <div class="justify-content-between d-flex ">
+                                    <p class="title">{{permission.name}}</p>
+                                    <pvc-button type="primary" :url="'/permission/'+permission.id">查看</pvc-button>
+                                </div>
+                                <small>{{permission.description}}</small>
+                            </li>
                         </ul>
                     </div>
                 </el-col>
@@ -35,18 +46,15 @@
             <pvc-button type="primary" url="/admin" icon="fa fa-list">列表</pvc-button>
 
         </el-card>
-    </div>
 </template>
 
 <script>
-    import {mapActions} from "vuex";
+    import {mapActions,mapGetters} from "vuex";
 
     export default {
         name: "pvc-admin-show",
         computed: {
-            admin() {
-                return this.$store.getters['admin/getById'](this.$route.params.id);
-            }
+            ...mapGetters('admin',{admin:'current'})
         },
         methods: {
             ...mapActions('admin',['get']),

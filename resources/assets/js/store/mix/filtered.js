@@ -58,14 +58,29 @@ export default {
             }
         },
 
+        setFilteredOne(state,item) {
+            if (item &&_.isObject(item)) {
+                let index = 0, filtered = _.clone(state.filtered);
+                if (index =_.findIndex(filtered,{id:item.id})) {
+                    filtered[index] = item;
+                    state.filtered = filtered;
+                } else {
+                    state.filtered.push(item);
+                }
+            }
+        },
+
         /**
          * 根据id删除一个item
          * @param state
          * @param id
          */
         removeFiltered(state,id) {
-            if (_.findKey(state.filtered,{id: id})) {
-                _.remove(state.filtered, item => item.id === id);
+            let filtered = _.clone(state.filtered);
+            _.remove(filtered, item => item.id === id);
+
+            if (filtered.length !== state.filtered.length) {
+                state.filtered = filtered;
             }
         },
 
@@ -95,25 +110,26 @@ export default {
             return new Promise((resolve,reject) => {
                 commit('startLoading');
                 if (limit) {
-                    state.query.setPerPage(limit);
+                    state.filteredQuery.setPerPage(limit);
                 }
                 this._vm.$axios.get(
                     state.setting.listUrl,
                     {
                         params: getters.filteredQuery.getQuery()
                     })
-                    .then(RemoteHelper.createThen(data => {
-                        if (data.status) {
-                            commit('setFiltered', data.data);
-                            commit('add',_.clone(data.data));
-                        }
+                    .then(response => {
+                        let data = response.data.data;
+                        commit('setFiltered', data);
+                        commit('add',_.clone(data));
                         commit('endLoading');
-                        RemoteHelper.showRemoteMessage(this._vm,data);
-                        resolve();
-                    }))
-                    .catch(RemoteHelper.createCatch(this._vm,commit,state.setting.listError),() => {
+
+                        resolve(data);
+                    })
+                    .catch((error) => {
+                        RemoteHelper.showRemoteError(this._vm,error,state.setting.listError);
+
                         commit('endLoading');
-                        reject();
+                        reject(error);
                     });
             })
 

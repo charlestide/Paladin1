@@ -24,6 +24,10 @@ class AxiosHelper {
                 Object.keys(config.data).forEach(key => formData.append(key, config.data[key]));
                 config.data = formData
             }
+
+            // if (_.includes(['post','put','patch'],config.method)) {
+            //     store.commit('resetFormError');
+            // }
             return config
         });
 

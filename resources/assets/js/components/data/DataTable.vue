@@ -4,8 +4,9 @@
             <slot/>
         </el-table>
         <tr role="searchBar">
-            <th v-for="(column,index) in columns" :key="index" v-if="column.searchable">
-                <el-input v-model="columns[index].search" :placeholder="'搜索'+column.label" @input="searchInput" >
+            <th v-for="(column,index) in columns" :key="index" >
+                <el-input v-model="columns[index].search" :placeholder="'搜索'+column.label" @input.native="searchInput"
+                          :name="column.name" v-if="column.searchable">
                     <i slot="prefix" class="el-input__icon el-icon-search" style="margin-left: 5px;"></i>
                 </el-input>
             </th>
@@ -19,8 +20,10 @@
 </template>
 
 <script>
+    import Definition from "../../store/definition";
+
     export default {
-        name: "pvc-datatable",
+        name: "pvc-table",
         props: {
             perPage: {
                 type: Number,
@@ -44,33 +47,36 @@
                 tableData: null,
                 lastSearchInput: 0,
                 page: 1,
-                query: null,
                 searchValue: [],
                 columns: []
             }
         },
         computed:  {
+            query() {
+                return this.$store.getters[this.store + '/' + Definition.STORE_GETTER_QUERY];
+            },
             total() {
-                return this.$store.getters[this.store + '/total'];
+                return this.$store.getters[this.store + '/' + Definition.STORE_GETTER_TOTAL];
             },
             list() {
-                return this.$store.getters[this.store + '/list'];
+                return this.$store.getters[this.store + '/' + Definition.STORE_GETTER_LIST];
             },
             loading() {
-                return this.$store.getters[this.store + '/loading'];
+                return this.$store.getters[Definition.COMMON_GETTER_LOADING];
             },
             currentPage: {
                 get() {
-                    return this.$store.getters[this.store + '/currentPage'];
+                    return this.$store.getters[this.store + '/' + Definition.STORE_GETTER_PAGE];
                 },
                 set(value) {
-                    this.$store.commit(this.store + '/setCurrentPage',value);
+                    this.$store.commit(this.store + '/' + Definition.STORE_MUTATION_SET_PAGE,value);
                 }
             }
         },
         methods: {
             loadList() {
-                this.$store.dispatch(this.store+'/getList');
+                this.$store.dispatch(this.store+'/' + Definition.STORE_ACTION_LIST)
+                    .then(this.applyAlign);
             },
 
             handleSort({ column, prop, order }) {
@@ -91,6 +97,19 @@
                 this.loadList();
             },
 
+            applyAlign() {
+                let nodeList = null;
+                _.each(this.columns,(column,index) => {
+                    if (column.align !== 'left') {
+                        nodeList = this.$el.querySelectorAll('td.el-table_1_column_' + (index + 1));
+                        if (nodeList && nodeList.length) {
+                            Array.prototype.forEach.call(nodeList,(td) => {
+                                td.classList.add('text-'+column.align);
+                            })
+                        }
+                    }
+                });
+            },
             /**
              * 启动搜索的延迟函数
              */
@@ -112,20 +131,19 @@
                 this.columns.push(column);
             },
 
-            searchInput(value) {
-                let inputColumns = _.filter(this.columns,{search:value});
-                for (let inputColumn of inputColumns) {
-                    this.search(value,inputColumn.name,this);
-                }
+            searchInput(event) {
+                let value = event.target.value,
+                    name = event.target.name;
+                    this.search(value,name,this);
             }
 
         },
         created() {
             this.loadList();
-            this.query = this.$store.getters[this.store + '/query'];
         },
         mounted: function () {
             this.renderSearchBar();
+            this.$nextTick(this.applyAlign);
         },
         beforeRouteUpdate (to, from, next) {
             this.loadList();
