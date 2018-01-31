@@ -35,10 +35,6 @@ class AuthProvider extends BasePassportServiceProvider
 
     public function boot() {
 
-//        $this->loadCrudPolicy();
-//        $this->registerPolicies();
-
-
         Response::macro('success',function ($data, string $message = null) {
             return Response::json([
                 'status' => true,
@@ -87,26 +83,5 @@ class AuthProvider extends BasePassportServiceProvider
         $grant->setRefreshTokenTTL(Passport::refreshTokensExpireIn());
 
         return $grant;
-    }
-
-    /**
-     * 从数据库中的permisstions表中，读取相应的object和policy的对应关系
-     */
-    public function loadCrudPolicy() {
-
-        $permisstions = Permission::query()
-            ->select('object','policy',DB::raw('count(action) as action_count'))
-            ->groupBy('object','policy');
-
-        /**
-         * @todo 如果发现同一个object对应两个不同的policy，就发出通知
-         */
-
-        foreach ($permisstions as $permisstion) {
-            $objectName = $permisstion->object;
-            if (class_exists($objectName) and !Gate::getPolicyFor($objectName) and !isset($this->policies[$objectName])) {
-                $this->policies[$objectName] = $permisstion->policy;
-            }
-        }
     }
 }

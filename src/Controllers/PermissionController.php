@@ -17,7 +17,9 @@ class PermissionController extends Controller
      */
     public function index(Request $request)
     {
-        return Datatable::of(Permission::withCount('users as admins_count','roles'));
+        return Datatable::of(
+            Permission::withCount('users as admins_count','roles')->with('category')
+        );
     }
 
 
@@ -47,6 +49,7 @@ class PermissionController extends Controller
         $permission->roles;
         $permission->admins = $permission->users;
         $permission->related;
+        $permission->category;
         return response()->success($permission);
     }
 

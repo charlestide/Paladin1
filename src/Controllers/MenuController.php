@@ -20,7 +20,12 @@ class MenuController extends Controller
     public function index(Request $request)
     {
 
-        return Datatable::of(Menu::with('permission')->orderBy('parent_id'));
+        return Datatable::of(
+                Menu::with([
+                    'permission.users',
+                    'permission.roles',
+//                    'permission'
+                ])->orderBy('parent_id'));
     }
 
     /**
@@ -34,18 +39,23 @@ class MenuController extends Controller
         $this->validateMenu($request,true);
         $menu = new Menu($request->all());
 
-        if (!$menu->permission_id) {
-            $permission = Permission::firstOrCreate([
-                'name' => $menu->name,
-                'description' => "能看到$menu->name菜单",
-                'guard_name' => 'admin'
-            ]);
-            $menu->permission_id = $permission->id;
-        }
+//        if (!$menu->permission_id) {
+//            $permission = Permission::firstOrCreate([
+//                'name' => $menu->name,
+//                'description' => "能看到$menu->name菜单",
+//                'guard_name' => 'admin'
+//            ]);
+//            $menu->permission_id = $permission->id;
+//        }
         $menu->save();
 
-        $permissionIds = Menu::find(explode('|',$menu->parent_path))->pluck('permission_id');
-        $menu->permission->related()->attach($permissionIds);
+        $menu->related()->sync($request->parent_path);
+
+        $menu->permission;
+        $menu->related;
+
+//        $permissionIds = Menu::find(explode('|',$menu->parent_path))->pluck('permission_id');
+//        $menu->permission->related()->attach($permissionIds);
 
         return response()->success($menu,'菜单创建成功');
     }
@@ -59,7 +69,9 @@ class MenuController extends Controller
     public function show(Request $request, Menu $menu)
     {
         $menu->parent;
-        $menu->permission;
+        $menu->permission->roles;
+        $menu->permission['admins'] = $menu->permission->users;
+        $menu->related;
         return response()->success($menu);
     }
 
@@ -74,17 +86,11 @@ class MenuController extends Controller
     {
         $this->validateMenu($request,false);
         $menu->fill($request->all());
-        if (!$menu->permission_id) {
-            $permission = Permission::firstOrCreate([
-                'name' => $menu->name,
-                'description' => '能看到'.$menu->name.'菜单',
-                'guard_name' => 'admin'
-            ]);
-            $menu->permission_id = $permission->id;
-        }
         $menu->save();
 
         $menu->permission;
+        $menu->related;
+        $menu->parent;
 
         return response()->success($menu,'菜单 保存成功');
     }

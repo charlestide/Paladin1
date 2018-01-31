@@ -10,6 +10,7 @@ namespace Charlestide\Paladin\Controllers;
 
 
 use Charlestide\Paladin\Models\Menu;
+use Charlestide\Paladin\Models\Permission;
 use Laravel\Passport\ClientRepository;
 use Illuminate\Http\Request;
 
@@ -26,11 +27,14 @@ class LayoutController extends Controller
 
     public function menu() {
 
-        $permissionIds = auth('admin')->user()->getAllPermissions()->pluck('id');
+        if (auth('admin')->user()->id == 1) {
+            $permissionIds = Permission::all()->pluck('id');
+        } else {
+            $permissionIds = auth('admin')->user()->getAllPermissions()->pluck('id');
+        }
         $menuTree = Menu::whereHas('permission', function($query) use ($permissionIds) {
             $query->whereIn('id', $permissionIds);
         })->get();
-//        $menuTree = Menu::wholeTree();
 
         return response()->success($menuTree,'菜单列表 获取成功');
     }

@@ -15,12 +15,30 @@ class CreatePermissionsTable extends Migration
     {
         if (!Schema::hasTable('permissions')) {
             Schema::create('permissions', function (Blueprint $table) {
-                $table->increments('id')->unsigned();
-                $table->string('name', 50)->comment('for display');
-                $table->string('object', 100)->comment('classname of object that to bed authenctied');
-                $table->string('action', 50)->comment('the method name of policy');
-                $table->string('policy', 100)->nullable();
+                $table->increments('id');
+                $table->string('name', 50)->unique()->comment('for display');
+                $table->string('guard_name', 50)->comment('for auth');
+                $table->integer('category_id');
                 $table->text('description')->nullable();
+                $table->timestamps();
+            });
+        }
+
+        if (!Schema::hasTable('permission_category')) {
+            Schema::create('permission_category', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name', 50)->unique();
+                $table->text('description')->nullable();
+                $table->timestamps();
+            });
+        }
+
+        if (!Schema::hasTable('permission_relations')) {
+            Schema::create('permission_relations', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('permission_id');
+                $table->integer('related_id');
+                $table->unique(['permission_id','related_id']);
                 $table->timestamps();
             });
         }
@@ -34,5 +52,7 @@ class CreatePermissionsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('permissions');
+        Schema::dropIfExists('permission_category');
+        Schema::dropIfExists('permission_relations');
     }
 }

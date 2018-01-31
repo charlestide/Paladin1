@@ -24,7 +24,7 @@ class AdminController extends Controller
     public function index()
     {
 
-        return Datatable::of(Admin::query());
+        return Datatable::of(Admin::with('permissions','roles'));
     }
 
     /**
@@ -35,7 +35,7 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validateAdmin($request);
+        $this->validateAdmin($request,true);
         $admin = new Admin($request->all());
 
         if ($password = $request->input('password') ) {
@@ -76,6 +76,7 @@ class AdminController extends Controller
     public function update(Request $request, Admin $admin)
     {
         if ($admin->id > 1) {
+            $this->validateAdmin($request,false);
             $admin->fill($request->all());
 
             if ($request->has('password')) {
@@ -112,10 +113,17 @@ class AdminController extends Controller
         }
     }
 
-    private function validateAdmin(Request $request) {
-        $this->validate($request, [
-            'name' => 'required|unique:admins|max:30',
-        ]);
+    private function validateAdmin(Request $request,$isCreate) {
+        $rules = [
+            'name' => 'required|max:30',
+        ];
+
+        if ($isCreate) {
+            $rules['name'] .= '|unique:admins';
+        }
+
+        $this->validate($request,$rules);
+
     }
 
 

@@ -29,10 +29,12 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validateRole($request,true);
         $role = new Role($request->all());
-        $role->syncPermissions($request->input('permissions'));
         $role->save();
-
+        if ($permissionNames = $request->input('permissionNames')) {
+            $role->syncPermissions($request->input('permissionNames'));
+        }
 
         return response()->success($role,'角色保存成功');
     }
@@ -40,10 +42,11 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param  Request $request
      * @param    Role  $role
      * @return  \Illuminate\Http\Response
      */
-    public function show(Role $role)
+    public function show(Request $request,Role $role)
     {
         $role->admins = $role->users;
         $role->permissions;
@@ -90,11 +93,10 @@ class RoleController extends Controller
     private function validateRole(Request $request,bool $isCreate) {
         $rules =[
             'name' => 'required|max:30',
-//            'permissionNames' => 'array'
         ];
 
         if ($isCreate) {
-            $rules['name'] .= '|unique:menu';
+            $rules['name'] .= '|unique:roles';
         }
         $this->validate($request, $rules);
     }

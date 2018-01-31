@@ -19,6 +19,7 @@ class CreateRolesTable extends Migration
                 $table->increments('id')->unsigned();
                 $table->string('name', 200)->unique();
                 $table->string('display_name');
+                $table->string('guard_name',50);
                 $table->text('description')->nullable();
                 $table->timestamps();
             });

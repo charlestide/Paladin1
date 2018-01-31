@@ -28,11 +28,11 @@ class PaladinServiceProvider extends ServiceProvider
 
         $this->loadModelFactories();
 
-        $this->loadRoutesFrom( __DIR__.'/web.php');
+        $this->loadRoutesFrom( __DIR__.'/admin.php');
 
 //        $this->loadMigrationsFrom(self::BASE_PATH . '/database/migrations');
 
-        $this->loadViewsFrom(self::BASE_PATH.'/resources/views','paladin');
+        $this->loadViewsFrom(self::BASE_PATH.'/views','paladin');
 
         $this->publishes([
             self::BASE_PATH . '/database/seeds' => database_path('seeds/paladin')
@@ -51,9 +51,6 @@ class PaladinServiceProvider extends ServiceProvider
             self::BASE_PATH.'/public' => public_path('paladin'),
             self::BASE_PATH . '/database/seeds' => database_path('seeds/paladin')
         ],'paladin');
-
-        $this->loadMenus();
-
     }
 
     public function register()
@@ -74,17 +71,5 @@ class PaladinServiceProvider extends ServiceProvider
 
     private function loadModelFactories() {
         FactoryManager::defineAll();
-    }
-
-    private function loadMenus() {
-
-        if (Schema::hasTable('menu')) {
-            //读取导航菜单
-            View::share('menus', Menu::wholeTree());
-        } else {
-            View::share('menus',[]);
-        }
-        View::share('menuClass',Menu::class);
-
     }
 }

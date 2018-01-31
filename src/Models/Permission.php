@@ -15,7 +15,7 @@ class Permission extends SpatiePermission
 
     protected $primaryKey = 'id';
     
-    protected $fillable = ['name','display_name','description'];
+    protected $fillable = ['name','display_name','description','category_id'];
 
     protected $attributes = ['guard_name' => 'admin'];
 
@@ -31,7 +31,7 @@ class Permission extends SpatiePermission
     }
 
     public function category() {
-        return $this->belongsToMany(PermissionCategory::class);
+        return $this->belongsTo(PermissionCategory::class,'category_id');
     }
 
     public function menus() {

@@ -19,7 +19,9 @@ class Menu extends Model
 
 //    protected $guarded = ['id'];
 
-    protected $fillable = ['name','parent_id','url','parent_path','permission_id'];
+    protected $fillable = ['name','parent_id','url','permission_id','parent_path'];
+
+    protected $appends = ['parent_path','parent'];
 
     public static function wholeTree($parentId = 0) {
         $menus = self::where('parent_id',$parentId)
@@ -53,35 +55,59 @@ class Menu extends Model
         return $this->belongsTo(Permission::class);
     }
 
-    public function getParentsBuilder() {
-        $dirtyParentPath = $this->getDirty()['parent_path'];
-//        $this->finishSave()
-        return $this->newQuery()->whereIn('id',explode('|',$this->parent_path));
+    public function related() {
+        return $this->belongsToMany(self::class,
+            'menu_relations',
+            'menu_id',
+            'related_id',
+            'id',
+            'id'
+        );
     }
 
-
     /**
-     * 将数据库的用|分隔的字符串，转成数组
+     * 权限ID的修改器
+     *
+     * 如果权限ID不存在，则创建一个新的权限
      *
      * @param $value
-     * @return array
      */
-//    static public function allParentPermissionNames(array $permissionNames) {
-//        static::permission()->whereIn('name',$permissionNames)
-//    }
+    public function setPermissionIdAttribute($value) {
+        if (empty($value)) {
+            $permission = Permission::firstOrCreate([
+                'name' => $this->name,
+                'description' => '能看到'.$this->name.'菜单',
+                'guard_name' => 'admin'
+            ]);
+            $value = $permission->id;
+        }
+        return $this->attributes['permission_id'] = $value;
+    }
 
     /**
-     * 将外部传来的数组，转成用|分隔的字符串，写入数据库
+     * 父路径的访问器
+     *
+     * @return mixed
+     */
+    public function getParentPathAttribute() {
+        return $this->related->pluck('id');
+    }
+
+    /**
+     * 父路径的修改器
      *
      * @param $value
-     * @return array
      */
-//    public function setPathAttribute($value) {
-//        if (is_array($value)) {
-//            return implode('|', $value);
-//        } else {
-//            return $value;
-//        }
-//    }
+    public function setParentPathAttribute($value) {
+        $this->related()->sync($value);
+    }
 
+    /**
+     * 父菜单的访问器
+     *
+     * @return mixed
+     */
+    public function getParentAttribute() {
+        return $this->attributes['parent'] = $this->related->last();
+    }
 }

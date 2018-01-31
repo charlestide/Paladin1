@@ -17,9 +17,24 @@ class PermissionCategory extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name','permissionNames'];
+
+    protected $appends = ['permissionNames'];
 
     public function permissions() {
-        return $this->hasMany(Permission::class);
+        return $this->hasMany(Permission::class,'category_id');
+    }
+
+    public function setPermissionNamesAttribute($value) {
+        if ($this->isDirty()) {
+            $this->save();
+        }
+
+        $permissions = Permission::whereIn('name',$value)->get();
+        $this->permissions()->saveMany($permissions);
+    }
+
+    public function getPermissionNamesAttribute() {
+        return $this->permissions->pluck('name');
     }
 }

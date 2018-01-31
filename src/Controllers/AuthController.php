@@ -26,10 +26,18 @@ class AuthController extends Controller
         $this->clients = $clients;
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function me(Request $request) {
         return $request->user();
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function client(Request $request)
     {
         $username = $request->input('username');
@@ -53,6 +61,9 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function logout() {
         if (auth('admin')->check()) {
             auth('admin')->user()->token()->delete();
