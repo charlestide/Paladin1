@@ -6,7 +6,8 @@
  * Time: 下午4:29
  */
 
-//Route::aliasMiddleware('autoauth','Charlestide\Paladin\Middlewares\AutoAuth');
+Route::aliasMiddleware('role',\Spatie\Permission\Middlewares\RoleMiddleware::class);
+Route::aliasMiddleware('permission',\Spatie\Permission\Middlewares\PermissionMiddleware::class);
 //Route::middlewareGroup('paladin',[
 //    'Charlestide\Paladin\Middlewares\AutoAuth',
 //]);
@@ -44,12 +45,12 @@ Route::namespace('Charlestide\Paladin\Controllers')
                 //Admin
                 Route::apiResource('admin', 'AdminController');
                 //Role
-                Route::resource('role','RoleController');
+                Route::apiResource('role','RoleController');
                 //Permission
-                Route::resource('permission','PermissionController');
+                Route::apiResource('permission','PermissionController');
                 //Menu
-                Route::resource('menu','MenuController');
-                Route::resource('permission-category','PermissionCategoryController');
+                Route::apiResource('menu','MenuController');
+                Route::apiResource('permission-category','PermissionCategoryController');
             });
 
         });

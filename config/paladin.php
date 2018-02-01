@@ -7,12 +7,13 @@
  */
 
 return [
+    'version' => 1,
 
-    'genereator' => [
-        'crud' => [
-            'model_path' => 'app/Model'
-        ]
-    ],
-
-    'storage' => 'paladin.json'
+    'permissions' => [
+        'admins' => ['create','update','delete','show','browse'],
+        'permissions' => ['create','update','delete','show','browse'],
+        'permissions_categories' => ['create','update','delete','show','browse'],
+        'menus' => ['create','update','delete','show','browse'],
+        'roles' => ['create','update','delete','show','browse'],
+    ]
 ];

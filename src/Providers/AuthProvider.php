@@ -12,6 +12,7 @@ namespace Charlestide\Paladin\Providers;
 use Charlestide\Paladin\Models\Permission;
 use Charlestide\Paladin\Policies\CrudPolicy;
 use Charlestide\Paladin\Services\AuthService;
+use Charlestide\Paladin\Services\Paladin;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Gate;
@@ -34,13 +35,13 @@ class AuthProvider extends BasePassportServiceProvider
 
 
     public function boot() {
-
         Response::macro('success',function ($data, string $message = null) {
             return Response::json([
                 'status' => true,
                 'data' => $data,
                 'auth' => auth('admin')->user(),
-                'message' => $message ?: '成功'
+                'message' => $message ?: '成功',
+                'version' => Paladin::version()
             ]);
         });
 
@@ -49,7 +50,8 @@ class AuthProvider extends BasePassportServiceProvider
                 'status' => false,
                 'data' => $data,
                 'auth' => auth('admin')->user(),
-                'message' => $message ?: '失败'
+                'message' => $message ?: '失败',
+                'version' => Paladin::version()
             ]);
         });
 
@@ -58,6 +60,7 @@ class AuthProvider extends BasePassportServiceProvider
                 'status' => false,
                 'data' => $data,
                 'message' => $message ?: '失败',
+                'version' => Paladin::version()
             ])->setStatusCode($status);
         });
 

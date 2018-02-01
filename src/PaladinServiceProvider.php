@@ -11,6 +11,7 @@ namespace Charlestide\Paladin;
 use Charlestide\Paladin\ModelFactories\FactoryManager;
 use Charlestide\Paladin\Providers\AuthProvider;
 use Charlestide\Paladin\Providers\ModelProvider;
+use Charlestide\Paladin\Services\Paladin;
 use Charlestide\Paladin\Storage\FileManager;
 use Charlestide\Paladin\Storage\Persistent;
 use Illuminate\Filesystem\FilesystemManager;
@@ -30,7 +31,7 @@ class PaladinServiceProvider extends ServiceProvider
 
         $this->loadRoutesFrom( __DIR__.'/admin.php');
 
-//        $this->loadMigrationsFrom(self::BASE_PATH . '/database/migrations');
+        $this->loadMigrationsFrom(self::BASE_PATH . '/database/migrations');
 
         $this->loadViewsFrom(self::BASE_PATH.'/views','paladin');
 
@@ -61,6 +62,10 @@ class PaladinServiceProvider extends ServiceProvider
 
         $this->app->singleton(FileManager::class, function ($app) {
             return new FileManager(new FilesystemManager($app));
+        });
+
+        $this->app->singleton(Paladin::class,function($app) {
+            return new Paladin();
         });
 
 

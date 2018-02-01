@@ -12,6 +12,11 @@ class MenuController extends Controller
 
     protected $authModel = Menu::class;
 
+    public function __construct()
+    {
+        $this->middleware('permission:菜单管理')->only('index');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +29,6 @@ class MenuController extends Controller
                 Menu::with([
                     'permission.users',
                     'permission.roles',
-//                    'permission'
                 ])->orderBy('parent_id'));
     }
 

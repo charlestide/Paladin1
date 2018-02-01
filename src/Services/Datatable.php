@@ -69,7 +69,8 @@ class Datatable
                 'perPage' => intval($pager->perPage()),
                 'currentPage' => $pager->currentPage(),
                 'status' => true,
-                'message' => '获取数据成功'
+                'message' => '获取数据成功',
+                'version' => Paladin::version()
             ];
         } else {
             $data = $query->get();
@@ -79,7 +80,8 @@ class Datatable
                 'perPage' => $data->count(),
                 'currentPage' => 1,
                 'status' => true,
-                'message' => '获取数据成功'
+                'message' => '获取数据成功',
+                'version' => Paladin::version()
             ];
         }
 

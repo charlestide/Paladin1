@@ -17,7 +17,7 @@ trait Migrated
         parent::setUp();
 
         $this->runMigrate();
-        $this->runSeeder();
+//        $this->runSeeder();
     }
 
     protected function tearDown()

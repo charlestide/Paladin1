@@ -12,14 +12,12 @@ class Base extends TestCase
 
     protected function setUp()
     {
-        require $this->getBasePath().'/vendor/autoload.php';
         parent::setUp();
     }
 
     protected function getPackageProviders($application)
     {
         return [
-            TestProvider::class,
             PaladinServiceProvider::class,
         ];
     }
@@ -31,15 +29,10 @@ class Base extends TestCase
             'driver' => 'mysql',
             'host' => '127.0.0.1',
             'port' => '3306',
-            'database' => 'test',
+            'database' => 'testbench',
             'username' => 'root',
             'password' => ''
         ]);
-    }
-
-    protected function getBasePath()
-    {
-        return realpath( __DIR__.'/../..');
     }
 
     /**

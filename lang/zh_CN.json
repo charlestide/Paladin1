@@ -1,0 +1,15 @@
+{
+  "admins": "管理员",
+  "permissions": "权限",
+  "permissions_categories": "权限类别",
+  "roles": "角色",
+  "menus": "菜单",
+  "create": "创建",
+  "update": "修改",
+  "delete": "删除",
+  "show": "查看",
+  "browse": "浏览",
+  "permissions of": "的相关操作权限",
+  "the permission allows you to": "此权限允许您",
+  "space": ""
+}
