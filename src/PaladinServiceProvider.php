@@ -8,6 +8,7 @@
 
 namespace Charlestide\Paladin;
 
+use Charlestide\Paladin\Command\Seed;
 use Charlestide\Paladin\ModelFactories\FactoryManager;
 use Charlestide\Paladin\Providers\AuthProvider;
 use Charlestide\Paladin\Providers\ModelProvider;
@@ -36,22 +37,19 @@ class PaladinServiceProvider extends ServiceProvider
         $this->loadViewsFrom(self::BASE_PATH.'/views','paladin');
 
         $this->publishes([
-            self::BASE_PATH . '/database/seeds' => database_path('seeds/paladin')
-        ],'paladin-seeder');
-
-        $this->publishes([
-            self::BASE_PATH.'/config/paladin.php' => config_path('paladin.php')
-        ],'paladin-config');
-
-        $this->publishes([
             self::BASE_PATH.'/public' => public_path('paladin')
         ],'paladin-assets');
 
         $this->publishes([
             self::BASE_PATH.'/config/paladin.php' => config_path('paladin.php'),
             self::BASE_PATH.'/public' => public_path('paladin'),
-            self::BASE_PATH . '/database/seeds' => database_path('seeds/paladin')
         ],'paladin');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                Seed::class
+            ]);
+        }
     }
 
     public function register()

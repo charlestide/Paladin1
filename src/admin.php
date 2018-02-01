@@ -27,13 +27,14 @@ Route::namespace('Charlestide\Paladin\Controllers')
             });
 
         Route::view('dashboard','paladin::admin.index');
+        Route::get('layout/settings','LayoutController@settings');
+
 
         //需要登陆的页面
         Route::middleware(['auth:admin','api'])
             ->group(function () {
                 Route::get('me','AuthController@me');
                 Route::get('layout/menu','LayoutController@menu');
-
 
                 //代码生成器
 //                Route::namespace('Generator')->prefix('generator/crud')->group(function (){

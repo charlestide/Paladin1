@@ -47,4 +47,8 @@ class LayoutController extends Controller
 
         return view('paladin::vue.index',['client' => $passwordClient]);
     }
+
+    public function settings() {
+        return response()->success(config('paladin.settings',[]));
+    }
 }
