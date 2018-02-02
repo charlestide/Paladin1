@@ -8,9 +8,6 @@
 
 Route::aliasMiddleware('role',\Spatie\Permission\Middlewares\RoleMiddleware::class);
 Route::aliasMiddleware('permission',\Spatie\Permission\Middlewares\PermissionMiddleware::class);
-//Route::middlewareGroup('paladin',[
-//    'Charlestide\Paladin\Middlewares\AutoAuth',
-//]);
 
 Route::aliasMiddleware('auth-admin',\Charlestide\Paladin\Middlewares\AuthenticateAdminApi::class);
 
@@ -31,7 +28,7 @@ Route::namespace('Charlestide\Paladin\Controllers')
 
 
         //需要登陆的页面
-        Route::middleware(['auth:admin','api'])
+        Route::middleware(['auth:'.config('paladin.guard','web'),'api'])
             ->group(function () {
                 Route::get('me','AuthController@me');
                 Route::get('layout/menu','LayoutController@menu');

@@ -10,11 +10,9 @@ use Charlestide\Paladin\Services\Datatable;
 class MenuController extends Controller
 {
 
-    protected $authModel = Menu::class;
-
     public function __construct()
     {
-        $this->middleware('permission:菜单管理')->only('index');
+        $this->restfulAuth('menus');
     }
 
     /**
@@ -42,24 +40,11 @@ class MenuController extends Controller
     {
         $this->validateMenu($request,true);
         $menu = new Menu($request->all());
-
-//        if (!$menu->permission_id) {
-//            $permission = Permission::firstOrCreate([
-//                'name' => $menu->name,
-//                'description' => "能看到$menu->name菜单",
-//                'guard_name' => 'admin'
-//            ]);
-//            $menu->permission_id = $permission->id;
-//        }
         $menu->save();
-
         $menu->related()->sync($request->parent_path);
 
         $menu->permission;
         $menu->related;
-
-//        $permissionIds = Menu::find(explode('|',$menu->parent_path))->pluck('permission_id');
-//        $menu->permission->related()->attach($permissionIds);
 
         return response()->success($menu,'菜单创建成功');
     }
@@ -120,7 +105,6 @@ class MenuController extends Controller
             'name' => 'required|max:30',
             'parent_path' => 'required',
             'parent_id' => 'required|integer',
-//            'permission_id' => 'required|integer',
         ];
 
         if ($isCreate) {

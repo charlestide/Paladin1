@@ -12,13 +12,9 @@ use Spatie\Permission\Models\Role as SpatieRole;
  */
 class Role extends SpatieRole
 {
-//    protected $table = 'my_roles';
-
     protected $primaryKey = 'id';
     
     protected $fillable = ['name','display_name','description'];
-
-    protected $attributes = ['guard_name' => 'admin'];
 
     protected $guard_name = 'admin';
 

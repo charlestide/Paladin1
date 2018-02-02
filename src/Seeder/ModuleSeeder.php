@@ -23,16 +23,21 @@ abstract class ModuleSeeder
      * @param string $name
      * @param int $categoryId
      * @param string|null $description
-     * @param string $guardName
      * @return Permission
      */
-    protected function createPermission(string $name,int $categoryId,string $description = null,string $guardName = 'admin') {
-        return Permission::firstOrCreate([
+    protected function createPermission(string $name,int $categoryId,string $description = null) {
+        $permission = Permission::firstOrCreate([
             'name' => $name,
+            'guard_name' => config('paladin.guard','admin'),
+        ]);
+
+        $permission->fill([
             'category_id' => $categoryId,
-            'guard_name' => $guardName,
             'description' => $description
         ]);
+
+        $permission->save();
+        return $permission;
     }
 
     /**
@@ -41,9 +46,9 @@ abstract class ModuleSeeder
      * @param string $moduleName
      * @param array $actions
      * @param int $categoryId
-     * @return [Permission]
+     * @return Permission
      */
-    protected function createPermissionsByModule(string $moduleName,array $actions,int $categoryId): array {
+    protected function createPermissionsByModule(string $moduleName,array $actions,int $categoryId): Permission {
         $result = [];
 
         $systemMenu = $this->getSystemMenu();
@@ -55,7 +60,9 @@ abstract class ModuleSeeder
                 __('the permission allows you to').' '.__($action).' '.__($moduleName));
 
             $permission->related()->sync($systemPermission->id);
-            $result[$action] = $permission;
+            if ($action == 'browse') {
+                $result = $permission;
+            }
         }
 
         return $result;
@@ -67,17 +74,20 @@ abstract class ModuleSeeder
      * @param string $moduleName
      * @return array
      */
-    protected function createPermissionsAndMenu(string $moduleName,$relatedId) {
+    protected function createPermissionsAndMenu(string $moduleName) {
         $result = [];
-        $actions = config('paladin.modules.'.$moduleName);
+        $actions = config('paladin.permissions.'.$moduleName);
 
-        $category = PermissionCategory::firstOrCreate(__('permissions of').' '.__($moduleName));
-        $actionPermissions = $this->createPermissionsByModule($moduleName,$actions,$category->id);
-        if (isset($actionPermissions[__('browse')])) {
-            $result['menu'] = $this->createMenu(__($moduleName), ($actionPermissions[__('browse')])->id);
+        $category = PermissionCategory::firstOrCreate([
+            'name' => __($moduleName).' '.__("'s permissions")
+        ]);
+        $browsePermission = $this->createPermissionsByModule($moduleName,$actions,$category->id);
+        if ($browsePermission instanceof Permission) {
+            $result['menu'] = $this->createMenu(
+                __($moduleName), $browsePermission->id);
         }
 
-        $result['permissions'] = $actionPermissions;
+        $result['permissions'] = $browsePermission;
 
         return $result;
     }
@@ -94,13 +104,19 @@ abstract class ModuleSeeder
      */
     protected function createMenu(string $name,int $permissionId,string $url = null,
                                       int $parentId = 0,string $icon = null) {
-        return Menu::firstOrCreate([
+        $menu = Menu::firstOrNew([
             'name' => $name,
+        ]);
+
+        $menu->fill([
             'url' => $url,
             'parent_id' => $parentId,
             'permission_id' => $permissionId,
             'icon' => $icon,
         ]);
+
+        $menu->save();
+        return $menu;
     }
 
     /**
@@ -109,7 +125,13 @@ abstract class ModuleSeeder
      * @return Menu
      */
     protected function getSystemMenu() {
-        $permission = $this->createPermission(__('permissions of').' '.__('System Management'),0);
-        return $this->createMenu(__('System Management'),$permission->id);
+        $permission = $this->createPermission(__('system').__("'s permissions"),0);
+        return $this->createMenu(
+            __('system'),
+            $permission->id,
+            config('paladin.menus.system.url'),
+            0,
+            config('paladin.menus.system.icon','gear')
+        );
     }
 }

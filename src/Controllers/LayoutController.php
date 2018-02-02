@@ -49,6 +49,8 @@ class LayoutController extends Controller
     }
 
     public function settings() {
-        return response()->success(config('paladin.settings',[]));
+        return response()->success(config('paladin.settings',[
+            'logo_path' => '/images/logo.png'
+        ]));
     }
 }

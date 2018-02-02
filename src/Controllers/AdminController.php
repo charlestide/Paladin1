@@ -11,10 +11,10 @@ use Charlestide\Paladin\Services\Datatable;
 class AdminController extends Controller
 {
 
-    /**
-     * @var string 需要验证权限的Model
-     */
-    protected $authModel = Admin::class;
+    public function __construct()
+    {
+        $this->restfulAuth('admins');
+    }
 
     /**
      * Display a listing of the resource.
@@ -75,26 +75,22 @@ class AdminController extends Controller
      */
     public function update(Request $request, Admin $admin)
     {
-        if ($admin->id > 1) {
-            $this->validateAdmin($request,false);
-            $admin->fill($request->all());
+        $this->validateAdmin($request,false);
+        $admin->fill($request->all());
 
-            if ($request->has('password')) {
-                $admin->password = $request->input('password');
-            }
-
-            $admin->save();
-
-            $admin->syncPermissions($request->input('permissionNames'));
-            $admin->syncRoles($request->input('roleNames'));
-
-            $admin->permissions;
-            $admin->roles;
-
-            return response()->success($admin,'管理员已经修改成功');
-        } else {
-            return response()->failure($admin,'您不能修改超级管理员');
+        if ($request->has('password')) {
+            $admin->password = $request->input('password');
         }
+
+        $admin->save();
+
+        $admin->syncPermissions($request->input('permissionNames'));
+        $admin->syncRoles($request->input('roleNames'));
+
+        $admin->permissions;
+        $admin->roles;
+
+        return response()->success($admin,'管理员已经修改成功');
     }
 
     /**

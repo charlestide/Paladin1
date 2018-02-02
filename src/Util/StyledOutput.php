@@ -156,7 +156,16 @@ trait StyledOutput {
             $this->getOutput()->writeln('');
         }
     }
-    
+
+    public function success(string $message,$newLine = true) {
+        $this->put($message,'fg=green',$newLine);
+    }
+
+    public function failure(string $message,$newLine = true) {
+        $this->put($message,'fg=red',$newLine);
+    }
+
+
     /**
      * Write a string as warning output.
      *
@@ -244,7 +253,7 @@ trait StyledOutput {
         $this->table($headers,$data);
     }
     
-    public function table(array $headers, $rows, $style = 'default')
+    public function table($headers, $rows, $style = 'default',array $columnStyles = [])
     {
         $table = new Table($this->getOutput());
 

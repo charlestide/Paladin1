@@ -8,7 +8,10 @@ use Charlestide\Paladin\Services\Datatable;
 class PermissionCategoryController extends Controller
 {
 
-    protected $authModel = PermissionCategory::class;
+    public function __construct()
+    {
+        $this->restfulAuth('permissions_categories');
+    }
 
     /**
      * Display a listing of the resource.

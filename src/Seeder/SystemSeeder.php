@@ -15,13 +15,13 @@ class SystemSeeder extends ModuleSeeder
     {
         $systemMenu = $this->getSystemMenu();
 
-        foreach (config('paladin.modules') as $moduleName => $actions) {
+        foreach (config('paladin.permissions') as $moduleName => $actions) {
             $result = $this->createPermissionsAndMenu($moduleName);
             $menu = $result['menu'];
             $menu->parent_id = $systemMenu->id;
+            $menu->icon = config("paladin.menus.{$moduleName}.icon");
+            $menu->url = config("paladin.menus.{$moduleName}.url");
             $menu->save();
         }
     }
-
-
 }

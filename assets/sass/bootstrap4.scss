@@ -1,0 +1,22 @@
+
+@import "~paladin-vue/sass/_variable.scss";
+
+$body-bg: $main-color-bg;
+$body-fg: $main-color-fg;
+
+$colors: (
+        "primary": $primary-color-fg,
+        "secondary": $secondary-color-fg,
+        "dark": #d0d0d0
+);
+
+$theme-colors: (
+        "primary": $primary-color-bg,
+        "secondary": $secondary-color-bg,
+        "dark": #2A2A2A
+);
+
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+
+@import "~bootstrap/scss/bootstrap";

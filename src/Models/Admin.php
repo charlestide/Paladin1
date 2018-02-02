@@ -2,11 +2,9 @@
 
 namespace Charlestide\Paladin\Models;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -28,8 +26,6 @@ class Admin extends Authenticatable
 {
     use Notifiable,HasApiTokens, HasRoles;
 
-    protected $guard_name = 'admin';
-
     protected $table = 'admins';
 
     protected $primaryKey = 'id';
@@ -40,10 +36,6 @@ class Admin extends Authenticatable
 
     protected $hidden = ['password','remember_token'];
 
-    public function isSuperAdmin() {
-        return $this->id == 1;
-    }
-
     /**
      * @param $password
      */
@@ -51,54 +43,20 @@ class Admin extends Authenticatable
         $this->attributes['password'] = bcrypt($password);
     }
 
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
-//     */
-//    public function permissions():MorphToMany {
-//        return $this->morphToMany(Permission::class,'related','permission_relations');
-//    }
-//
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function roles(): BelongsToMany {
-//        return $this->belongsToMany(Role::class,'role_admin_relations');
-//    }
+    protected function getGuardNames(): Collection
+    {
+        $guardNames = collect();
+        $guardNames->push(config('paladin.guard','admin'));
 
-//    /**
-//     * 按权限action和object判断，管理员是否有这种权限
-//     *
-//     * @param string $permissionAction
-//     * @param string $class
-//     * @return bool
-//     */
-//    public function hasPermissionByAction(string $permissionAction,string $class): bool {
-//        $permissionId = Permission::where([
-//            'action'=> $permissionAction,
-//            'object' => $class
-//        ])->value('id');
-//        return $permissionId and $this->hasPermissionById($permissionId);
-//    }
-//
-//    /**
-//     * 按权限ID判断，管理员是否有这种权限
-//     *
-//     * @param int $permissionId
-//     * @return bool
-//     */
-//    public function hasPermissionById(int $permissionId): bool {
-//
-//        if ($this->permissions()->where('permissions.id',$permissionId)->count()) {
-//            return true;
-//        }
-//
-//        $hasCount = $this->roles()->withCount([
-//                    'permissions' => function(Builder $query) use ($permissionId) {
-//                        $query->where('permissions.id',$permissionId);
-//                    }
-//                ])
-//                ->pluck('permissions_count');
-//
-//        return $hasCount->sum() > 0;
-//    }
+        $guardNames->merge(collect(config('auth.guards'))
+            ->map(function ($guard) {
+                return config("auth.providers.{$guard['provider']}.model");
+            })
+            ->filter(function ($model) {
+                return get_class($this) === $model;
+            })
+            ->keys());
+
+        return $guardNames;
+    }
 }

@@ -65,8 +65,9 @@ class AuthController extends Controller
      * @return mixed
      */
     public function logout() {
-        if (auth('admin')->check()) {
-            auth('admin')->user()->token()->delete();
+        $auth = auth(config('paladin.guard','admin'));
+        if ($auth->check()) {
+            $auth->user()->token()->delete();
         }
 
         return response()->success(null,'登出成功');

@@ -18,11 +18,9 @@ class Seed extends Command
 
     protected $description = 'run seeder for paladin system initialize';
 
-
-
     public function handle() {
         $systemSeeder = new SystemSeeder();
         $systemSeeder->run();
-        $this->info('seeder has been run');
+        $this->info('Seeder has been run.');
     }
 }

@@ -8,7 +8,10 @@ use Charlestide\Paladin\Services\Datatable;
 class PermissionController extends Controller
 {
 
-    protected $authModel = Permission::class;
+    public function __construct()
+    {
+        $this->restfulAuth('permissions');
+    }
 
     /**
      * Display a listing of the resource.

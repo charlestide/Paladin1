@@ -9,7 +9,10 @@ use Charlestide\Paladin\Models\Role;
 class RoleController extends Controller
 {
 
-    protected $authModel = Role::class;
+    public function __construct()
+    {
+        $this->restfulAuth('roles');
+    }
 
     /**
      * Display a listing of the resource.

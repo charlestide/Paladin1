@@ -21,7 +21,7 @@ class AdminPassportRepository extends UserRepository
 
     public function getUserEntityByUserCredentials($username, $password, $grantType, ClientEntityInterface $clientEntity)
     {
-        $guard = App::make(Request::class)->get('guard') ?: 'api';//其实关键的就在这里，就是通过传递一个guard参数来告诉它我们是使用api还是admin_api provider来做认证
+        $guard = App::make(Request::class)->get('guard') ?: 'api';
         $provider = config("auth.guards.{$guard}.provider");
         if (is_null($model = config("auth.providers.{$provider}.model"))) {
             throw new RuntimeException('Unable to determine user model from configuration.');
@@ -32,7 +32,6 @@ class AdminPassportRepository extends UserRepository
         } else {
             $user = (new $model)->where('email', $username)->first();
         }
-
 
         if (!$user) {
             return;

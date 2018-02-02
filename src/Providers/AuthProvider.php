@@ -9,15 +9,8 @@
 namespace Charlestide\Paladin\Providers;
 
 
-use Charlestide\Paladin\Models\Permission;
-use Charlestide\Paladin\Policies\CrudPolicy;
-use Charlestide\Paladin\Services\AuthService;
 use Charlestide\Paladin\Services\Paladin;
-use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-
 use Charlestide\Paladin\Auth\AdminPassportRepository;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use Laravel\Passport\PassportServiceProvider as BasePassportServiceProvider;
@@ -39,7 +32,7 @@ class AuthProvider extends BasePassportServiceProvider
             return Response::json([
                 'status' => true,
                 'data' => $data,
-                'auth' => auth('admin')->user(),
+                'auth' => auth(config('paladin.guard','web'))->user(),
                 'message' => $message ?: '成功',
                 'version' => Paladin::version()
             ]);
@@ -49,7 +42,7 @@ class AuthProvider extends BasePassportServiceProvider
             return Response::json([
                 'status' => false,
                 'data' => $data,
-                'auth' => auth('admin')->user(),
+                'auth' => auth(config('paladin.guard','web'))->user(),
                 'message' => $message ?: '失败',
                 'version' => Paladin::version()
             ]);
@@ -69,9 +62,6 @@ class AuthProvider extends BasePassportServiceProvider
 
     public function register()
     {
-        $this->app->singleton(AuthService::class,function($app) {
-           return new AuthService();
-        });
         parent::register();
     }
 

@@ -17,8 +17,8 @@ class AuthenticateAdminApi extends Authenticate
     protected function authenticate(array $guards)
     {
 
-        if ($this->auth->guard('admin')->check()) {
-            return $this->auth->shouldUse('admin');
+        if ($this->auth->guard(config('paladin.guard','web'))->check()) {
+            return $this->auth->shouldUse(config('paladin.guard','web'));
         } else {
             throw new UnauthorizedHttpException('', 'Unauthenticated');
         }

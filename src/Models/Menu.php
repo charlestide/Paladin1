@@ -17,9 +17,7 @@ class Menu extends Model
 
     protected $primaryKey = 'id';
 
-//    protected $guarded = ['id'];
-
-    protected $fillable = ['name','parent_id','url','permission_id','parent_path'];
+    protected $fillable = ['name','parent_id','url','permission_id','parent_path','icon'];
 
     protected $appends = ['parent_path','parent'];
 
