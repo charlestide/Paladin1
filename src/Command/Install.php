@@ -68,7 +68,7 @@ class Install extends Command
         $this->call('paladin:seed');
 
         $this->step('Generate Perload Mapping File');
-        passthru('./node_modules/.bin/perload');
+        passthru('./node_modules/.bin/perloader');
 
         $this->step('Compile Assets');
         passthru('npm run dev');
