@@ -49,6 +49,9 @@ class Install extends Command
         $this->step('Publish assets By Charlestide/Paladin ');
         $this->publishPaladin('assets',true);
 
+        $this->step('Publish Language Files By Charlestide/Paladin ');
+        $this->publishPaladin('lang',true);
+
         $this->step('Generate Passport Key');
         $this->call('passport:keys');
 
@@ -65,7 +68,14 @@ class Install extends Command
         passthru('npm run dev');
 
         if ($this->confirm('Would you like create a Super Admin User?',true)) {
-            $this->call('paladin:superadmin');
+
+            $email = $this->ask('What is the Email of Super Admin User?','admin@admin.com');
+            $password = $this->secret('What is the Password?',true);
+
+            $this->call('paladin:superadmin',[
+                'email' => $email,
+                'password' => $password
+            ]);
         }
     }
 
@@ -107,8 +117,8 @@ class Install extends Command
             'vue',
             'vuex',
             'bootstrap',
-            'element-ui'
-//            'paladin-vue'
+            'element-ui',
+            'paladin-vue'
         ];
 
         $command = $cmd . implode(' ',$dev).' --save-dev';
@@ -119,7 +129,7 @@ class Install extends Command
         $this->line($command);
         passthru($command);
 
-        passthru('npm install ../../Charlestide/Paladin-vue/');
+//        passthru('npm install ../../Charlestide/Paladin-vue/');
 
         passthru('npm install');
     }

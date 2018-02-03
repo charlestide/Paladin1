@@ -27,8 +27,8 @@ class SuperAdmin extends Command
 
         if ($admin->id) {
             $this->info('Super Admin has been created');
-            $this->warn('name: ' . $admin->name);
-            $this->warn('email: ' . $admin->email);
+            $this->warn('Name: ' . $admin->name);
+            $this->warn('Email: ' . $admin->email);
         } else {
             $this->error('Error to create Super Admin');
         }

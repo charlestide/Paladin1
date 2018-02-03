@@ -28,7 +28,7 @@ Route::namespace('Charlestide\Paladin\Controllers')
 
 
         //需要登陆的页面
-        Route::middleware(['auth:'.config('paladin.guard','web'),'api'])
+        Route::middleware(['auth:'.config('paladin.guard','admin'),'api'])
             ->group(function () {
                 Route::get('me','AuthController@me');
                 Route::get('layout/menu','LayoutController@menu');
