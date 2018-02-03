@@ -134,4 +134,5 @@ abstract class ModuleSeeder
             config('paladin.menus.system.icon','gear')
         );
     }
+
 }
