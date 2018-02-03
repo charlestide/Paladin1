@@ -112,7 +112,8 @@ class Install extends Command
             'babel-plugin-transform-vue-jsx',
             'babel-plugin-transform-runtime',
             'laravel-mix',
-            'babel-plugin-syntax-dynamic-import'
+            'babel-plugin-syntax-dynamic-import',
+            'babel-helper-vue-jsx-merge-props'
         ];
 
         $prod = [
