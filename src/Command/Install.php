@@ -43,6 +43,9 @@ class Install extends Command
         $this->step('Publish config By Charlestide/Paladin ');
         $this->publishPaladin('config',true);
 
+        $this->step('Include Default Config By Charlestide/Paladin');
+        config(['paladin' => require(__DIR__.'/../../config/paladin.php')]);
+
         $this->step('Publish migrations By Charlestide/Paladin ');
         $this->publishPaladin('migrations');
 
@@ -179,5 +182,8 @@ class Install extends Command
             ob_end_clean();
         }
         return $this->path.$path;
+    }
+
+    private function includeConfig() {
     }
 }

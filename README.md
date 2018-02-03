@@ -27,59 +27,40 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### 配置认证服务的用户Model
-
-请修改 `config/auth.php` 中的 providers.users.model 选项，改为以下内容
-
-```php
-    'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => Charlestide\Paladin\Models\Admin::class, //这就是要修改的地方
-        ],
-    ],
-```
-
-### 运行Paladin的发布程序
-
-发布程序(publish)能够使Laravel的扩展包中的文件，移动到目标项目中
-
-请在项目根目录运行 `artian` 工具，它是Laravel的一部分
+### 运行安装程序
 
 ```bash
-php artian vendor:puslish --tag=paladin
+    php artisan paladin:install
+```
+安装程序最后会询问您是否创建超级管理员，建议您选择是，并指定登陆用的邮箱和密码
+
+##安装程序做了什么
+
+###发布了配置文件
+
+覆盖了以下文件
+```blade
+    config/auth.php
+    config/permission.php //这是 spatie/laravel-permission 的配置文件
 ```
 
-### 运行数据库库迁移
+创建了Paladin自身的配置文件
+```text
+    config/paladin.php
+```
+###生成了.babelrc
 
-修改 `database/seeds/DatabaseSeeder.php`，在`run`方法中增加`AdminsTableSeeder`的调用，就下面这样
-
-```php
-class DatabaseSeeder extends Seeder
+其内容如下：
+```json
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-         $this->call(AdminsTableSeeder::class); //这是增加的部分
-    }
+  "presets": ["env"],
+  "plugins": ["syntax-dynamic-import"]
 }
 ```
+其作用主要是便于后续前端编译
 
-然后运行迁移命令 
 
-```bash
-php artian mirgate --seed
-```
-
-```blade
-<font color=red>注意</font>，这会运行您的所有mirgations
-```
-
-### 启用服务器
+## 启用服务器
 
 你可以启动本地的nginx, apache或者其他web服务器，当然也可以使用的Laravel的valet，然后就可以访问了
 
