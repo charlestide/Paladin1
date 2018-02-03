@@ -13,7 +13,7 @@ use Charlestide\Paladin\Models\Menu;
 use Charlestide\Paladin\Models\Permission;
 use Laravel\Passport\ClientRepository;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Route;
 
 class LayoutController extends Controller
 {
@@ -52,5 +52,26 @@ class LayoutController extends Controller
         return response()->success(config('paladin.settings',[
             'logo_path' => '/images/logo.png'
         ]));
+    }
+
+    public function routes() {
+
+        $routes = Route::getRoutes()->getRoutes();
+
+        $routeData = collect();
+
+        foreach ($routes as $route)
+            $routeData->push([
+                'host'   => $route->domain(),
+                'method' => implode('|', $route->methods()),
+                'uri'    => $route->uri(),
+                'name'   => $route->getName(),
+                'action' => $route->getActionName(),
+                'middleware' => collect($route->gatherMiddleware())->map(function ($middleware) {
+                    return $middleware instanceof Closure ? 'Closure' : $middleware;
+                })->implode(',')
+            ]);
+
+        return response()->success($routeData);
     }
 }

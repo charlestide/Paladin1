@@ -25,6 +25,7 @@ Route::namespace('Charlestide\Paladin\Controllers')
 
         Route::view('dashboard','paladin::admin.index');
         Route::get('layout/settings','LayoutController@settings');
+        Route::get('layout/routes','LayoutController@routes');
 
 
         //需要登陆的页面
