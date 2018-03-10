@@ -19,7 +19,7 @@
     },
     "require": {
         "php": ">=7.1",
-        "laravel/framework": "5.5.*",
+        "laravel/framework": "^5.0",
         "matriphe/larinfo": "^1.0",
         "trntv/probe": "^1.0",
         "minime/annotations": "~3.0",

@@ -13,7 +13,7 @@ let mix = require('laravel-mix');
 
 const
     webpack = require('webpack'),
-    CleanWebpackPlugin = require('clean-webpack-plugin'),
+    // CleanWebpackPlugin = require('clean-webpack-plugin');
     LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 mix.webpackConfig({
@@ -22,14 +22,31 @@ mix.webpackConfig({
         "/js/vue": ['vue','vuex','vue-router']
     },
     plugins: [
-        new CleanWebpackPlugin(['public/components','public/fonts']),
+        // new CleanWebpackPlugin(['public/components','public/fonts']),
         new LodashModuleReplacementPlugin(),
-        new webpack.optimize.CommonsChunkPlugin({
-            names: ['/js/vue','/js/vendor'],
-        })
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     names: ['/js/vue','/js/vendor'],
+        // })
     ],
     output: {
         chunkFilename: './components/[name].js'
+    },
+    optimization: {
+        // runtimeChunk: {
+        //     name: 'manifest'
+        // },
+        // splitChunks: {
+        //     name() {
+        //         return ['/js/vue','/js/vendor'];
+        //     },
+            // cacheGroups: {
+            //     commons: {
+            //         test: /[\\/]node_modules[\\/]/,
+            //         name: './components/[name].js',
+            //         chunks: "all"
+            //     }
+            // }
+        // }
     }
 });
 
